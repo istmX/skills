@@ -2,7 +2,7 @@
 
 ## Font installation
 
-Identify fonts from `design.md` `typography.*.fontFamily`. System fonts (`system-ui`, `-apple-system`): no action. Proprietary fonts: check the project for font files (`*.ttf`, `*.otf`, `*.woff2`) first; none found → substitute and inform the user:
+Identify fonts from `.istm-context/design.md` `typography.*.fontFamily`. System fonts (`system-ui`, `-apple-system`): no action. Proprietary fonts: check the project for font files (`*.ttf`, `*.otf`, `*.woff2`) first; none found → substitute and inform the user:
 
 | Proprietary | Substitute |
 |---|---|
@@ -27,7 +27,7 @@ Resolve where hero images, avatars, product/gallery photos, logos, illustrations
 
 **Step 1: Does this build need image/media assets at all?** Pure form, table, or text layout: skip this section.
 
-**Step 2: Look for matching project assets** (your file tools): search (ignoring `node_modules`, `.git`) for directories named `assets`, `images`, `img`, `media`, or `public`; scan them for filenames plausibly matching what the UI needs (hero, avatar, logo, product, …). Also check `design.md`/the design reference for named or pictured assets.
+**Step 2: Look for matching project assets** (your file tools): search (ignoring `node_modules`, `.git`) for directories named `assets`, `images`, `img`, `media`, or `public`; scan them for filenames plausibly matching what the UI needs (hero, avatar, logo, product, …). Also check `.istm-context/design.md`/the design reference for named or pictured assets.
 
 **Step 3: If no matching assets are found, ask** (as above; never silently invent paths, emoji, or blank boxes):
 - **question**: "This UI needs <list what, e.g. a hero image + 3 product photos> but I found no matching assets in the project. How should I source them?"
@@ -67,7 +67,7 @@ Pass 1 from the guide's bar: design before you integrate. A gate, not advice, on
 
 A complete product screen carries, cohesive and branded:
 - **Brand**: logo/wordmark, consistent; none → derive one from the product name, never an empty corner.
-- **Context and copy**: real product specific copy (headline, supporting line, honest microcopy) from the product's purpose (`AGENTS.md`, spec intent, scope), never lorem ipsum.
+- **Context and copy**: real product specific copy (headline, supporting line, honest microcopy) from the product's purpose (`.istm-context/agents.md`, spec intent, scope), never lorem ipsum.
 - **A considered layout, not a lone box.** Compose the whole page. Calibrate to what a senior designer ships for THIS screen; the list is a sample, not a checklist:
   - **Auth**: branded card or two pane (brand/value/visual + form), secondary links, light social proof.
   - **Dashboard / feed**: app shell (header, nav, user menu), title/context, real hierarchy, a proper empty state.
@@ -104,14 +104,14 @@ Use the HTML element that most precisely describes the content; the element carr
 
 Every visual value (colour, font, size, spacing, radius, shadow, duration, easing) comes from the token file's CSS custom properties. No hardcoded hex, no hardcoded `px` duplicating a token.
 
-Before calling the phase complete, search the changed files for hardcoded values: hex colors (e.g. `#fff`, `#1a2b3c`), `rgb(`/`hsl(` functions, raw pixel values (e.g. `: 16px`). Any match that isn't a `0`, a `1px` border with no token equivalent, or a known constant is a violation: replace with the corresponding `var(--token)`. Cross check against `design.md ## Do's and Don'ts`. Fix every violation before moving on.
+Before calling the phase complete, search the changed files for hardcoded values: hex colors (e.g. `#fff`, `#1a2b3c`), `rgb(`/`hsl(` functions, raw pixel values (e.g. `: 16px`). Any match that isn't a `0`, a `1px` border with no token equivalent, or a known constant is a violation: replace with the corresponding `var(--token)`. Cross check against `.istm-context/design.md ## Do's and Don'ts`. Fix every violation before moving on.
 
 ---
 
 ### Phase 3: Responsive layout
 
 - Mobile first CSS: start at the smallest viewport, layer up with `min-width` breakpoints.
-- Breakpoints from `design.md ## Responsive Behavior` if specified; else `sm 640px`, `md 768px`, `lg 1024px`, `xl 1280px`.
+- Breakpoints from `.istm-context/design.md ## Responsive Behavior` if specified; else `sm 640px`, `md 768px`, `lg 1024px`, `xl 1280px`.
 - Path A images at multiple widths: use the layout changes extracted in A0.
 - Minimum touch target for any interactive element: 44×44px; reach it with padding without affecting visual size.
 - Minimum body text: 16px on every viewport.
@@ -239,7 +239,7 @@ Use CSS logical properties, not physical, so layouts work for RTL without overri
 
 The build is not done until you have checked it. Ambition in prose is not enough; this is the step that catches a build that quietly fell back to bare minimum.
 
-- **Audit against the bar's disqualifiers** (guide top) and this page's `design.md` mandate: lone form, dead space, naked or unstyled elements, default only styling, missing states, orphaned controls, a widget where a full surface was owed. Any hit → fix it, do not report around it.
+- **Audit against the bar's disqualifiers** (guide top) and this page's `.istm-context/design.md` mandate: lone form, dead space, naked or unstyled elements, default only styling, missing states, orphaned controls, a widget where a full surface was owed. Any hit → fix it, do not report around it.
 - **Look at it, if you can.** With a browser or screenshot tool, render the page (a desktop and one mobile width) and actually look. Fix any visual defect you see: a stray unstyled bar, broken spacing, a blank half page, a collapsed element. This is the only reliable catch for a render defect the code did not reveal.
 - **Report the audit.** State what you checked, and if you rendered it, what you saw and fixed.
 
@@ -256,7 +256,7 @@ The build is not done until you have checked it. Ambition in prose is not enough
 **Dark mode strategy**: .dark class | @media | both
 **Icon library**: <library name> | none (install needed)
 **Path**: Design.md (existing) | A (image) | A (multi: <what each image represented>) | B (derived: <mood> | url: <url> | custom: "<style>")
-**design.md**: pre-existing | created | fetched from <url>
+**.istm-context/design.md**: pre-existing | created | fetched from <url>
 **Token conflicts**: none | <list, verify manually before next run>
 **Token file**: created | updated | unchanged (<path>)
 **Fonts**: <family> via <method> | <proprietary> to <substitute> | system
@@ -265,7 +265,7 @@ The build is not done until you have checked it. Ambition in prose is not enough
 **Self-audit**: disqualifiers checked (none found | fixed: <list>) · rendered and looked (yes: <what you saw/fixed> | no browser tool)
 **Invented (for review, swap when you have the real thing)**: <brand name/wordmark · tagline/headline · body copy · placeholder assets>, or "none (all provided)"
 **Built**: <name> (<file paths>)
-**Token adherence**: all sourced from design.md | <deviations>
+**Token adherence**: all sourced from .istm-context/design.md | <deviations>
 **Accessibility**: WCAG AA passed | <items deferred>
 **Semantic HTML**: correct elements used | <issues noted>
 **Keyboard**: fully navigable | <gaps>

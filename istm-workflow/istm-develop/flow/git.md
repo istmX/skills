@@ -1,6 +1,6 @@
 # Develop: git handling (read only when git integration is on)
 
-Read this only when the nearest `AGENTS.md` `## Git` block says `integration: on`. Absent or `off` → do no active git; the engineer manages branches and commits, and the read only freshness checks still apply. Git is the one hard dependency; skip silently if there is no repo.
+Read this only when the nearest `.istm-context/agents.md` `## Git` block says `integration: on`. Absent or `off` → do no active git; the engineer manages branches and commits, and the read only freshness checks still apply. Git is the one hard dependency; skip silently if there is no repo.
 
 Read the setting: `integration`, `branch prefix` (default `feat/`), `commit` (`per-milestone` default, `end-of-build`, or `manual`). Local ops (branch, commit) are offers with a recommendation; **push and PR always confirm** (outward) and PR is `/document`'s job, not this skill's.
 

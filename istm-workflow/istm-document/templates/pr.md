@@ -4,7 +4,7 @@ Produce a title and body. Always return both as text (the skill shows them in th
 
 ## Title
 
-One line, imperative mood, ≤ 72 chars. Match the project's commit convention if `AGENTS.md` specifies one (e.g. `feat:`, `fix:`). Examples: `feat: add rate limiting to the orders API`, `fix: prevent double-charge on retried checkout`.
+One line, imperative mood, ≤ 72 chars. Match the project's commit convention if `.istm-context/agents.md` specifies one (e.g. `feat:`, `fix:`). Examples: `feat: add rate limiting to the orders API`, `fix: prevent double-charge on retried checkout`.
 
 ## Body structure
 
@@ -15,7 +15,7 @@ One line, imperative mood, ≤ 72 chars. Match the project's commit convention i
 
 ## Why
 
-<The motivation. Link the spec if one governs this change, e.g. "Implements docs/specs/0007-rate-limiting.md". Reference the issue/ticket if known.>
+<The motivation. Link the spec if one governs this change, e.g. "Implements .istm-context/specs/0007-rate-limiting.md". Reference the issue/ticket if known.>
 
 ## Changes
 

@@ -42,7 +42,7 @@ Spec 0001 · code in `./`
 
 ### 2. Coding standards & tooling
 Capture conventions, then install lint, format, and pre-commit enforcement from the real scaffolded project.
-**Done when:** root `AGENTS.md` reflects the real stack, and lint/format/pre-commit run clean.
+**Done when:** root `.istm-context/agents.md` reflects the real stack, and lint/format/pre-commit run clean.
 - [ ] Capture conventions + tooling choices: `/audit`
 - [ ] Install the tooling: `/develop tooling`
 - [ ] Check it runs clean: `/test`
@@ -64,7 +64,7 @@ Spec 0002 · code (filled by /develop)
 
 ### 4. Design system & UI foundation · needs a decision
 Visual language, layout primitives, and base components so the flows feel cohesive and accessible.
-**Done when:** `design.md` covers type/color/spacing/components, and base components handle focus and keyboard.
+**Done when:** `.istm-context/design.md` covers type/color/spacing/components, and base components handle focus and keyboard.
 - [ ] Design it (spec): `/architect design system & UI foundation`
 
 ## Slice 1: Core standup loop
@@ -128,7 +128,7 @@ Partial catalog; finish the remaining pieces via /develop. code in `src/catalog/
 
 ## Large product: epic split
 
-When `scope.md` outgrows a comfortable scan (roughly a dozen plus features across clearly distinct areas), split by epic: **rename `scope.md` to `docs/scope/index.md`** (keep the At a glance table across all epics + a one line status rollup per epic, each linking its file), and **move each area's feature sections out into its own `docs/scope/<epic>.md`**. Promote **on demand**; don't split a small product early. File names are always **semantic** (`scope.md` / `index.md` / `<epic>.md`), never numbered. In a monorepo, each workspace gets its own `docs/scope/<workspace>/` the same way, with a top level `docs/scope/index.md` mapping the workspaces (one line + rollup each).
+When `scope.md` outgrows a comfortable scan (roughly a dozen plus features across clearly distinct areas), split by epic: **rename `scope.md` to `.istm-context/scope/index.md`** (keep the At a glance table across all epics + a one line status rollup per epic, each linking its file), and **move each area's feature sections out into its own `.istm-context/scope/<epic>.md`**. Promote **on demand**; don't split a small product early. File names are always **semantic** (`scope.md` / `index.md` / `<epic>.md`), never numbered. In a monorepo, each workspace gets its own `.istm-context/scope/<workspace>/` the same way, with a top level `.istm-context/scope/index.md` mapping the workspaces (one line + rollup each).
 
 ## Completion report block
 
@@ -139,10 +139,10 @@ When `scope.md` outgrows a comfortable scan (roughly a dozen plus features acros
 **Behavior**: <plan | replan | add (inferred from the situation, not a typed subcommand)>
 **Build approach**: <name (one-line principle)> · **Per-feature overrides**: <feature → approach, … (or "none, all inherit")>
 **Workflow**: <Vibe | Lean | Medium | Full> (<the stages it runs; why recommended for this product>) · **Per-feature tier overrides**: <feature → tier, … (or "none, all inherit")>
-**Scope file**: <docs/scope/scope.md> (<created new | updated in place | new epic file for <area>>)
+**Scope file**: <.istm-context/scope/scope.md> (<created new | updated in place | new epic file for <area>>)
 **Scope (this pass)**: <N> new features to build, <M> already on the scope, <K> deferred
 **Build order**: <feature 1> → <feature 2> → …
-**First step**: <run `/clear` first, then the first unticked box, usually `/architect <first feature>` (or `/audit` if a brownfield repo has no root AGENTS.md), each skill reads its inputs from the files just written, so a fresh session keeps every step cheap>
+**First step**: <run `/clear` first, then the first unticked box, usually `/architect <first feature>` (or `/audit` if a brownfield repo has no root .istm-context/agents.md), each skill reads its inputs from the files just written, so a fresh session keeps every step cheap>
 ```
 
-_Context hygiene: the scope, the specs, and `AGENTS.md` are the durable state, so the workflow hands off through files, not the chat. Advise `/clear` between units (after `/scope`, after each `/architect`, between features) and `/compact` mid unit if one run gets long. On Claude Code use `/clear` / `/compact`; use your agent's fresh session equivalent elsewhere._
+_Context hygiene: the scope, the specs, and `.istm-context/agents.md` are the durable state, so the workflow hands off through files, not the chat. Advise `/clear` between units (after `/scope`, after each `/architect`, between features) and `/compact` mid unit if one run gets long. On Claude Code use `/clear` / `/compact`; use your agent's fresh session equivalent elsewhere._

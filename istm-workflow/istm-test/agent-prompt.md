@@ -41,14 +41,14 @@ SCOPE_CLASSIFIED
 - app/api/orders/route.ts       [api/server]
 -->
 
-## Project context (AGENTS.md, inlined because it is short)
+## Project context (.istm-context/agents.md, inlined because it is short)
 
 PROJECT_CONTEXT
 
 ## Pointers to read only if relevant (do not assume; read on demand)
 
 - **Recent spec paths**: SPEC_PATHS  (read one only if it plainly governs a file you're testing)
-- **design.md path**: DESIGN_PATH  (read only when writing component/page accessibility cases; `none` if not provided)
+- **.istm-context/design.md path**: DESIGN_PATH  (read only when writing component/page accessibility cases; `none` if not provided)
 
 ---
 

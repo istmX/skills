@@ -160,27 +160,21 @@ async function main() {
      * Sets the primary system prompt for the IDE.
      */
     if (response.coreSkill !== 'workflow-only') {
-      const skillPath = path.join(SKILLS_ROOT, response.coreSkill, 'SKILL.md');
-      
+      // 1. Drop the chosen core skill as the root harness (e.g., GEMINI.md)
+      const coreSkillPath = path.join(SKILLS_ROOT, response.coreSkill, 'SKILL.md');
       try {
-        await fs.copyFile(skillPath, path.join(targetDir, harness));
+        await fs.copyFile(coreSkillPath, path.join(targetDir, harness));
         console.log(chalk.dim(`  - Injected Master Orchestrator`));
-        
-        /**
-         * Register the master orchestrator as a native autocomplete slash command
-         * We deliberately rename it to `/istm` so the user always has a consistent God Mode command.
-         */
+      } catch (err) {}
+
+      // 2. Drop the Universal NLP Router as the /istm slash command
+      const routerPath = path.join(SKILLS_ROOT, 'istm', 'SKILL.md');
+      try {
         await fs.mkdir(workflowTarget, { recursive: true });
-        
-        // Read the file and replace its name frontmatter to 'name: istm'
-        let skillContent = await fs.readFile(skillPath, 'utf8');
-        skillContent = skillContent.replace(/^name:\s*.*$/m, 'name: istm');
-        
         if (harness === '.cursorrules') {
-          await fs.writeFile(path.join(workflowTarget, 'istm.mdc'), skillContent);
+          await fs.copyFile(routerPath, path.join(workflowTarget, 'istm.mdc'));
         } else {
-          await fs.mkdir(path.join(workflowTarget, 'istm'), { recursive: true });
-          await fs.writeFile(path.join(workflowTarget, 'istm', 'SKILL.md'), skillContent);
+          await fs.cp(path.join(SKILLS_ROOT, 'istm'), path.join(workflowTarget, 'istm'), { recursive: true });
         }
       } catch (err) {}
     }

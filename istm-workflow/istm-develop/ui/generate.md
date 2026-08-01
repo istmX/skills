@@ -4,7 +4,7 @@
 
 This is case 4 from the guide: nothing was provided, so you establish the design system, then build to the bar. Design first, integrate second.
 
-**Prefer a proven design skill when one is available** (Anthropic's `frontend-design` on Claude Code, Codex's frontend skill, or a design MCP): it sets the visual direction with the same craft that makes the chat app's output good. With none available, derive the system from B2. Either way the token values land in CSS and the art direction lands in `design.md`.
+**Prefer a proven design skill when one is available** (Anthropic's `frontend-design` on Claude Code, Codex's frontend skill, or a design MCP): it sets the visual direction with the same craft that makes the chat app's output good. With none available, derive the system from B2. Either way the token values land in CSS and the art direction lands in `.istm-context/design.md`.
 
 There are no bundled brand templates. You do not copy a design system, you derive one and prove it holds up.
 
@@ -15,14 +15,14 @@ Ask for a reference first; a real one beats anything you invent, and engineers o
 ```
 "Anything to steer the design?"   (header: "Direction")
   - A site or brand URL       "I'll read it and pull the real colors and type"
-  - A design.md URL           "I'll fetch it, validate it, and adopt it"
+  - A .istm-context/design.md URL           "I'll fetch it, validate it, and adopt it"
   - Describe a style          "Tell me the feel and I'll derive the system"
   - Nothing, suggest one      "I'll pick a direction and derive it"   (recommended)
 ```
 
 - **A screenshot or Figma after all?** Stop and route back through the guide's Step 0 (`ui/image.md` or `ui/mcp.md`). Replicating a real reference beats deriving one.
 - **A site or brand URL** → fetch it (no web capability on the main thread: spawn the read only `researcher` subagent on the cheapest model). Read its CSS custom properties and computed styles, not a screenshot of it. Take the accent, the neutral ladder, the fonts, the radius. Then run the B2 checks on what you took: real sites often fail contrast, and you fix it rather than copy the failure.
-- **A design.md URL** → fetch, validate it has colors and typography, adopt it, then run the B2 checks.
+- **A .istm-context/design.md URL** → fetch, validate it has colors and typography, adopt it, then run the B2 checks.
 - **Describe a style** → their words plus the aesthetic guide below, into B2.
 - **Nothing** → ask the mood, then derive.
 
@@ -78,7 +78,7 @@ Check **light and dark separately**. A ladder that passes in light frequently fa
 
 **7. Write the values into the project's CSS** (`app/globals.css` / `src/styles/tokens.css`, plus the tailwind config if used), per B3. That file is the single source of truth for colors, typography, spacing, radius, shadows, and motion.
 
-**8. Write `design.md` as ART DIRECTION only**, never a copy of the token values, those live in CSS:
+**8. Write `.istm-context/design.md` as ART DIRECTION only**, never a copy of the token values, those live in CSS:
 
 ```yaml
 ---
@@ -114,7 +114,7 @@ You are a senior product designer. Every page ships as a complete, professional 
 - **Apple consumer**: white canvas, system font stack, 10 to 20px radius, spring motion (200 to 350ms)
 - **Named brand**: use that brand's documented colors and fonts, then verify contrast as above; substitute proprietary fonts (see font installation)
 
-Fill every design.md section with real, specific direction. No placeholders, and no token value dumps (values live in CSS).
+Fill every .istm-context/design.md section with real, specific direction. No placeholders, and no token value dumps (values live in CSS).
 
 ### B3: Create CSS token file
 

@@ -2,7 +2,7 @@
 
 ### Step 1: Locate the scope; greenfield / brownfield / monorepo
 
-Detect (skip `node_modules/` and `.git/`): source files (any `.ts`, `.tsx`, `.js`, `.py`, `.go`, `.rs`; presence ⇒ brownfield, none ⇒ greenfield); root `AGENTS.md`; existing scope under `docs/scope/` (`scope.md`, or `index.md` + epic files; monorepo: `docs/scope/<workspace>/`), noting the shape.
+Detect (skip `node_modules/` and `.git/`): source files (any `.ts`, `.tsx`, `.js`, `.py`, `.go`, `.rs`; presence ⇒ brownfield, none ⇒ greenfield); root `.istm-context/agents.md`; existing scope under `.istm-context/scope/` (`scope.md`, or `index.md` + epic files; monorepo: `.istm-context/scope/<workspace>/`), noting the shape.
 
 Read exactly one route file before continuing to Step 2:
 
@@ -14,7 +14,7 @@ Do not read the other plan route files unless the classification changes. After 
 
 ### Step 2: Ask (generated question walk, as decision panels)
 
-Do not follow a fixed script or a set number of rounds. Enumerate the planning dimensions THIS product needs (generate them from the idea and `AGENTS.md`), then ask them one after another as batched decision panels (up to 4 per panel), as many panels as it takes. Infer and skip anything already stated; ask everything else. The more thoroughly you ask, the better the scope: never cap the questions to save time, and never end while a load bearing dimension is unasked.
+Do not follow a fixed script or a set number of rounds. Enumerate the planning dimensions THIS product needs (generate them from the idea and `.istm-context/agents.md`), then ask them one after another as batched decision panels (up to 4 per panel), as many panels as it takes. Infer and skip anything already stated; ask everything else. The more thoroughly you ask, the better the scope: never cap the questions to save time, and never end while a load bearing dimension is unasked.
 
 Cover at least these dimension groups (a checklist of what to reach, not an order to recite; add product specific dimensions freely):
 
@@ -37,7 +37,7 @@ Reason out the pick, never hardcode it or its mechanics: default for a proper pr
 
 **Once the approach is chosen, read its persona file and adopt that engineer's role for decomposition** (`approaches/tracer-bullet.md`, `approaches/skateboard.md`, `approaches/facade.md`, or `approaches/journey.md`). Read only the chosen one. Each persona defines how that engineer slices, what the first slice or deliverable is, what is real vs deferred, and the sequencing, with a worked example. All slicing and sequencing in Step 4 and Step 5 follows that persona, so the four approaches produce genuinely different scopes for the same product, not the same list relabeled. A per feature override (Step 5) reads that feature's chosen persona and applies it to that feature only.
 
-Record it (the propagation source) in the scope header: `Build approach: <name> (<one-line principle>)`. A project wide convention: `/audit` and `/sync` persist it into root `AGENTS.md`; `/architect`, `/develop`, `/check verify` read and honor it. It also sets each feature's Phase (its slice / journey), shown in the At a glance table and as section grouping.
+Record it (the propagation source) in the scope header: `Build approach: <name> (<one-line principle>)`. A project wide convention: `/audit` and `/sync` persist it into root `.istm-context/agents.md`; `/architect`, `/develop`, `/check verify` read and honor it. It also sets each feature's Phase (its slice / journey), shown in the At a glance table and as section grouping.
 
 Header value = project default; a single feature may override via the optional per feature Approach (Step 5), a tag beside its heading (e.g. `· Facade`). Precedence: own tag if set, else project default; tag only when it differs (no tag = inherit).
 
@@ -57,12 +57,12 @@ From the answers, produce the feature list: foundations first (Step 4), then sli
 - **Done when line (acceptance criteria seeds)**: one compact `Done when:` line of observable outcomes (e.g. "user can filter the list and the URL reflects it; empty and error states render"). Seeds, not a spec; `/architect` grows them into the spec's full requirements and acceptance criteria. Load bearing outcomes only.
 - **Workflow tier** (only when it differs from the project default set in Step 5b): `Vibe` / `Lean` / `Medium` / `Full`, from this feature's risk, scope, and compliance sensitivity. Most features inherit the project default; tag a feature (e.g. `· Full`) only when it warrants more or less rigor than the rest. Higher tier → more likely `Needs spec: yes`.
 - **Approach (optional per feature override)**: defaults to inherit. Only when genuinely best built differently, run a Build approach panel for THAT feature: `(recommended) inherit the project default` on top, plus the named approaches (Tracer Bullet · Skateboard · Facade (prototype grade) · Journey) as overrides; same panel and no hardcoded tool conventions as Step 3, tag and precedence rules per Step 3.
-- **Needs spec?**: the invent test: would building it require a decision the engineer hasn't made? Yes for a provider/library choice, a data model, a cross cutting pattern, the design system, a whole page/screen with no spec yet, or behavior that is not trivial (search, filtering, recommendations). No only for genuinely pure implementation an existing `design.md`/spec/convention covers. Unsure → yes; an unflagged decision is the expensive miss. `Full`/`Medium` tier → almost always yes.
+- **Needs spec?**: the invent test: would building it require a decision the engineer hasn't made? Yes for a provider/library choice, a data model, a cross cutting pattern, the design system, a whole page/screen with no spec yet, or behavior that is not trivial (search, filtering, recommendations). No only for genuinely pure implementation an existing `.istm-context/design.md`/spec/convention covers. Unsure → yes; an unflagged decision is the expensive miss. `Full`/`Medium` tier → almost always yes.
 - One decision per spec: multiple distinct decisions in one feature → one `Needs spec: yes` item each, never one lumped "strategy" spec. Several sharing one broad decision that then splits → an umbrella that dependents reference; never mark a dependent `no` when it carries its own decision.
 
 No build task breakdown here. A not yet designed feature gets exactly one checkbox, its entry command: `/architect <feature>` when it `needs a decision`, else `/develop <feature>` (the coding standards and tooling foundation's first box is `/audit`, never `/develop`). Never enumerate UI / data model / API / test sub tasks; `/architect` fills the built ready shape on spec capture (see What this skill does; atomic tasks stay in the spec). The next step is then always the first unticked box, always a command or tracked milestone (no separate `Next:` line). See the lifecycle table in `scope-template.md`.
 
-Analysis/inventory is not a scope row: cataloguing duplication, listing call sites, auditing current state is decision support research living with the spec (`/architect` puts it in the spec's `rationale.md`). Never plan a row or step that writes a `.md` into `docs/scope/`.
+Analysis/inventory is not a scope row: cataloguing duplication, listing call sites, auditing current state is decision support research living with the spec (`/architect` puts it in the spec's `rationale.md`). Never plan a row or step that writes a `.md` into `.istm-context/scope/`.
 
 ### Step 5b: Recommend the workflow depth (decision panel)
 
@@ -88,8 +88,8 @@ Record the pick as the project default in the scope header `**Workflow:**` line 
 
 List the scope location again immediately before writing (a teammate may have changed it), then write per `scope-template.md`:
 
-- Small product → single file `docs/scope/scope.md` (monorepo: `docs/scope/<workspace>/scope.md`): At a glance table (including brownfield enrolled features) + phase grouped feature sections + legend.
-- Large product → epic split per Artifact ownership (`docs/scope/index.md` + `docs/scope/<epic>.md`); promote only when `scope.md` has outgrown a comfortable scan, else stay single file.
+- Small product → single file `.istm-context/scope/scope.md` (monorepo: `.istm-context/scope/<workspace>/scope.md`): At a glance table (including brownfield enrolled features) + phase grouped feature sections + legend.
+- Large product → epic split per Artifact ownership (`.istm-context/scope/index.md` + `.istm-context/scope/<epic>.md`); promote only when `scope.md` has outgrown a comfortable scan, else stay single file.
 - Run again (living update): edit in place, never a dated file: append new rows with the next free `#`, sharpen existing rows' intent/seeds, leave existing statuses untouched; set a now out of scope row to `dropped` (never delete). Brownfield: append enrolled `existing`/`in-progress` rows above the `planned` ones.
 
 Citations are gated by Step 6b: ask that panel first (or confirm the chosen level) before adding any `(basis: …)` or `## References` content, and honor its level.
@@ -106,7 +106,7 @@ Ask ONE consent question governing both the `(basis: …)` citations and any ref
 
 No references (or no answer): no `## References` section, no `(basis: …)` citations anywhere; the scope keeps its intent and reasoning and reads clean. Done.
 
-Sources only (or the agent has no web tools): wherever the scope recommends something the engineer didn't dictate (phasing choice, order rationale, a suggested capability, a `Needs spec` flag, a tier call), append a short `(basis: …)`: a project source (`your AGENTS.md`, a spec, the existing stack) or a named practice (`vertical slices ship real value early`, `foundations before features`, `data model is the costliest thing to redo`); inline you have no web tools, so name the source or practice, never a URL. Add a `## References` section naming *Project sources* (verifiable) and *Practices & standards* (named); no Links group, no subagent. Done.
+Sources only (or the agent has no web tools): wherever the scope recommends something the engineer didn't dictate (phasing choice, order rationale, a suggested capability, a `Needs spec` flag, a tier call), append a short `(basis: …)`: a project source (`your .istm-context/agents.md`, a spec, the existing stack) or a named practice (`vertical slices ship real value early`, `foundations before features`, `data model is the costliest thing to redo`); inline you have no web tools, so name the source or practice, never a URL. Add a `## References` section naming *Project sources* (verifiable) and *Practices & standards* (named); no Links group, no subagent. Done.
 
 Sources plus web verified links: as Sources only, then verify the links with a read only web subagent (it only fetches; you do the writing), so links are confirmed, never fabricated:
 - Spawn a read only `researcher` subagent (capability first). `model`: the cheapest tier; do not inherit the session model (Claude Code: the `researcher` type pins `haiku` and carries the web tools; a light model elsewhere) · `description: "Scope: verify reference links"`

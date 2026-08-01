@@ -1,6 +1,6 @@
 # Release Notes Template
 
-Write release notes for VERSION_RANGE, written for users to `docs/releases/<version>.md`. Audience is **end users**, not developers, so translate technical changes into what users can now do, and lead with what they'll care about most.
+Write release notes for VERSION_RANGE, written for users to `.istm-context/releases/<version>.md`. Audience is **end users**, not developers, so translate technical changes into what users can now do, and lead with what they'll care about most.
 
 ## Structure
 

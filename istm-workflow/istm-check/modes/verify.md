@@ -51,11 +51,11 @@ Only in refactor mode. It drives the app twice and holds two output sets, so run
 
 ### Step 0b: Load the spec contract (if a governing spec exists)
 
-Before scoping, find the governing spec: the feature dir `docs/specs/NNNN-<feature>/` (or single file `docs/specs/NNNN-<feature>.md`) this change implements. Match by branch/feature name or touched surfaces; a scope under `docs/scope/` points to the spec. No governing spec (a trivial change with no record)? Skip this step and verify against observed behavior only.
+Before scoping, find the governing spec: the feature dir `.istm-context/specs/NNNN-<feature>/` (or single file `.istm-context/specs/NNNN-<feature>.md`) this change implements. Match by branch/feature name or touched surfaces; a scope under `.istm-context/scope/` points to the spec. No governing spec (a trivial change with no record)? Skip this step and verify against observed behavior only.
 
 The spec carries the contract: `## Requirements` with IDed acceptance criteria (`AC-1`, `AC-2`, …) plus the surfaces it specs (pages, routes, tables, migrations). Load the checklist:
 
-1. Prefer the per feature `verify.md` beside the spec (`docs/specs/NNNN-<feature>/verify.md`) if present; `/develop` emits it as concrete, already resolved verify steps tagged with the `AC-N` each exercises:
+1. Prefer the per feature `verify.md` beside the spec (`.istm-context/specs/NNNN-<feature>/verify.md`) if present; `/develop` emits it as concrete, already resolved verify steps tagged with the `AC-N` each exercises:
    ```markdown
    # Verify: <feature> · spec NNNN
    ## UI / manual
@@ -71,7 +71,7 @@ You now hold the `AC-N` list to confirm and the specced surface list to confirm 
 
 ### Step 0c: Calibrate "working" to the build approach
 
-Know what this slice was meant to be. Read the build approach for THIS feature with precedence: the feature's scope row `Approach` override if its row declares one, else the project default (root `AGENTS.md`, else the scope header). This mirrors spec overrides-`AGENTS.md`: a feature declaring its own approach (e.g. a Facade prototype in an otherwise Skateboard project) is verified by ITS approach; every other feature uses the project default. If neither records one, use the reasoned default (an end to end / Tracer Bullet slice for production work) and note the assumption. The wrong bar produces false failures (dinging a prototype for lacking a real backend) or false passes (blessing a slice that never proved the path it existed to prove).
+Know what this slice was meant to be. Read the build approach for THIS feature with precedence: the feature's scope row `Approach` override if its row declares one, else the project default (root `.istm-context/agents.md`, else the scope header). This mirrors spec overrides-`.istm-context/agents.md`: a feature declaring its own approach (e.g. a Facade prototype in an otherwise Skateboard project) is verified by ITS approach; every other feature uses the project default. If neither records one, use the reasoned default (an end to end / Tracer Bullet slice for production work) and note the assumption. The wrong bar produces false failures (dinging a prototype for lacking a real backend) or false passes (blessing a slice that never proved the path it existed to prove).
 
 Reason as the acceptance engineer about what done means for this slice; no fixed per approach script. The judgment: what did this slice promise to make real, and what is it explicitly still allowed to fake? Verify the former hard; don't fail the slice for the latter. Common framings and their bars: a thin end to end path wired through every layer (the whole path carries a real request to a real result); a thinnest usable whole core loop (that one loop genuinely works, not the trimmings); a UI first shell wired to placeholders (the shell and its placeholder flow render and navigate; a stubbed data source is the plan, not a defect); a full user journey per phase (the journey end to end, not isolated screens). Let the label set the bar, then carry it into the scope and the conformance verdict. Acceptance criteria govern what must be true; the approach tells how much of the stack behind them is expected to be real yet.
 
@@ -81,14 +81,14 @@ Base branch `BASE`: `git rev-parse --verify main`; on success use `main`, otherw
 
 Spec contract loaded (Step 0b)? The checklist is your scope: each `verify.md` step / `AC-N` is an observable behavior to exercise, each specced surface (page, route, table, migration) a thing to confirm was built. Don't narrow to only the changed files: an AC or surface with no implementation is exactly the miss this gate catches; keep it listed and let Step 4b flag it. Use the git diff to locate where each is (or isn't) implemented.
 
-No spec? From the changed files write the 2 to 5 concrete things a human could watch to know the change works, e.g. "the /pricing page renders all three tiers and the CTA opens checkout". If a feature scope exists (in `docs/scope/`), anchor these to that feature's acceptance criteria / sub tasks. Keep them observable, not internal.
+No spec? From the changed files write the 2 to 5 concrete things a human could watch to know the change works, e.g. "the /pricing page renders all three tiers and the CTA opens checkout". If a feature scope exists (in `.istm-context/scope/`), anchor these to that feature's acceptance criteria / sub tasks. Keep them observable, not internal.
 
 ### Step 2: Determine how to run the app
 
 Monorepo: run the specific affected app, not the repo root. Find the workspace the change lives in (`apps/<x>/…`) and use its run command (e.g. `pnpm --filter <x> dev`, `turbo run dev --filter <x>`, or that workspace's `package.json` script). A change to a shared package: run the app(s) that consume it.
 
 In order:
-1. A project run skill / documented command: a project specific "run/start" skill, then `AGENTS.md`, then `package.json` scripts (`dev`, `start`), `Makefile`, `Procfile`, `docker-compose`. Prefer what the project already uses.
+1. A project run skill / documented command: a project specific "run/start" skill, then `.istm-context/agents.md`, then `package.json` scripts (`dev`, `start`), `Makefile`, `Procfile`, `docker-compose`. Prefer what the project already uses.
 2. Built in patterns by project type if nothing is documented:
    - Web app → start the dev server, then drive the route: prefer a connected browser/Playwright MCP (real navigation, clicks, form submits, screenshots); else your agent's own browser tool; else, headless, request the route over HTTP and check the returned HTML plus a boot check (server starts, health route responds).
    - API / backend → start the server, hit the endpoint (curl/HTTP client).
@@ -146,7 +146,7 @@ Overall verdict PASS requires every behavior verified with cited evidence, and (
 
 ### Step 5: Report
 
-Update the scope: if this feature is on the scope (`docs/scope/`) and the verdict is PASS, tick its `Verify it` box. **Also tick, in this feature's `verify.md`, each step you actually ran and that passed** (`- [ ]` → `- [x]`); leave a step unticked if it failed or you could not run it. This is per feature: only the feature you verified gets ticked, other features' `verify.md` files stay unchecked until you verify them (expected, not a miss). What happens next depends on the workflow tier (the effective tier: the feature's own tier tag if set, else the scope header `**Workflow:**` default):
+Update the scope: if this feature is on the scope (`.istm-context/scope/`) and the verdict is PASS, tick its `Verify it` box. **Also tick, in this feature's `verify.md`, each step you actually ran and that passed** (`- [ ]` → `- [x]`); leave a step unticked if it failed or you could not run it. This is per feature: only the feature you verified gets ticked, other features' `verify.md` files stay unchecked until you verify them (expected, not a miss). What happens next depends on the workflow tier (the effective tier: the feature's own tier tag if set, else the scope header `**Workflow:**` default):
 
 - **Lean** → `/check verify` is the last required stage, so on PASS also set the feature `done` (At a glance table and heading) and mirror the governing spec's `**Status**:` line `In Progress` → `Accepted` (surgically; not `In Progress` → flag, don't clobber). Exception: an `Assumed` spec blocks `done`, leave it `in-progress` and point to `/architect <feature>` to ratify first. Then point to `/sync`.
 - **Medium / Full** → leave `Test it` and the `done` status to `/test` and `/sync`; point to `/test <feature>` next.

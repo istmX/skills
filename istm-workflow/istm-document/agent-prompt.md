@@ -25,7 +25,7 @@ TEMPLATE_CONTENT
 
 ## Context
 
-- **Project (AGENTS.md, inlined)**: PROJECT_CONTEXT
+- **Project (.istm-context/agents.md, inlined)**: PROJECT_CONTEXT
 - **Recent spec paths (the "why", read only if you need the rationale)**: SPEC_PATHS
 - **Today**: DATE
 
@@ -34,8 +34,8 @@ TEMPLATE_CONTENT
 - **Target**: OUTPUT_TARGET
   - `pr` → return the title and body as text (always). Then, per **GH_ACTION**: `none` = chat-only, do not touch gh; `gh pr create` = create the PR with this body; `gh pr edit` = update the existing PR's body. Never run a gh command other than the one in GH_ACTION.
   - `changelog` → **Edit** `CHANGELOG.md`. If the file exists, **match its existing format and section style** (per CHANGELOG_FORMAT_NOTE), do not impose a different convention. Only if it does not exist, create it with a Keep a Changelog header. Add the entry under the current unreleased/top section.
-  - `release-note` → **Write** `docs/releases/<version>.md` (create the directory if missing).
-  - `postmortem` → **Write** `docs/postmortems/<DATE>-<slug>.md` (create the directory if missing).
+  - `release-note` → **Write** `.istm-context/releases/<version>.md` (create the directory if missing).
+  - `postmortem` → **Write** `.istm-context/postmortems/<DATE>-<slug>.md` (create the directory if missing).
 - **GH_ACTION** (pr only): GH_ACTION
 - **CHANGELOG_FORMAT_NOTE** (changelog only): CHANGELOG_FORMAT_NOTE
 

@@ -10,7 +10,7 @@ Your role: the senior reviewer with fresh eyes, the one who didn't write the cod
 - Read only on code: produces findings, never edits the code under review.
 - Want a different provider? For the most independent review, switch your active model (`/model`, or your other AI tool) and run the review there; a recommendation, not machinery. The skill never sends your code anywhere itself.
 
-Owns review findings (`docs/reviews/`). Does not write code, tests, specs, or the `AGENTS.md`/`CLAUDE.md` context files.
+Owns review findings (`.istm-context/reviews/`). Does not write code, tests, specs, or the `.istm-context/agents.md`/`CLAUDE.md` context files.
 
 ## Asks vs acts
 
@@ -20,7 +20,7 @@ Steering: `/check review` (default contrasting model), `/check review with opus`
 
 ## Artifact ownership
 
-`docs/reviews/<YYYY-MM-DD>-<branch>.md`, created by this skill only. The subagent writes it; the main model relays a summary.
+`.istm-context/reviews/<YYYY-MM-DD>-<branch>.md`, created by this skill only. The subagent writes it; the main model relays a summary.
 
 Artifact base: findings live under `docs/` by default. If `docs/` is a published docs site (`docusaurus.config.*`, `.vitepress/`, `mkdocs.yml`, Astro Starlight, or Nextra detected), use `.workflow/` instead (`.workflow/reviews/`). Always follow whichever base, `docs/` or `.workflow/`, already exists (paths here assume `docs/`).
 
@@ -93,12 +93,12 @@ If the change set is empty: stop and tell the engineer there's nothing to review
 
 ### 3. Gather lightweight pointers (do NOT read heavy files here)
 
-Paths and cheap signals only; the subagent reads on demand. Using your file tools: list the 3 most-recent spec files under `docs/specs/` (paths only), and resolve the test signal, one of three states, not a yes/no:
+Paths and cheap signals only; the subagent reads on demand. Using your file tools: list the 3 most-recent spec files under `.istm-context/specs/` (paths only), and resolve the test signal, one of three states, not a yes/no:
 - `TESTS = configured`: `test-preferences.json` sets `"tool"` to a framework (a runner is set up). Judge test adequacy normally.
-- `TESTS = none-by-design`: `test-preferences.json` has `"tool": null` and a `"gate"` (e.g. `"typecheck+verify"`), or the nearest `AGENTS.md`/governing spec states a "no test runner" convention. Deliberate: the gate is typecheck + `/check verify`, not a suite.
+- `TESTS = none-by-design`: `test-preferences.json` has `"tool": null` and a `"gate"` (e.g. `"typecheck+verify"`), or the nearest `.istm-context/agents.md`/governing spec states a "no test runner" convention. Deliberate: the gate is typecheck + `/check verify`, not a suite.
 - `TESTS = none-yet`: no `test-preferences.json` at all, and no stated convention. A genuine gap.
 
-Pass to the subagent: project-context contents inline (read `AGENTS.md`, canonical, or `CLAUDE.md` as fallback; short), the 3 recent spec paths, the base ref / merge-base, and the diff scope. The subagent reads a governing spec's **build-spec sections only** (`index.md`: Requirements, Decision, the design section, Consequences), the contract to review against; not `rationale.md` (decision history), unless a specific finding hinges on the reasoning. It runs `git diff` itself and reads the changed files and their tests.
+Pass to the subagent: project-context contents inline (read `.istm-context/agents.md`, canonical, or `CLAUDE.md` as fallback; short), the 3 recent spec paths, the base ref / merge-base, and the diff scope. The subagent reads a governing spec's **build-spec sections only** (`index.md`: Requirements, Decision, the design section, Consequences), the contract to review against; not `rationale.md` (decision history), unless a specific finding hinges on the reasoning. It runs `git diff` itself and reads the changed files and their tests.
 
 ### 4. Spawn the review subagent: on the contrasting Claude model
 
@@ -110,10 +110,10 @@ Resolve this skill's folder to an absolute path (you, the main agent, already re
 - `prompt`: the absolute path to `review-agent-prompt.md` (Read it first, then follow it), plus `Placeholder values:`, a labeled list supplying:
   1. `REVIEW_GUIDE`: the absolute path to `review-guide.md` (the subagent reads it as its rubric)
   2. Diff scope: `MODE`, `BASE`, `MERGE_BASE`, and the changed-file list with the exact `git diff` command to run
-  3. Project-context contents (inline), `AGENTS.md` or `CLAUDE.md` fallback, the conventions the review must enforce
+  3. Project-context contents (inline), `.istm-context/agents.md` or `CLAUDE.md` fallback, the conventions the review must enforce
   4. Recent spec paths (read if relevant), or inline the relevant spec text if your client gives subagents no file access
   5. The test signal (`configured` / `none-by-design` / `none-yet`) so it judges test adequacy correctly; never nag for tests on a `none-by-design` project
-  6. Output path for findings: `docs/reviews/<date>-<branch>.md`
+  6. Output path for findings: `.istm-context/reviews/<date>-<branch>.md`
 
 ### 5. Relay the result
 
@@ -124,7 +124,7 @@ If the subagent errored or wrote no findings file, report the failure and offer 
 
 **Reviewed by**: <reviewer-model> (you're on <author-model>)
 **Scope**: <N> files, <branch vs base | uncommitted>
-**Findings file**: `docs/reviews/<date>-<branch>.md`
+**Findings file**: `.istm-context/reviews/<date>-<branch>.md`
 
 **Verdict**: <Approve | Approve with nits | Changes requested | Blocked>
 
@@ -144,7 +144,7 @@ Show all blockers and majors in chat; collapse minors/nits to a count with a poi
 For a high-stakes change (verdict was Blocked or Changes requested, or the change is high/critical severity), append one line:
 > "For an independent second opinion from a different provider, switch your model with `/model` (or paste the diff into another assistant) and re-run /check review, no API keys needed."
 
-**Tick the scope box (closing gate).** If the reviewed feature has a row in `docs/scope/`, tick its `Review it` box (the review ran; the box marks that, not that it passed) and confirm it in the report: "Scope: ticked `Review it`." No matching row → say so ("no scope row matched `<feature>`, tick it manually or enroll it"). This is the only scope edit review makes; it writes no code, tests, or specs.
+**Tick the scope box (closing gate).** If the reviewed feature has a row in `.istm-context/scope/`, tick its `Review it` box (the review ran; the box marks that, not that it passed) and confirm it in the report: "Scope: ticked `Review it`." No matching row → say so ("no scope row matched `<feature>`, tick it manually or enroll it"). This is the only scope edit review makes; it writes no code, tests, or specs.
 
 This skill is complete after relaying. It does not fix the findings (the implementer does that) and does not invoke other skills. If the engineer wants the issues fixed, that's a normal follow-up; /check review's job is the assessment.
 

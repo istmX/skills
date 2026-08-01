@@ -44,7 +44,7 @@ Act on the pick:
 1. Tell the engineer the spec path, a one line preview from your report, and (if a cross check ran) its note:
 
    ```
-   Draft spec written to `docs/specs/<NNNN-title>.md`
+   Draft spec written to `.istm-context/specs/<NNNN-title>.md`
    Decision: <Decision line from report>
    Key tradeoff: <Key tradeoff line from report>
    Cross-check: <one-line verdict + any issue raised · or "you're reviewing it yourself" · or "skipped">
@@ -66,7 +66,7 @@ Act on the pick:
    - **Decision only spec** (ARCHITECTURE stack decision or CROSS-CUTTING standard, no `## Build plan` by rule) → no build tasks to copy. Link the row's `spec` cell (relative path, as below), tick the decision box `[x]`, and leave the execution sub task(s) untouched (e.g. `Scaffold from the decision: /develop …` on the Stack and architecture feature) so `/develop` derives those steps from the decision at build time. Do not write scaffold or implementation steps into the row (the double spec bug this avoids).
    - **A matching scope feature exists (buildable feature spec)** → update the feature to the built ready shape (the scope's main living update, done every time a spec is captured). Make exactly these edits, nothing else:
      1. Tick the decision box `[x]` (located as above) and remove the `· needs a decision` tag from the heading (it is decided now).
-     2. Link the spec on the feature's pointer line, computed as a relative path from the scope file to the spec: from `docs/scope/api/…` to `docs/specs/api/0001-x.md` is `[0001](../../specs/api/0001-x.md)`; to a directory spec (umbrella or single with files), `[0001](../../specs/api/0001-x/index.md)`; single repo `docs/scope/` → `docs/specs/` is `../specs/…`.
+     2. Link the spec on the feature's pointer line, computed as a relative path from the scope file to the spec: from `.istm-context/scope/api/…` to `.istm-context/specs/api/0001-x.md` is `[0001](../../specs/api/0001-x.md)`; to a directory spec (umbrella or single with files), `[0001](../../specs/api/0001-x/index.md)`; single repo `.istm-context/scope/` → `.istm-context/specs/` is `../specs/…`.
      3. Define the build milestones, a rollup, never the atomic dump: add a `- [ ] Build it: /develop <feature>` box, and under it 2 to 5 milestone sub items rolled up from the spec's `## Build plan` by grouping its atomic tasks into coherent chunks (by AC cluster or by layer), each tagged with the ACs it covers. The atomic tasks and per task detail stay in the spec's `## Build plan`. The 2-to 5 is a guideline you reason about, not a rule: if it won't fit in about five milestones the feature is too big and should be split. Never a fixed milestone list; derive them from THIS spec's Build plan.
      4. Add the closing boxes after Build, per the feature's workflow tier (so every box the feature will run has an owner): `- [ ] Verify it: /check verify <feature>` (Lean and up) and `- [ ] Test it: /test <feature>` (Medium and up); for a `Full` tier feature also `- [ ] Review it (fresh model): /check review <feature>` and `- [ ] Document it: /document <feature>`. A `Vibe` feature needs none of these (it closes at `/develop`). Match the boxes to the tier; don't add a box no stage will run.
      5. Move the feature's status to `in-progress` (designing is progress) in the At a glance table and beside the heading.

@@ -2,7 +2,7 @@
 name: check
 allowed-tools: Bash, Read, Grep, Glob, Write, Agent
 argument-hint: [verify | review]
-description: "Run /check before merge to confirm a change is sound. Two modes: `/check verify` drives the real app and proves behavior against the spec (every acceptance criterion met, every specced surface built); `/check review` runs a senior code review on a different model than wrote the code. Verify after /develop, review before a PR. Writes findings to docs/reviews/; never edits your code."
+description: "Run /check before merge to confirm a change is sound. Two modes: `/check verify` drives the real app and proves behavior against the spec (every acceptance criterion met, every specced surface built); `/check review` runs a senior code review on a different model than wrote the code. Verify after /develop, review before a PR. Writes findings to .istm-context/reviews/; never edits your code."
 ---
 
 ## Output style (plain words, no dashes, no hyphens)
@@ -16,7 +16,7 @@ Write everything this skill produces, files and messages alike, in plain simple 
 `/check` is the gate before merge. It confirms a change is sound in two different ways, run as two modes; they are separate jobs and you usually run both, verify first:
 
 - **`verify`** (runtime proof): run the real app and watch the change behave. Proves the feature actually works and conforms to the spec (every acceptance criterion met, every specced surface built), which green tests never reveal. Read only on code, owns no durable files. Runs on the main thread. Typically after `/develop`.
-- **`review`** (fresh model code review): a rigorous senior read of the diff, on a **different model than wrote the code**, because a model reviewing its own output shares its blind spots. Writes findings ranked by severity to `docs/reviews/`. Read only on code. Typically before opening a PR.
+- **`review`** (fresh model code review): a rigorous senior read of the diff, on a **different model than wrote the code**, because a model reviewing its own output shares its blind spots. Writes findings ranked by severity to `.istm-context/reviews/`. Read only on code. Typically before opening a PR.
 
 Neither mode edits your code. `verify` points failures at `/debug` or `/develop`; `review` reports findings for the implementer to fix.
 

@@ -1,7 +1,7 @@
 ---
 name: scope
 allowed-tools: Bash, Read, Grep, Glob, Write, Edit, Agent, AskUserQuestion
-description: "Run /scope to turn a product idea into a living, coarse scope in docs/scope/ and keep it current: plan a new product, plan the next slice, enroll one named feature, or run with no argument to reconcile after shipping and queue what is next. Seeds WHAT to build; /architect designs, /develop builds."
+description: "Run /scope to turn a product idea into a living, coarse scope in .istm-context/scope/ and keep it current: plan a new product, plan the next slice, enroll one named feature, or run with no argument to reconcile after shipping and queue what is next. Seeds WHAT to build; /architect designs, /develop builds."
 ---
 
 ## Output style (plain words, no dashes, no hyphens)
@@ -35,11 +35,11 @@ Every choice is an options panel, never a neutral menu: 2 to 4 concrete options 
 
 ## Artifact ownership
 
-`docs/scope/` is the feature scope, owned by this skill; `/architect` owns `docs/specs/`. Other skills find a feature by scanning `docs/scope/` for its row. Living document: `plan`, `replan`, `add` all edit in place (reconcile and append, never a new dated file). Writes nothing else: no specs, code, or `AGENTS.md`. `docs/scope/` holds scope files only; inventories, analyses, research docs live with the spec in its `rationale.md` (owned by `/architect`).
+`.istm-context/scope/` is the feature scope, owned by this skill; `/architect` owns `.istm-context/specs/`. Other skills find a feature by scanning `.istm-context/scope/` for its row. Living document: `plan`, `replan`, `add` all edit in place (reconcile and append, never a new dated file). Writes nothing else: no specs, code, or `.istm-context/agents.md`. `.istm-context/scope/` holds scope files only; inventories, analyses, research docs live with the spec in its `rationale.md` (owned by `/architect`).
 
 File shape:
-- Small product: one file, `docs/scope/scope.md` (At a glance table + phase grouped sections + legend).
-- Large product: epic split: `docs/scope/index.md` (At a glance table across epics + one line status rollup per epic, each linking its epic file) + one file per epic named by area (`docs/scope/auth.md`, …).
+- Small product: one file, `.istm-context/scope/scope.md` (At a glance table + phase grouped sections + legend).
+- Large product: epic split: `.istm-context/scope/index.md` (At a glance table across epics + one line status rollup per epic, each linking its epic file) + one file per epic named by area (`.istm-context/scope/auth.md`, …).
 - Promote on demand: start single file; when `scope.md` outgrows a comfortable scan (roughly a dozen plus features across clearly distinct areas), rename to `index.md` (keep table + per epic rollup), move each area's sections into its own `<epic>.md`. Never split it early. Names semantic (`scope.md` / `index.md` / `<epic>.md`), never numbered.
 - Keep every file coarse and small; a long epic file needs finer features and tighter intent, not a build task dump.
 
@@ -56,7 +56,7 @@ Workflow tier (one rigor dial per feature, `Vibe` · `Lean` · `Medium` · `Full
 
 `/scope` recommends the project default from the risk and size of the feature mix (Step 5b), the same signals `/architect` and `/develop` read; `/develop` reads the effective tier (feature override, else project default, else inferred) to scale the next steps it recommends, so a `Vibe` project is not told to run verify and a `Lean` project is not told to run a full review chain. Not a global playbook a feature is slotted into: it is a per project, per feature judgment.
 
-Artifact base: `docs/` by default; if `docs/` is a published docs site (`docusaurus.config.*`, `.vitepress/`, `mkdocs.yml`, Astro Starlight, or Nextra detected), use `.workflow/` (`.workflow/scope/…`). Always follow whichever base already exists (paths here assume `docs/`).
+
 
 Concurrency: shared across sessions and teammates. Read again immediately before writing; surgical edits only (append rows in order, reconcile changed cells, never rewrite the file); flag rather than clobber unexpected state; append with the next free numbers so adders don't collide.
 
@@ -72,7 +72,7 @@ Any Agent Skills client on macOS, Linux, Windows. Detection snippets are POSIX r
 
 ### Step 0: Infer intent & idea check
 
-No subcommand. First check whether a scope exists under `docs/scope/` (or `.workflow/scope/` if that is the artifact base), then infer:
+No subcommand. First check whether a scope exists under `.istm-context/scope/` (or `.workflow/scope/` if that is the artifact base), then infer:
 - Scope exists + no argument (or running again, described as "reconcile / what's next") → replan behavior (`modes/replan.md`).
 - Scope exists + argument names a single feature → add behavior (`modes/add.md`).
 - No scope yet + a product sized idea, or scoping the next slice (including brownfield) → plan behavior, below.
