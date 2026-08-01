@@ -112,23 +112,41 @@ async function main() {
     ? allHarnesses 
     : [response.targetHarness === 'auto' ? autoDetectedHarness : response.targetHarness];
 
-  // Step 1: Global Context Scaffolding (Only do once)
+  /**
+   * ==========================================
+   * STEP 1: Global Context Scaffolding
+   * ==========================================
+   * This step initializes the shared `.istm-context` directory.
+   * It is only performed once, regardless of how many harnesses are targeted.
+   */
   if (response.coreSkill !== 'workflow-only') {
     console.log(chalk.green(`✓ Scaffolding .istm-context/`));
+    
     try { await fs.mkdir(contextDir, { recursive: true }); } catch (err) {}
     try { await fs.cp(path.join(SKILLS_ROOT, response.coreSkill), path.join(contextDir, response.coreSkill), { recursive: true }); } catch(e) {}
     try { await fs.writeFile(path.join(contextDir, 'agents.md'), `# @istmx/skills Runtime Memory\n\nThis file will be hydrated by the master orchestrator.`); } catch (err) {}
     
-    // Copy dependencies into context
+    /** 
+     * Inject physical dependencies (like UI tokens or DB schemas) 
+     * into the global context so the AI can read them.
+     */
     const deps = DEPENDENCY_MAP[response.coreSkill] || [];
+    
     for (const dep of deps) {
       try { await fs.cp(path.join(SKILLS_ROOT, dep), path.join(contextDir, dep), { recursive: true }); } catch(e) {}
     }
+    
   } else {
     console.log(chalk.dim(`✓ Skipping Core Orchestrator context (Workflow tools only).`));
   }
 
-  // Step 2: Loop through all selected harnesses
+  /**
+   * ==========================================
+   * STEP 2: Harness Injection Loop
+   * ==========================================
+   * Iterates through every requested AI harness (Cursor, Gemini, etc.)
+   * and injects both the root orchestrator rules and autocomplete workflows.
+   */
   for (const harness of harnessesToInstall) {
     console.log(chalk.cyan(`\n⚙ Configuring ${chalk.bold(harness)}...`));
     
@@ -137,15 +155,23 @@ async function main() {
     if (harness === 'GEMINI.md') workflowTarget = path.join(targetDir, '.gemini', 'skills');
     if (harness === '.windsurfrules') workflowTarget = path.join(targetDir, '.windsurf', 'rules');
 
-    // Root Orchestrator
+    /**
+     * Inject Root Orchestrator
+     * Sets the primary system prompt for the IDE.
+     */
     if (response.coreSkill !== 'workflow-only') {
       const skillPath = path.join(SKILLS_ROOT, response.coreSkill, 'SKILL.md');
+      
       try {
         await fs.copyFile(skillPath, path.join(targetDir, harness));
         console.log(chalk.dim(`  - Injected Master Orchestrator`));
         
-        // Also add the master orchestrator to autocomplete tools so they can use it as a slash command
+        /**
+         * Register the master orchestrator as a native autocomplete slash command
+         * so the user can explicitly trigger it via `/istm` or `/istm-architecture`.
+         */
         await fs.mkdir(workflowTarget, { recursive: true });
+        
         if (harness === '.cursorrules') {
           await fs.copyFile(skillPath, path.join(workflowTarget, `${response.coreSkill}.mdc`));
         } else {
@@ -155,10 +181,15 @@ async function main() {
       } catch (err) {}
     }
     
-    // Workflow Target Dependencies (Autocomplete rules)
+    /**
+     * Inject Autocomplete Dependencies
+     * Drops related tools (like `/istm-design`) directly into the IDE's slash menu.
+     */
     const deps = DEPENDENCY_MAP[response.coreSkill] || [];
+    
     if (deps.length > 0) {
       let injectedDeps = false;
+      
       for (const dep of deps) {
         try {
           await fs.mkdir(workflowTarget, { recursive: true });
@@ -170,15 +201,22 @@ async function main() {
           injectedDeps = true;
         } catch (err) {}
       }
+      
       if (injectedDeps) console.log(chalk.dim(`  - Injected dependencies into autocomplete rules`));
     }
 
-    // Workflow Tools (Autocomplete rules)
+    /**
+     * Inject Workflow Tools
+     * Installs day-to-day tools (`/istm-craft`, `/istm-debug`, etc.) into the slash menu.
+     */
     const workflowSource = path.join(SKILLS_ROOT, 'istm-workflow');
+    
     try {
       if (harness === '.cursorrules') {
         await fs.mkdir(workflowTarget, { recursive: true });
+        
         const dirs = await fs.readdir(workflowSource, { withFileTypes: true });
+        
         for (const dirent of dirs) {
           if (dirent.isDirectory()) {
             try { await fs.copyFile(path.join(workflowSource, dirent.name, 'SKILL.md'), path.join(workflowTarget, `${dirent.name}.mdc`)); } catch (e) {}
@@ -187,6 +225,7 @@ async function main() {
       } else {
         await fs.cp(workflowSource, workflowTarget, { recursive: true });
       }
+      
       console.log(chalk.dim(`  - Bundled workflow commands into autocomplete rules`));
     } catch (err) {}
   }
