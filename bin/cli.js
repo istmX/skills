@@ -35,7 +35,7 @@ async function main() {
   console.log(chalk.dim('   The master context orchestrator for AI coding agents.\n'));
 
   const cwd = process.cwd();
-  let autoDetectedHarness = '.cursorrules';
+  let autoDetectedHarness = null;
   
   if (process.env.TERM_PROGRAM === 'cursor') autoDetectedHarness = '.cursorrules';
   if (process.env.TERM_PROGRAM === 'Windsurf') autoDetectedHarness = '.windsurfrules';
@@ -49,22 +49,27 @@ async function main() {
     if (files.includes('.cline')) autoDetectedHarness = '.clinerules';
   } catch (err) {}
 
+  const harnessChoices = [];
+  if (autoDetectedHarness) {
+    harnessChoices.push({ title: `Auto-Detect (${autoDetectedHarness})`, value: 'auto' });
+  }
+  harnessChoices.push(
+    { title: 'Cursor', description: '.cursorrules', value: '.cursorrules' },
+    { title: 'Windsurf', description: '.windsurfrules', value: '.windsurfrules' },
+    { title: 'Claude Code', description: 'CLAUDE.md', value: 'CLAUDE.md' },
+    { title: 'Gemini Antigravity CLI', description: 'GEMINI.md', value: 'GEMINI.md' },
+    { title: 'Roo Code / Cline', description: '.clinerules', value: '.clinerules' },
+    { title: 'GitHub Copilot', description: 'copilot-instructions.md', value: '.github/copilot-instructions.md' },
+    { title: 'OpenAI Codex', description: 'CODEX.md', value: 'CODEX.md' },
+    { title: 'Opencode', description: 'OPENCODE.md', value: 'OPENCODE.md' }
+  );
+
   const response = await prompts([
     {
       type: 'select',
       name: 'targetHarness',
       message: 'Which AI Agent Harness are you targeting?',
-      choices: [
-        { title: `Auto-Detect (${autoDetectedHarness})`, value: 'auto' },
-        { title: 'Cursor', description: '.cursorrules', value: '.cursorrules' },
-        { title: 'Windsurf', description: '.windsurfrules', value: '.windsurfrules' },
-        { title: 'Claude Code', description: 'CLAUDE.md', value: 'CLAUDE.md' },
-        { title: 'Gemini Antigravity CLI', description: 'GEMINI.md', value: 'GEMINI.md' },
-        { title: 'Roo Code / Cline', description: '.clinerules', value: '.clinerules' },
-        { title: 'GitHub Copilot', description: 'copilot-instructions.md', value: '.github/copilot-instructions.md' },
-        { title: 'OpenAI Codex', description: 'CODEX.md', value: 'CODEX.md' },
-        { title: 'Opencode', description: 'OPENCODE.md', value: 'OPENCODE.md' }
-      ]
+      choices: harnessChoices
     },
     {
       type: 'select',
@@ -128,8 +133,9 @@ async function main() {
   const deps = DEPENDENCY_MAP[response.coreSkill] || [];
   if (deps.length > 0) {
     console.log(chalk.green(`✓ Resolving skill dependencies...`));
+    console.log(chalk.dim(`  (Your chosen architecture relies on these modular skills to function)`));
     for (const dep of deps) {
-      console.log(chalk.dim(`  - Injecting dependency: ${dep}`));
+      console.log(chalk.dim(`  - Auto-installing dependency: ${dep}`));
       // Copy to native workflow target for autocomplete
       try {
         await fs.mkdir(workflowTarget, { recursive: true });
