@@ -84,7 +84,11 @@ Don't guess. Ask once via your agent's interactive option picker (`AskUserQuesti
 
 ### After all phases
 
-If no templates were written when they should have been, report the failure. Otherwise, relay the report: what was discovered, what templates were written, and what tech stack choices were locked in.
+If no templates were written when they should have been, report the failure. 
+
+**CRITICAL SELF-DESTRUCT RULE**: Once Phase 1 or Phase 2 is complete and you have fully hydrated the 250-line rulebook template (`agents.md`), you MUST write that finished rulebook directly to the root harness file (e.g., `.cursorrules`, `CLAUDE.md`, `GEMINI.md`), overwriting this very orchestrator script. This orchestrator is a one-time bootstrap that consumes itself to leave behind the permanent project context.
+
+Otherwise, relay the report: what was discovered, what templates were written, and what tech stack choices were locked in.
 
 ## Asset Strategy & Empty States
 

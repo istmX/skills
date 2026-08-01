@@ -24,14 +24,22 @@ async function main() {
   console.log(logo);
   console.log(chalk.dim('   The master context orchestrator for AI coding agents.\n'));
 
-  // Step 1: Harness Detection (Auto-detect default)
+  // Step 1: Harness Detection (Multi-Tier)
   const cwd = process.cwd();
   let autoDetectedHarness = '.cursorrules';
+  
+  // Tier 1: Check Integrated Terminal
+  if (process.env.TERM_PROGRAM === 'cursor') autoDetectedHarness = '.cursorrules';
+  if (process.env.TERM_PROGRAM === 'Windsurf') autoDetectedHarness = '.windsurfrules';
+  
+  // Tier 2: Check Directory Footprints
   try {
     const files = await fs.readdir(cwd);
     if (files.includes('.gemini')) autoDetectedHarness = 'GEMINI.md';
     if (files.includes('.claude')) autoDetectedHarness = 'CLAUDE.md';
     if (files.includes('.windsurf')) autoDetectedHarness = '.windsurfrules';
+    if (files.includes('.cursor')) autoDetectedHarness = '.cursorrules';
+    if (files.includes('.cline')) autoDetectedHarness = '.clinerules';
   } catch (err) {}
 
   // Step 2: The Core Interview
@@ -52,15 +60,7 @@ async function main() {
         { title: 'Opencode', description: 'OPENCODE.md', value: 'OPENCODE.md' }
       ]
     },
-    {
-      type: 'select',
-      name: 'strategy',
-      message: 'How should we initialize the architecture?',
-      choices: [
-        { title: 'Greenfield', description: 'Start fresh from a prompt (Interactive)', value: 'greenfield' },
-        { title: 'Brownfield', description: 'Reverse-engineer the existing codebase', value: 'brownfield' }
-      ]
-    },
+
     {
       type: 'confirm',
       name: 'installWorkflow',
@@ -69,7 +69,7 @@ async function main() {
     }
   ]);
 
-  if (!response.strategy) {
+  if (!response.targetHarness) {
     console.log(chalk.red('Installation cancelled.'));
     process.exit(1);
   }
@@ -80,13 +80,15 @@ async function main() {
   const contextDir = path.join(targetDir, '.istm-context');
   const harness = response.targetHarness === 'auto' ? autoDetectedHarness : response.targetHarness;
   
-  // SKILL.md will be handled by the workflow installer or placed in a skills folder
+  // Step 3: Inject the Orchestrator at the root
+  console.log(chalk.green(`✓ Injecting Master Orchestrator into ${chalk.bold(harness)}`));
   const skillPath = path.join(SKILLS_ROOT, 'istm-architecture', 'SKILL.md');
-  const targetSkillDir = path.join(targetDir, '.istm-workflow', 'istm-architecture');
+  const targetHarnessPath = path.join(targetDir, harness);
   try {
-    await fs.mkdir(targetSkillDir, { recursive: true });
-    await fs.copyFile(skillPath, path.join(targetSkillDir, 'SKILL.md'));
-  } catch (err) {}
+    await fs.copyFile(skillPath, targetHarnessPath);
+  } catch (err) {
+    console.log(chalk.yellow(`  ⚠ Could not copy SKILL.md. Ensure it exists in the package.`));
+  }
 
   // Step 4: Inject the Pillars (Pure Installer Mode)
   console.log(chalk.green(`✓ Scaffolding .istm-context/`));
@@ -95,7 +97,7 @@ async function main() {
   } catch (err) {}
 
   const templatesDir = path.join(SKILLS_ROOT, 'istm-architecture', 'templates');
-  const pillars = ['project-overview.md', 'architecture.md', 'design.md']; // agents.md handled separately
+  const pillars = ['project-overview.md', 'architecture.md', 'design.md', 'agents.md']; 
 
   for (const pillar of pillars) {
     console.log(chalk.dim(`  - Dropping ${pillar}`));
@@ -106,15 +108,6 @@ async function main() {
     } catch (err) {
       console.log(chalk.red(`  ✗ Failed to drop ${pillar}: ${err.message}`));
     }
-  }
-
-  // Handle agents.md renaming
-  console.log(chalk.green(`✓ Linking context rules to ${chalk.bold(harness)}`));
-  try {
-    const agentsTemplate = await fs.readFile(path.join(templatesDir, 'agents.md'), 'utf-8');
-    await fs.writeFile(path.join(targetDir, harness), agentsTemplate);
-  } catch (err) {
-    console.log(chalk.red(`  ✗ Failed to generate ${harness}: ${err.message}`));
   }
 
   // Step 5: Workflow Injection
@@ -132,8 +125,8 @@ async function main() {
 
   console.log(chalk.bold.magenta('\n✨ Initialization Complete!'));
   console.log(`Your AI is now operating under the ${chalk.bold('istmX')} architecture.`);
-  console.log(chalk.dim(`Note: We generated ${chalk.bold('.istm-context/agents.md')}. Most agents support this natively.`));
-  console.log(chalk.dim(`If your AI requires a specific name (like AGENTS.md or context.md), you can safely rename it.\n`));
+  console.log(chalk.dim(`Note: We generated the core rules into ${chalk.bold(harness)}.`));
+  console.log(chalk.dim(`You can now use your AI to generate the full context.\n`));
 }
 
 main().catch(err => {
