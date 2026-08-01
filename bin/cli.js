@@ -126,8 +126,25 @@ async function main() {
   if (harness === '.windsurfrules') workflowTarget = path.join(targetDir, '.windsurf', 'rules');
   
   try {
-    // Basic directory copy (Node 16.7+)
-    await fs.cp(workflowSource, workflowTarget, { recursive: true });
+    if (harness === '.cursorrules') {
+      // Flatten into .mdc files for Cursor
+      await fs.mkdir(workflowTarget, { recursive: true });
+      const dirs = await fs.readdir(workflowSource, { withFileTypes: true });
+      for (const dirent of dirs) {
+        if (dirent.isDirectory()) {
+          const skillFile = path.join(workflowSource, dirent.name, 'SKILL.md');
+          const mdcFile = path.join(workflowTarget, `${dirent.name}.mdc`);
+          try {
+            await fs.copyFile(skillFile, mdcFile);
+          } catch (e) {
+            // ignore if SKILL.md doesn't exist
+          }
+        }
+      }
+    } else {
+      // Standard folder copy for Gemini/others
+      await fs.cp(workflowSource, workflowTarget, { recursive: true });
+    }
   } catch (err) {
     console.log(chalk.yellow(`  ⚠ Workflow directory not copied (make sure istm-workflow exists).`));
   }
