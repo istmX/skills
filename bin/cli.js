@@ -69,7 +69,9 @@ async function main() {
         { title: 'Standard SaaS', description: 'istm-architecture', value: 'istm-architecture' },
         { title: 'Premium Awwwards Site', description: 'istm-awwward-designer', value: 'istm-awwward-designer' },
         { title: 'Backend / APIs Only', description: 'istm-system-design', value: 'istm-system-design' },
-        { title: 'UI Tokens Only', description: 'istm-design', value: 'istm-design' }
+        { title: 'UI Tokens Only', description: 'istm-design', value: 'istm-design' },
+        { title: 'Motion & Animation Only', description: 'istm-animate', value: 'istm-animate' },
+        { title: 'Workflow Tools Only', description: 'Just install /istm-craft, /istm-debug, etc.', value: 'workflow-only' }
       ]
     }
   ]);
@@ -86,35 +88,38 @@ async function main() {
   const harness = response.targetHarness === 'auto' ? autoDetectedHarness : response.targetHarness;
   
   // Step 3: Inject the Orchestrator at the root
-  console.log(chalk.green(`✓ Injecting Master Orchestrator into ${chalk.bold(harness)}`));
-  const skillPath = path.join(SKILLS_ROOT, response.coreSkill, 'SKILL.md');
-  const targetHarnessPath = path.join(targetDir, harness);
-  try {
-    await fs.copyFile(skillPath, targetHarnessPath);
-  } catch (err) {
-    console.log(chalk.yellow(`  ⚠ Could not copy SKILL.md. Ensure it exists in the package.`));
-  }
+  if (response.coreSkill !== 'workflow-only') {
+    console.log(chalk.green(`✓ Injecting Master Orchestrator into ${chalk.bold(harness)}`));
+    const skillPath = path.join(SKILLS_ROOT, response.coreSkill, 'SKILL.md');
+    const targetHarnessPath = path.join(targetDir, harness);
+    try {
+      await fs.copyFile(skillPath, targetHarnessPath);
+    } catch (err) {
+      console.log(chalk.yellow(`  ⚠ Could not copy SKILL.md. Ensure it exists in the package.`));
+    }
 
-  // Step 4: Inject the Pillars (Pure Installer Mode)
-  console.log(chalk.green(`✓ Scaffolding .istm-context/`));
-  try {
-    await fs.mkdir(contextDir, { recursive: true });
-  } catch (err) {}
+    // Step 4: Inject the Pillars (Pure Installer Mode)
+    console.log(chalk.green(`✓ Scaffolding .istm-context/`));
+    try {
+      await fs.mkdir(contextDir, { recursive: true });
+    } catch (err) {}
 
-  const agentsPath = path.join(contextDir, 'agents.md');
-  const initialAgentsContent = `# @istmx/skills Runtime Memory\n\nThis file will be hydrated by the master orchestrator during the initial interview.`;
-  try {
-    await fs.writeFile(agentsPath, initialAgentsContent);
-    console.log(chalk.dim(`  - Dropped blank agents.md`));
-  } catch (err) {
-    console.log(chalk.red(`  ✗ Failed to drop agents.md: ${err.message}`));
+    const agentsPath = path.join(contextDir, 'agents.md');
+    const initialAgentsContent = `# @istmx/skills Runtime Memory\n\nThis file will be hydrated by the master orchestrator during the initial interview.`;
+    try {
+      await fs.writeFile(agentsPath, initialAgentsContent);
+      console.log(chalk.dim(`  - Dropped blank agents.md`));
+    } catch (err) {
+      console.log(chalk.red(`  ✗ Failed to drop agents.md: ${err.message}`));
+    }
+  } else {
+    console.log(chalk.dim(`✓ Skipping Core Orchestrator injection (Workflow tools only).`));
   }
 
   // Step 5: Native Workflow Injection (Enables Autocomplete popups)
   console.log(chalk.green(`✓ Bundling workflow commands for native IDE autocomplete (/istm-audit, /istm-debug)`));
   const workflowSource = path.join(SKILLS_ROOT, 'istm-workflow');
-  
-  // Determine native skills folder based on harness
+ 
   let workflowTarget = path.join(targetDir, '.istm-workflow'); // fallback
   if (harness === '.cursorrules') workflowTarget = path.join(targetDir, '.cursor', 'rules');
   if (harness === 'GEMINI.md') workflowTarget = path.join(targetDir, '.gemini', 'skills');
