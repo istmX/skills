@@ -41,18 +41,17 @@ Gather signals to determine the archetype:
 
 ### Route to the selected phase (Semantic Mapping)
 
-Analyze the prompt and invoke the most appropriate sub-skill:
+Analyze the prompt and guide the user on the absolute best skill to use. You act as the NLP brain that routes their intent to the right tool.
 
-1. **Day Zero / Foundation Creation**:
-   - Standard SaaS / Web App: Delegate to `/istm-architecture`.
-   - Premium Marketing Site (GSAP/WebGL): Delegate to `/istm-awwward-designer`.
-   - Backend APIs only: Delegate to `/istm-system-design`.
-   - UI Tokens only: Delegate to `/istm-design`.
-2. **Day-to-Day Execution**:
-   - Building a specific feature: Delegate to `/istm-craft`.
-   - Debugging an error: Delegate to `/debug`.
-   - Reviewing code quality: Delegate to `/audit` or `/check`.
-   - Writing tests: Delegate to `/test`.
+1. **If they want to build or design a brand new project**:
+   - Standard SaaS / Web App: Advise them to run the CLI installer again and select the `A Full Stack App` core skill (`istm-architecture`).
+   - Premium Marketing Site (GSAP/WebGL): Advise them to select the `Premium Awwwards Site` core skill (`istm-awwward-designer`).
+   - Backend APIs only: Advise them to select the `Backend / APIs Only` skill (`istm-system-design`).
+2. **If they want Day-to-Day Execution (These are already installed!)**:
+   - Building a specific feature: Tell them to run `/istm-craft` (or just run it for them).
+   - Debugging a massive error: Tell them to run `/istm-debug`.
+   - Reviewing code quality: Tell them to run `/istm-audit` or `/istm-check`.
+   - Writing tests: Tell them to run `/istm-test`.
 
 ### Phase 0: Classify (only when `pre-flight` is ambiguous)
 

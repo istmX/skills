@@ -10,6 +10,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const SKILLS_ROOT = path.join(__dirname, '..');
 
+const DEPENDENCY_MAP = {
+  'istm': ['istm-architecture', 'istm-awwward-designer', 'istm-animate', 'istm-design', 'istm-system-design'],
+  'istm-architecture': ['istm-design', 'istm-system-design'],
+  'istm-awwward-designer': ['istm-design', 'istm-animate'],
+  'istm-animate': ['istm-design'],
+  'istm-system-design': [],
+  'istm-design': [],
+  'workflow-only': []
+};
+
 async function main() {
   const logo = `
  ${chalk.cyan('██╗')}${chalk.magenta('███████╗')}${chalk.cyan('████████╗')}${chalk.magenta('███╗   ███╗')}
@@ -24,15 +34,12 @@ async function main() {
   console.log(logo);
   console.log(chalk.dim('   The master context orchestrator for AI coding agents.\n'));
 
-  // Step 1: Harness Detection (Multi-Tier)
   const cwd = process.cwd();
-  let autoDetectedHarness = '.cursorrules';
+  let autoDetectedHarness = null;
   
-  // Tier 1: Check Integrated Terminal
   if (process.env.TERM_PROGRAM === 'cursor') autoDetectedHarness = '.cursorrules';
   if (process.env.TERM_PROGRAM === 'Windsurf') autoDetectedHarness = '.windsurfrules';
   
-  // Tier 2: Check Directory Footprints
   try {
     const files = await fs.readdir(cwd);
     if (files.includes('.gemini')) autoDetectedHarness = 'GEMINI.md';
@@ -42,29 +49,47 @@ async function main() {
     if (files.includes('.cline')) autoDetectedHarness = '.clinerules';
   } catch (err) {}
 
-  // Step 2: The Core Interview
+  const harnessChoices = [];
+  if (autoDetectedHarness) {
+    harnessChoices.push({ title: `Auto-Detect (${autoDetectedHarness})`, value: 'auto' });
+  }
+  harnessChoices.push(
+    { title: 'Install for ALL Agents (Universal)', description: 'Generates rules for Cursor, Gemini, Claude, Windsurf, etc.', value: 'all' },
+    { title: 'Cursor', description: '.cursorrules', value: '.cursorrules' },
+    { title: 'Windsurf', description: '.windsurfrules', value: '.windsurfrules' },
+    { title: 'Claude Code', description: 'CLAUDE.md', value: 'CLAUDE.md' },
+    { title: 'Gemini Antigravity CLI', description: 'GEMINI.md', value: 'GEMINI.md' },
+    { title: 'Roo Code / Cline', description: '.clinerules', value: '.clinerules' },
+    { title: 'GitHub Copilot', description: 'copilot-instructions.md', value: '.github/copilot-instructions.md' },
+    { title: 'OpenAI Codex / Opencode', description: 'AGENTS.md', value: 'AGENTS.md' },
+    { title: 'Other AI Agents', description: 'AGENTS.md', value: 'AGENTS.md' }
+  );
+
   const response = await prompts([
     {
       type: 'select',
       name: 'targetHarness',
       message: 'Which AI Agent Harness are you targeting?',
-      choices: [
-        { title: `Auto-Detect (${autoDetectedHarness})`, value: 'auto' },
-        { title: 'Cursor', description: '.cursorrules', value: '.cursorrules' },
-        { title: 'Windsurf', description: '.windsurfrules', value: '.windsurfrules' },
-        { title: 'Claude Code', description: 'CLAUDE.md', value: 'CLAUDE.md' },
-        { title: 'Gemini Antigravity CLI', description: 'GEMINI.md', value: 'GEMINI.md' },
-        { title: 'Roo Code / Cline', description: '.clinerules', value: '.clinerules' },
-        { title: 'GitHub Copilot', description: 'copilot-instructions.md', value: '.github/copilot-instructions.md' },
-        { title: 'OpenAI Codex', description: 'CODEX.md', value: 'CODEX.md' },
-        { title: 'Opencode', description: 'OPENCODE.md', value: 'OPENCODE.md' }
-      ]
+      choices: harnessChoices
     },
-    // Removed interactive prompt for workflow installation - now bundled by default
+    {
+      type: 'select',
+      name: 'coreSkill',
+      message: 'Which Core Architecture Skill do you want to initialize?',
+      choices: [
+        { title: 'All the skills (God Mode)', description: 'istm', value: 'istm' },
+        { title: 'A Full Stack App', description: 'istm-architecture', value: 'istm-architecture' },
+        { title: 'Premium Awwwards Site', description: 'istm-awwward-designer', value: 'istm-awwward-designer' },
+        { title: 'Backend / APIs Only', description: 'istm-system-design', value: 'istm-system-design' },
+        { title: 'UI Tokens Only', description: 'istm-design', value: 'istm-design' },
+        { title: 'Motion & Animation Only', description: 'istm-animate', value: 'istm-animate' },
+        { title: 'Workflow Tools Only', description: 'Just install /istm-craft, /istm-debug, etc.', value: 'workflow-only' }
+      ]
+    }
   ]);
 
-  if (!response.targetHarness) {
-    console.log(chalk.red('Installation cancelled.'));
+  if (!response.targetHarness || !response.coreSkill) {
+    console.log(chalk.red('\nInstallation cancelled by user.'));
     process.exit(1);
   }
 
@@ -72,48 +97,149 @@ async function main() {
 
   const targetDir = cwd;
   const contextDir = path.join(targetDir, '.istm-context');
-  const harness = response.targetHarness === 'auto' ? autoDetectedHarness : response.targetHarness;
   
-  // Step 3: Inject the Orchestrator at the root
-  console.log(chalk.green(`✓ Injecting Master Orchestrator into ${chalk.bold(harness)}`));
-  const skillPath = path.join(SKILLS_ROOT, 'istm', 'SKILL.md');
-  const targetHarnessPath = path.join(targetDir, harness);
-  try {
-    await fs.copyFile(skillPath, targetHarnessPath);
-  } catch (err) {
-    console.log(chalk.yellow(`  ⚠ Could not copy SKILL.md. Ensure it exists in the package.`));
+  const allHarnesses = [
+    '.cursorrules',
+    '.windsurfrules',
+    'CLAUDE.md',
+    'GEMINI.md',
+    '.clinerules',
+    '.github/copilot-instructions.md',
+    'AGENTS.md'
+  ];
+  
+  const harnessesToInstall = response.targetHarness === 'all' 
+    ? allHarnesses 
+    : [response.targetHarness === 'auto' ? autoDetectedHarness : response.targetHarness];
+
+  /**
+   * ==========================================
+   * STEP 1: Global Context Scaffolding
+   * ==========================================
+   * This step initializes the shared `.istm-context` directory.
+   * It is only performed once, regardless of how many harnesses are targeted.
+   */
+  if (response.coreSkill !== 'workflow-only') {
+    console.log(chalk.green(`✓ Scaffolding .istm-context/`));
+    
+    try { await fs.mkdir(contextDir, { recursive: true }); } catch (err) {}
+    try { await fs.cp(path.join(SKILLS_ROOT, response.coreSkill), path.join(contextDir, response.coreSkill), { recursive: true }); } catch(e) {}
+    try { await fs.writeFile(path.join(contextDir, 'agents.md'), `# @istmx/skills Runtime Memory\n\nThis file will be hydrated by the master orchestrator.`); } catch (err) {}
+    
+    /** 
+     * Inject physical dependencies (like UI tokens or DB schemas) 
+     * into the global context so the AI can read them.
+     */
+    const deps = DEPENDENCY_MAP[response.coreSkill] || [];
+    
+    for (const dep of deps) {
+      try { await fs.cp(path.join(SKILLS_ROOT, dep), path.join(contextDir, dep), { recursive: true }); } catch(e) {}
+    }
+    
+  } else {
+    console.log(chalk.dim(`✓ Skipping Core Orchestrator context (Workflow tools only).`));
   }
 
-  // Step 4: Inject the Pillars (Pure Installer Mode)
-  console.log(chalk.green(`✓ Scaffolding .istm-context/`));
-  try {
-    await fs.mkdir(contextDir, { recursive: true });
-  } catch (err) {}
+  /**
+   * ==========================================
+   * STEP 2: Harness Injection Loop
+   * ==========================================
+   * Iterates through every requested AI harness (Cursor, Gemini, etc.)
+   * and injects both the root orchestrator rules and autocomplete workflows.
+   */
+  for (const harness of harnessesToInstall) {
+    console.log(chalk.cyan(`\n⚙ Configuring ${chalk.bold(harness)}...`));
+    
+    let workflowTarget = path.join(targetDir, '.agents', 'skills');
+    if (harness === '.cursorrules') workflowTarget = path.join(targetDir, '.cursor', 'rules');
+    if (harness === 'GEMINI.md') workflowTarget = path.join(targetDir, '.gemini', 'skills');
+    if (harness === '.windsurfrules') workflowTarget = path.join(targetDir, '.windsurf', 'rules');
 
-  const agentsPath = path.join(contextDir, 'agents.md');
-  const initialAgentsContent = `# @istmx/skills Runtime Memory\n\nThis file will be hydrated by the master orchestrator during the initial interview.`;
-  try {
-    await fs.writeFile(agentsPath, initialAgentsContent);
-    console.log(chalk.dim(`  - Dropped blank agents.md`));
-  } catch (err) {
-    console.log(chalk.red(`  ✗ Failed to drop agents.md: ${err.message}`));
-  }
+    /**
+     * Inject Root Orchestrator
+     * Sets the primary system prompt for the IDE.
+     */
+    if (response.coreSkill !== 'workflow-only') {
+      const skillPath = path.join(SKILLS_ROOT, response.coreSkill, 'SKILL.md');
+      
+      try {
+        await fs.copyFile(skillPath, path.join(targetDir, harness));
+        console.log(chalk.dim(`  - Injected Master Orchestrator`));
+        
+        /**
+         * Register the master orchestrator as a native autocomplete slash command
+         * We deliberately rename it to `/istm` so the user always has a consistent God Mode command.
+         */
+        await fs.mkdir(workflowTarget, { recursive: true });
+        
+        // Read the file and replace its name frontmatter to 'name: istm'
+        let skillContent = await fs.readFile(skillPath, 'utf8');
+        skillContent = skillContent.replace(/^name:\s*.*$/m, 'name: istm');
+        
+        if (harness === '.cursorrules') {
+          await fs.writeFile(path.join(workflowTarget, 'istm.mdc'), skillContent);
+        } else {
+          await fs.mkdir(path.join(workflowTarget, 'istm'), { recursive: true });
+          await fs.writeFile(path.join(workflowTarget, 'istm', 'SKILL.md'), skillContent);
+        }
+      } catch (err) {}
+    }
+    
+    /**
+     * Inject Autocomplete Dependencies
+     * Drops related tools (like `/istm-design`) directly into the IDE's slash menu.
+     */
+    const deps = DEPENDENCY_MAP[response.coreSkill] || [];
+    
+    if (deps.length > 0) {
+      let injectedDeps = false;
+      
+      for (const dep of deps) {
+        try {
+          await fs.mkdir(workflowTarget, { recursive: true });
+          if (harness === '.cursorrules') {
+            await fs.copyFile(path.join(SKILLS_ROOT, dep, 'SKILL.md'), path.join(workflowTarget, `${dep}.mdc`));
+          } else {
+            await fs.cp(path.join(SKILLS_ROOT, dep), path.join(workflowTarget, dep), { recursive: true });
+          }
+          injectedDeps = true;
+        } catch (err) {}
+      }
+      
+      if (injectedDeps) console.log(chalk.dim(`  - Injected dependencies into autocomplete rules`));
+    }
 
-  // Step 5: Workflow Injection (Unconditional)
-  console.log(chalk.green(`✓ Bundling workflow commands (/istm-audit, /istm-debug)`));
-  const workflowSource = path.join(SKILLS_ROOT, 'istm-workflow');
-  const workflowTarget = path.join(targetDir, '.istm-workflow');
-  try {
-    await fs.cp(workflowSource, workflowTarget, { recursive: true });
-  } catch (err) {
-    console.log(chalk.yellow(`  ⚠ Workflow directory not copied (make sure istm-workflow exists).`));
+    /**
+     * Inject Workflow Tools
+     * Installs day-to-day tools (`/istm-craft`, `/istm-debug`, etc.) into the slash menu.
+     */
+    const workflowSource = path.join(SKILLS_ROOT, 'istm-workflow');
+    
+    try {
+      if (harness === '.cursorrules') {
+        await fs.mkdir(workflowTarget, { recursive: true });
+        
+        const dirs = await fs.readdir(workflowSource, { withFileTypes: true });
+        
+        for (const dirent of dirs) {
+          if (dirent.isDirectory()) {
+            try { await fs.copyFile(path.join(workflowSource, dirent.name, 'SKILL.md'), path.join(workflowTarget, `${dirent.name}.mdc`)); } catch (e) {}
+          }
+        }
+      } else {
+        await fs.cp(workflowSource, workflowTarget, { recursive: true });
+      }
+      
+
+      console.log(chalk.dim(`  - Bundled workflow commands into autocomplete rules`));
+    } catch (err) {}
   }
 
   console.log(chalk.bold.magenta('\n✨ Initialization Complete!'));
-  console.log(`Your AI is now operating under the ${chalk.bold('istmX')} Universal Router.`);
+  console.log(`Your AI is now operating under the ${chalk.bold('istmX')} Architecture (${response.coreSkill}).`);
   
   console.log('\n' + chalk.bold('You are now in God Mode. Try your first prompt:'));
-  console.log(chalk.cyan('> /istm build me a sleek dashboard\n'));
+  console.log(chalk.cyan(`> /istm build me a sleek dashboard\n`));
   
   console.log(chalk.bold('💡 PRO TIP:') + ' You also just unlocked the istm-workflow skillset!');
   console.log('Whenever you are stuck, use these commands instead of chatting:');
@@ -127,6 +253,5 @@ async function main() {
 
 main().catch(err => {
   console.error(chalk.red('Error during installation:'), err);
-  
   process.exit(1);
 });
