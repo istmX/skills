@@ -132,7 +132,7 @@ async function main() {
   for (const harness of harnessesToInstall) {
     console.log(chalk.cyan(`\n⚙ Configuring ${chalk.bold(harness)}...`));
     
-    let workflowTarget = path.join(targetDir, '.istm-workflow');
+    let workflowTarget = path.join(targetDir, '.agents', 'skills');
     if (harness === '.cursorrules') workflowTarget = path.join(targetDir, '.cursor', 'rules');
     if (harness === 'GEMINI.md') workflowTarget = path.join(targetDir, '.gemini', 'skills');
     if (harness === '.windsurfrules') workflowTarget = path.join(targetDir, '.windsurf', 'rules');
