@@ -1,6 +1,6 @@
 # Spec Template
 
-File path: `docs/specs/NNNN-kebab-case-title.md`
+File path: `.istm-context/specs/NNNN-kebab-case-title.md`
 
 ---
 
@@ -183,7 +183,7 @@ N. <Build task>, satisfies **AC-N**
      later; these links are here for a human to follow. -->
 
 **Project sources** (verifiable, in this repo):
-- <e.g. `AGENTS.md`, the auth convention · spec 0003 · an installed community skill · already on the project's BaaS>
+- <e.g. `.istm-context/agents.md`, the auth convention · spec 0003 · an installed community skill · already on the project's BaaS>
 
 **Practices & standards**:
 - <named practice/principle the decision rests on, e.g. idempotency keys for money ops · strangler pattern · OWASP session guidance>
@@ -244,7 +244,7 @@ The spec's status mirrors its feature's build lifecycle (scope: planned→`Propo
 | `Superseded by [NNNN](NNNN-title.md)` | Replaced by a newer spec |
 
 **Which status behavior applies depends on whether a buildable scope feature links this spec:**
-- **Feature linked spec** (a `docs/scope/` row's `spec` cell points to it) → **feature mirrored**: `Proposed` → `In Progress` → `Accepted`, tracking the feature's build lifecycle (table above). Confirmation ratifies content but does not set `Accepted`; /develop advances it.
+- **Feature linked spec** (a `.istm-context/scope/` row's `spec` cell points to it) → **feature mirrored**: `Proposed` → `In Progress` → `Accepted`, tracking the feature's build lifecycle (table above). Confirmation ratifies content but does not set `Accepted`; /develop advances it.
 - **Standalone decision spec** (a foundational/stack or cross cutting standard with **no linked buildable feature**) → **decision status**: `Proposed` when written, then **`Accepted` once the engineer ratifies it** (on confirmation). There's no build phase to gate on, so it is not feature mirrored.
 - **spec documenting already shipped work** (the "already built" path, or a feature already `existing`) → **born `Accepted`**, it describes reality that already exists.
 
