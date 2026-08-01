@@ -54,6 +54,7 @@ async function main() {
     harnessChoices.push({ title: `Auto-Detect (${autoDetectedHarness})`, value: 'auto' });
   }
   harnessChoices.push(
+    { title: 'Install for ALL Agents (Universal)', description: 'Generates rules for Cursor, Gemini, Claude, Windsurf, etc.', value: 'all' },
     { title: 'Cursor', description: '.cursorrules', value: '.cursorrules' },
     { title: 'Windsurf', description: '.windsurfrules', value: '.windsurfrules' },
     { title: 'Claude Code', description: 'CLAUDE.md', value: 'CLAUDE.md' },
@@ -96,82 +97,90 @@ async function main() {
 
   const targetDir = cwd;
   const contextDir = path.join(targetDir, '.istm-context');
-  const harness = response.targetHarness === 'auto' ? autoDetectedHarness : response.targetHarness;
   
-  let workflowTarget = path.join(targetDir, '.istm-workflow');
-  if (harness === '.cursorrules') workflowTarget = path.join(targetDir, '.cursor', 'rules');
-  if (harness === 'GEMINI.md') workflowTarget = path.join(targetDir, '.gemini', 'skills');
-  if (harness === '.windsurfrules') workflowTarget = path.join(targetDir, '.windsurf', 'rules');
+  const allHarnesses = [
+    '.cursorrules',
+    '.windsurfrules',
+    'CLAUDE.md',
+    'GEMINI.md',
+    '.clinerules',
+    '.github/copilot-instructions.md',
+    'CODEX.md',
+    'OPENCODE.md'
+  ];
+  
+  const harnessesToInstall = response.targetHarness === 'all' 
+    ? allHarnesses 
+    : [response.targetHarness === 'auto' ? autoDetectedHarness : response.targetHarness];
 
-  // Step 1: Root Orchestrator & Context Initialization
+  // Step 1: Global Context Scaffolding (Only do once)
   if (response.coreSkill !== 'workflow-only') {
-    console.log(chalk.green(`✓ Injecting Master Orchestrator into ${chalk.bold(harness)}`));
-    const skillPath = path.join(SKILLS_ROOT, response.coreSkill, 'SKILL.md');
-    try {
-      await fs.copyFile(skillPath, path.join(targetDir, harness));
-    } catch (err) {
-      console.log(chalk.yellow(`  ⚠ Could not copy SKILL.md for ${response.coreSkill}.`));
-    }
-
     console.log(chalk.green(`✓ Scaffolding .istm-context/`));
     try { await fs.mkdir(contextDir, { recursive: true }); } catch (err) {}
+    try { await fs.cp(path.join(SKILLS_ROOT, response.coreSkill), path.join(contextDir, response.coreSkill), { recursive: true }); } catch(e) {}
+    try { await fs.writeFile(path.join(contextDir, 'agents.md'), `# @istmx/skills Runtime Memory\n\nThis file will be hydrated by the master orchestrator.`); } catch (err) {}
     
-    // Copy the root skill's entire folder contents into .istm-context to ensure CSVs and libraries are available
-    try {
-      await fs.cp(path.join(SKILLS_ROOT, response.coreSkill), path.join(contextDir, response.coreSkill), { recursive: true });
-    } catch(e) {}
-
-    const agentsPath = path.join(contextDir, 'agents.md');
-    try {
-      await fs.writeFile(agentsPath, `# @istmx/skills Runtime Memory\n\nThis file will be hydrated by the master orchestrator.`);
-    } catch (err) {}
-  } else {
-    console.log(chalk.dim(`✓ Skipping Core Orchestrator injection (Workflow tools only).`));
-  }
-
-  // Step 2: Inject Dependencies (Architecture/Design/Awwward Skills)
-  const deps = DEPENDENCY_MAP[response.coreSkill] || [];
-  if (deps.length > 0) {
-    console.log(chalk.green(`✓ Resolving skill dependencies...`));
-    console.log(chalk.dim(`  (Your chosen architecture relies on these modular skills to function)`));
+    // Copy dependencies into context
+    const deps = DEPENDENCY_MAP[response.coreSkill] || [];
     for (const dep of deps) {
-      console.log(chalk.dim(`  - Auto-installing dependency: ${dep}`));
-      // Copy to native workflow target for autocomplete
-      try {
-        await fs.mkdir(workflowTarget, { recursive: true });
-        if (harness === '.cursorrules') {
-          await fs.copyFile(path.join(SKILLS_ROOT, dep, 'SKILL.md'), path.join(workflowTarget, `${dep}.mdc`));
-        } else {
-          await fs.cp(path.join(SKILLS_ROOT, dep), path.join(workflowTarget, dep), { recursive: true });
-        }
-      } catch (err) {}
-      
-      // Copy physical files (frameworks, CSVs) into .istm-context
-      try {
-        await fs.cp(path.join(SKILLS_ROOT, dep), path.join(contextDir, dep), { recursive: true });
-      } catch(e) {}
+      try { await fs.cp(path.join(SKILLS_ROOT, dep), path.join(contextDir, dep), { recursive: true }); } catch(e) {}
     }
+  } else {
+    console.log(chalk.dim(`✓ Skipping Core Orchestrator context (Workflow tools only).`));
   }
 
-  // Step 3: Inject Day-to-Day Workflow Tools
-  console.log(chalk.green(`✓ Bundling workflow commands for native IDE autocomplete`));
-  const workflowSource = path.join(SKILLS_ROOT, 'istm-workflow');
-  try {
-    if (harness === '.cursorrules') {
-      await fs.mkdir(workflowTarget, { recursive: true });
-      const dirs = await fs.readdir(workflowSource, { withFileTypes: true });
-      for (const dirent of dirs) {
-        if (dirent.isDirectory()) {
-          try {
-            await fs.copyFile(path.join(workflowSource, dirent.name, 'SKILL.md'), path.join(workflowTarget, `${dirent.name}.mdc`));
-          } catch (e) {}
-        }
-      }
-    } else {
-      await fs.cp(workflowSource, workflowTarget, { recursive: true });
+  // Step 2: Loop through all selected harnesses
+  for (const harness of harnessesToInstall) {
+    console.log(chalk.cyan(`\n⚙ Configuring ${chalk.bold(harness)}...`));
+    
+    let workflowTarget = path.join(targetDir, '.istm-workflow');
+    if (harness === '.cursorrules') workflowTarget = path.join(targetDir, '.cursor', 'rules');
+    if (harness === 'GEMINI.md') workflowTarget = path.join(targetDir, '.gemini', 'skills');
+    if (harness === '.windsurfrules') workflowTarget = path.join(targetDir, '.windsurf', 'rules');
+
+    // Root Orchestrator
+    if (response.coreSkill !== 'workflow-only') {
+      const skillPath = path.join(SKILLS_ROOT, response.coreSkill, 'SKILL.md');
+      try {
+        await fs.copyFile(skillPath, path.join(targetDir, harness));
+        console.log(chalk.dim(`  - Injected Master Orchestrator`));
+      } catch (err) {}
     }
-  } catch (err) {
-    console.log(chalk.yellow(`  ⚠ Workflow directory not copied.`));
+    
+    // Workflow Target Dependencies (Autocomplete rules)
+    const deps = DEPENDENCY_MAP[response.coreSkill] || [];
+    if (deps.length > 0) {
+      let injectedDeps = false;
+      for (const dep of deps) {
+        try {
+          await fs.mkdir(workflowTarget, { recursive: true });
+          if (harness === '.cursorrules') {
+            await fs.copyFile(path.join(SKILLS_ROOT, dep, 'SKILL.md'), path.join(workflowTarget, `${dep}.mdc`));
+          } else {
+            await fs.cp(path.join(SKILLS_ROOT, dep), path.join(workflowTarget, dep), { recursive: true });
+          }
+          injectedDeps = true;
+        } catch (err) {}
+      }
+      if (injectedDeps) console.log(chalk.dim(`  - Injected dependencies into autocomplete rules`));
+    }
+
+    // Workflow Tools (Autocomplete rules)
+    const workflowSource = path.join(SKILLS_ROOT, 'istm-workflow');
+    try {
+      if (harness === '.cursorrules') {
+        await fs.mkdir(workflowTarget, { recursive: true });
+        const dirs = await fs.readdir(workflowSource, { withFileTypes: true });
+        for (const dirent of dirs) {
+          if (dirent.isDirectory()) {
+            try { await fs.copyFile(path.join(workflowSource, dirent.name, 'SKILL.md'), path.join(workflowTarget, `${dirent.name}.mdc`)); } catch (e) {}
+          }
+        }
+      } else {
+        await fs.cp(workflowSource, workflowTarget, { recursive: true });
+      }
+      console.log(chalk.dim(`  - Bundled workflow commands into autocomplete rules`));
+    } catch (err) {}
   }
 
   console.log(chalk.bold.magenta('\n✨ Initialization Complete!'));
