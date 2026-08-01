@@ -60,13 +60,7 @@ async function main() {
         { title: 'Opencode', description: 'OPENCODE.md', value: 'OPENCODE.md' }
       ]
     },
-
-    {
-      type: 'confirm',
-      name: 'installWorkflow',
-      message: 'Install Day-to-Day Workflow Commands (/audit, /debug)?',
-      initial: true
-    }
+    // Removed interactive prompt for workflow installation - now bundled by default
   ]);
 
   if (!response.targetHarness) {
@@ -82,7 +76,7 @@ async function main() {
   
   // Step 3: Inject the Orchestrator at the root
   console.log(chalk.green(`✓ Injecting Master Orchestrator into ${chalk.bold(harness)}`));
-  const skillPath = path.join(SKILLS_ROOT, 'istm-architecture', 'SKILL.md');
+  const skillPath = path.join(SKILLS_ROOT, 'istm', 'SKILL.md');
   const targetHarnessPath = path.join(targetDir, harness);
   try {
     await fs.copyFile(skillPath, targetHarnessPath);
@@ -96,40 +90,43 @@ async function main() {
     await fs.mkdir(contextDir, { recursive: true });
   } catch (err) {}
 
-  const templatesDir = path.join(SKILLS_ROOT, 'istm-architecture', 'templates');
-  const pillars = ['project-overview.md', 'architecture.md', 'design.md', 'agents.md']; 
-
-  for (const pillar of pillars) {
-    console.log(chalk.dim(`  - Dropping ${pillar}`));
-    try {
-      const templatePath = path.join(templatesDir, pillar);
-      const content = await fs.readFile(templatePath, 'utf-8');
-      await fs.writeFile(path.join(contextDir, pillar), content);
-    } catch (err) {
-      console.log(chalk.red(`  ✗ Failed to drop ${pillar}: ${err.message}`));
-    }
+  const agentsPath = path.join(contextDir, 'agents.md');
+  const initialAgentsContent = `# @istmx/skills Runtime Memory\n\nThis file will be hydrated by the master orchestrator during the initial interview.`;
+  try {
+    await fs.writeFile(agentsPath, initialAgentsContent);
+    console.log(chalk.dim(`  - Dropped blank agents.md`));
+  } catch (err) {
+    console.log(chalk.red(`  ✗ Failed to drop agents.md: ${err.message}`));
   }
 
-  // Step 5: Workflow Injection
-  if (response.installWorkflow) {
-    console.log(chalk.green(`✓ Installing workflow commands (/audit, /debug)`));
-    const workflowSource = path.join(SKILLS_ROOT, 'istm-workflow');
-    const workflowTarget = path.join(targetDir, '.istm-workflow');
-    try {
-      // Basic directory copy (Node 16.7+)
-      await fs.cp(workflowSource, workflowTarget, { recursive: true });
-    } catch (err) {
-      console.log(chalk.yellow(`  ⚠ Workflow directory not copied (make sure istm-workflow exists).`));
-    }
+  // Step 5: Workflow Injection (Unconditional)
+  console.log(chalk.green(`✓ Bundling workflow commands (/istm-audit, /istm-debug)`));
+  const workflowSource = path.join(SKILLS_ROOT, 'istm-workflow');
+  const workflowTarget = path.join(targetDir, '.istm-workflow');
+  try {
+    await fs.cp(workflowSource, workflowTarget, { recursive: true });
+  } catch (err) {
+    console.log(chalk.yellow(`  ⚠ Workflow directory not copied (make sure istm-workflow exists).`));
   }
 
   console.log(chalk.bold.magenta('\n✨ Initialization Complete!'));
-  console.log(`Your AI is now operating under the ${chalk.bold('istmX')} architecture.`);
-  console.log(chalk.dim(`Note: We generated the core rules into ${chalk.bold(harness)}.`));
-  console.log(chalk.dim(`You can now use your AI to generate the full context.\n`));
+  console.log(`Your AI is now operating under the ${chalk.bold('istmX')} Universal Router.`);
+  
+  console.log('\n' + chalk.bold('You are now in God Mode. Try your first prompt:'));
+  console.log(chalk.cyan('> /istm build me a sleek dashboard\n'));
+  
+  console.log(chalk.bold('💡 PRO TIP:') + ' You also just unlocked the istm-workflow skillset!');
+  console.log('Whenever you are stuck, use these commands instead of chatting:');
+  console.log('  - ' + chalk.cyan('/istm-craft') + '   (Plan a new feature)');
+  console.log('  - ' + chalk.cyan('/istm-develop') + ' (Write the code)');
+  console.log('  - ' + chalk.cyan('/istm-debug') + '   (Fix a massive error)');
+  console.log('  - ' + chalk.cyan('/istm-audit') + '   (Check for tech debt)');
+  
+  console.log('\n📚 Read the Docs: ' + chalk.dim('https://istmx.github.io/skills\n'));
 }
 
 main().catch(err => {
   console.error(chalk.red('Error during installation:'), err);
+  
   process.exit(1);
 });
