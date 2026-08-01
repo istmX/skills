@@ -28,6 +28,12 @@ Before writing code, you must read:
 - `.istm-context/design.md`: For UI tokens, colors, and typography.
 - `.istm-context/animate.md`: For the required motion physics and easing.
 
+## Awwwards References Library
+
+You have a vast library of technical standards and anti-patterns available. **Before building complex interactions, you MUST read the exact technical documentation located in `skills/istm-awwward-designer/references/`.**
+
+Specifically, use your read tools to check files like `animation-standards.md`, `anti-patterns.md`, `scroll-patterns.md`, and `tech-stack.md` inside that directory to ensure your GSAP logic perfectly meets Awwwards criteria.
+
 ## Absolute Awwwards Execution Rules
 
 1. **Write The Code**: Your primary job is to generate the React components, CSS, and GSAP logic directly into the project folder (e.g., `src/components/`).
