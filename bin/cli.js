@@ -10,6 +10,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const SKILLS_ROOT = path.join(__dirname, '..');
 
+const DEPENDENCY_MAP = {
+  'istm': ['istm-architecture', 'istm-awwward-designer', 'istm-animate', 'istm-design', 'istm-system-design'],
+  'istm-architecture': ['istm-design', 'istm-system-design'],
+  'istm-awwward-designer': ['istm-design', 'istm-animate'],
+  'istm-animate': ['istm-design'],
+  'istm-system-design': [],
+  'istm-design': [],
+  'workflow-only': []
+};
+
 async function main() {
   const logo = `
  ${chalk.cyan('██╗')}${chalk.magenta('███████╗')}${chalk.cyan('████████╗')}${chalk.magenta('███╗   ███╗')}
@@ -24,15 +34,12 @@ async function main() {
   console.log(logo);
   console.log(chalk.dim('   The master context orchestrator for AI coding agents.\n'));
 
-  // Step 1: Harness Detection (Multi-Tier)
   const cwd = process.cwd();
   let autoDetectedHarness = '.cursorrules';
   
-  // Tier 1: Check Integrated Terminal
   if (process.env.TERM_PROGRAM === 'cursor') autoDetectedHarness = '.cursorrules';
   if (process.env.TERM_PROGRAM === 'Windsurf') autoDetectedHarness = '.windsurfrules';
   
-  // Tier 2: Check Directory Footprints
   try {
     const files = await fs.readdir(cwd);
     if (files.includes('.gemini')) autoDetectedHarness = 'GEMINI.md';
@@ -42,7 +49,6 @@ async function main() {
     if (files.includes('.cline')) autoDetectedHarness = '.clinerules';
   } catch (err) {}
 
-  // Step 2: The Core Interview
   const response = await prompts([
     {
       type: 'select',
@@ -87,66 +93,79 @@ async function main() {
   const contextDir = path.join(targetDir, '.istm-context');
   const harness = response.targetHarness === 'auto' ? autoDetectedHarness : response.targetHarness;
   
-  // Step 3: Inject the Orchestrator at the root
+  let workflowTarget = path.join(targetDir, '.istm-workflow');
+  if (harness === '.cursorrules') workflowTarget = path.join(targetDir, '.cursor', 'rules');
+  if (harness === 'GEMINI.md') workflowTarget = path.join(targetDir, '.gemini', 'skills');
+  if (harness === '.windsurfrules') workflowTarget = path.join(targetDir, '.windsurf', 'rules');
+
+  // Step 1: Root Orchestrator & Context Initialization
   if (response.coreSkill !== 'workflow-only') {
     console.log(chalk.green(`✓ Injecting Master Orchestrator into ${chalk.bold(harness)}`));
     const skillPath = path.join(SKILLS_ROOT, response.coreSkill, 'SKILL.md');
-    const targetHarnessPath = path.join(targetDir, harness);
     try {
-      await fs.copyFile(skillPath, targetHarnessPath);
+      await fs.copyFile(skillPath, path.join(targetDir, harness));
     } catch (err) {
-      console.log(chalk.yellow(`  ⚠ Could not copy SKILL.md. Ensure it exists in the package.`));
+      console.log(chalk.yellow(`  ⚠ Could not copy SKILL.md for ${response.coreSkill}.`));
     }
 
-    // Step 4: Inject the Pillars (Pure Installer Mode)
     console.log(chalk.green(`✓ Scaffolding .istm-context/`));
+    try { await fs.mkdir(contextDir, { recursive: true }); } catch (err) {}
+    
+    // Copy the root skill's entire folder contents into .istm-context to ensure CSVs and libraries are available
     try {
-      await fs.mkdir(contextDir, { recursive: true });
-    } catch (err) {}
+      await fs.cp(path.join(SKILLS_ROOT, response.coreSkill), path.join(contextDir, response.coreSkill), { recursive: true });
+    } catch(e) {}
 
     const agentsPath = path.join(contextDir, 'agents.md');
-    const initialAgentsContent = `# @istmx/skills Runtime Memory\n\nThis file will be hydrated by the master orchestrator during the initial interview.`;
     try {
-      await fs.writeFile(agentsPath, initialAgentsContent);
-      console.log(chalk.dim(`  - Dropped blank agents.md`));
-    } catch (err) {
-      console.log(chalk.red(`  ✗ Failed to drop agents.md: ${err.message}`));
-    }
+      await fs.writeFile(agentsPath, `# @istmx/skills Runtime Memory\n\nThis file will be hydrated by the master orchestrator.`);
+    } catch (err) {}
   } else {
     console.log(chalk.dim(`✓ Skipping Core Orchestrator injection (Workflow tools only).`));
   }
 
-  // Step 5: Native Workflow Injection (Enables Autocomplete popups)
-  console.log(chalk.green(`✓ Bundling workflow commands for native IDE autocomplete (/istm-audit, /istm-debug)`));
+  // Step 2: Inject Dependencies (Architecture/Design/Awwward Skills)
+  const deps = DEPENDENCY_MAP[response.coreSkill] || [];
+  if (deps.length > 0) {
+    console.log(chalk.green(`✓ Resolving skill dependencies...`));
+    for (const dep of deps) {
+      console.log(chalk.dim(`  - Injecting dependency: ${dep}`));
+      // Copy to native workflow target for autocomplete
+      try {
+        await fs.mkdir(workflowTarget, { recursive: true });
+        if (harness === '.cursorrules') {
+          await fs.copyFile(path.join(SKILLS_ROOT, dep, 'SKILL.md'), path.join(workflowTarget, `${dep}.mdc`));
+        } else {
+          await fs.cp(path.join(SKILLS_ROOT, dep), path.join(workflowTarget, dep), { recursive: true });
+        }
+      } catch (err) {}
+      
+      // Copy physical files (frameworks, CSVs) into .istm-context
+      try {
+        await fs.cp(path.join(SKILLS_ROOT, dep), path.join(contextDir, dep), { recursive: true });
+      } catch(e) {}
+    }
+  }
+
+  // Step 3: Inject Day-to-Day Workflow Tools
+  console.log(chalk.green(`✓ Bundling workflow commands for native IDE autocomplete`));
   const workflowSource = path.join(SKILLS_ROOT, 'istm-workflow');
- 
-  let workflowTarget = path.join(targetDir, '.istm-workflow'); // fallback
-  if (harness === '.cursorrules') workflowTarget = path.join(targetDir, '.cursor', 'rules');
-  if (harness === 'GEMINI.md') workflowTarget = path.join(targetDir, '.gemini', 'skills');
-  if (harness === '.windsurfrules') workflowTarget = path.join(targetDir, '.windsurf', 'rules');
-  
   try {
     if (harness === '.cursorrules') {
-      // Flatten into .mdc files for Cursor
       await fs.mkdir(workflowTarget, { recursive: true });
       const dirs = await fs.readdir(workflowSource, { withFileTypes: true });
       for (const dirent of dirs) {
         if (dirent.isDirectory()) {
-          const skillFile = path.join(workflowSource, dirent.name, 'SKILL.md');
-          const mdcFile = path.join(workflowTarget, `${dirent.name}.mdc`);
           try {
-            await fs.copyFile(skillFile, mdcFile);
-          } catch (e) {
-            // ignore if SKILL.md doesn't exist
-          }
+            await fs.copyFile(path.join(workflowSource, dirent.name, 'SKILL.md'), path.join(workflowTarget, `${dirent.name}.mdc`));
+          } catch (e) {}
         }
       }
     } else {
-      // Standard folder copy for Gemini/others
       await fs.cp(workflowSource, workflowTarget, { recursive: true });
     }
   } catch (err) {
-    console.log(chalk.yellow(`  ⚠ Workflow directory not copied (make sure istm-workflow exists).`));
+    console.log(chalk.yellow(`  ⚠ Workflow directory not copied.`));
   }
 
   console.log(chalk.bold.magenta('\n✨ Initialization Complete!'));
