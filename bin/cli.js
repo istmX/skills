@@ -60,7 +60,18 @@ async function main() {
         { title: 'Opencode', description: 'OPENCODE.md', value: 'OPENCODE.md' }
       ]
     },
-    // Removed interactive prompt for workflow installation - now bundled by default
+    {
+      type: 'select',
+      name: 'coreSkill',
+      message: 'Which Core Architecture Skill do you want to initialize?',
+      choices: [
+        { title: 'Universal Router (God Mode)', description: 'istm', value: 'istm' },
+        { title: 'Standard SaaS', description: 'istm-architecture', value: 'istm-architecture' },
+        { title: 'Premium Awwwards Site', description: 'istm-awwward-designer', value: 'istm-awwward-designer' },
+        { title: 'Backend / APIs Only', description: 'istm-system-design', value: 'istm-system-design' },
+        { title: 'UI Tokens Only', description: 'istm-design', value: 'istm-design' }
+      ]
+    }
   ]);
 
   if (!response.targetHarness) {
@@ -76,7 +87,7 @@ async function main() {
   
   // Step 3: Inject the Orchestrator at the root
   console.log(chalk.green(`✓ Injecting Master Orchestrator into ${chalk.bold(harness)}`));
-  const skillPath = path.join(SKILLS_ROOT, 'istm', 'SKILL.md');
+  const skillPath = path.join(SKILLS_ROOT, response.coreSkill, 'SKILL.md');
   const targetHarnessPath = path.join(targetDir, harness);
   try {
     await fs.copyFile(skillPath, targetHarnessPath);
@@ -99,18 +110,25 @@ async function main() {
     console.log(chalk.red(`  ✗ Failed to drop agents.md: ${err.message}`));
   }
 
-  // Step 5: Workflow Injection (Unconditional)
-  console.log(chalk.green(`✓ Bundling workflow commands (/istm-audit, /istm-debug)`));
+  // Step 5: Native Workflow Injection (Enables Autocomplete popups)
+  console.log(chalk.green(`✓ Bundling workflow commands for native IDE autocomplete (/istm-audit, /istm-debug)`));
   const workflowSource = path.join(SKILLS_ROOT, 'istm-workflow');
-  const workflowTarget = path.join(targetDir, '.istm-workflow');
+  
+  // Determine native skills folder based on harness
+  let workflowTarget = path.join(targetDir, '.istm-workflow'); // fallback
+  if (harness === '.cursorrules') workflowTarget = path.join(targetDir, '.cursor', 'rules');
+  if (harness === 'GEMINI.md') workflowTarget = path.join(targetDir, '.gemini', 'skills');
+  if (harness === '.windsurfrules') workflowTarget = path.join(targetDir, '.windsurf', 'rules');
+  
   try {
+    // Basic directory copy (Node 16.7+)
     await fs.cp(workflowSource, workflowTarget, { recursive: true });
   } catch (err) {
     console.log(chalk.yellow(`  ⚠ Workflow directory not copied (make sure istm-workflow exists).`));
   }
 
   console.log(chalk.bold.magenta('\n✨ Initialization Complete!'));
-  console.log(`Your AI is now operating under the ${chalk.bold('istmX')} Universal Router.`);
+  console.log(`Your AI is now operating under the ${chalk.bold('istmX')} Architecture (${response.coreSkill}).`);
   
   console.log('\n' + chalk.bold('You are now in God Mode. Try your first prompt:'));
   console.log(chalk.cyan('> /istm build me a sleek dashboard\n'));
@@ -127,6 +145,5 @@ async function main() {
 
 main().catch(err => {
   console.error(chalk.red('Error during installation:'), err);
-  
   process.exit(1);
 });
