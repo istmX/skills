@@ -20,11 +20,17 @@ The master visual token engine: compiles the design system, enforces typography 
 
 Does not build system architecture (/istm-architecture owns that), wire complex databases (/istm-system-design owns that), or build heavy marketing animations (/istm-animate and /istm-awwward-designer own that).
 
+**CRITICAL RULE: NEVER WRITE APPLICATION CODE (HTML/CSS/JS/React).** You are an architect. You ONLY write the blueprint file (`.istm-context/design.md`). If the user asks you to build a page, you must refuse, write the blueprint instead, and instruct the user to run `/develop` to build the code.
+
+
 ## Blueprint file convention
 
 Durable design context lives in the `.istm-context/` directory. This skill specifically owns the hydration and enforcement of:
 
 - `design.md`: The UX strategy, standard motion logic, and strict UI token dictionary.
+
+**GOLD STANDARD REFERENCE:** When creating a new `design.md`, you MUST read and use the workspace root `/workspaces/laughing-giggle/DESIGN.md` as your structural template. Your output must match its level of detail: including comprehensive YAML frontmatter (colors, typography scaling, rounded corners, spacing, components) followed by deep, philosophical markdown explaining the rules. Do not output a shallow file. Read the root `DESIGN.md` first to understand the required depth.
+
 
 Never overwrite an existing `design.md` without permission; gap-fill conservatively and respect established brand guidelines.
 
