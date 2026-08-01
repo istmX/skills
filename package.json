@@ -1,6 +1,6 @@
 {
   "name": "@istmx/skills",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Context-as-a-Service (CaaS) for AI Coding Agents. Elite orchestrators for Cursor, Windsurf, Claude Code, and Gemini. Build Awwwards-winning UI, full-stack Next.js architecture, and strictly typed APIs with zero hallucinations.",
   "type": "module",
   "bin": "bin/cli.js",
