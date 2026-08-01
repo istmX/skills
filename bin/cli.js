@@ -143,6 +143,15 @@ async function main() {
       try {
         await fs.copyFile(skillPath, path.join(targetDir, harness));
         console.log(chalk.dim(`  - Injected Master Orchestrator`));
+        
+        // Also add the master orchestrator to autocomplete tools so they can use it as a slash command
+        await fs.mkdir(workflowTarget, { recursive: true });
+        if (harness === '.cursorrules') {
+          await fs.copyFile(skillPath, path.join(workflowTarget, `${response.coreSkill}.mdc`));
+        } else {
+          await fs.mkdir(path.join(workflowTarget, response.coreSkill), { recursive: true });
+          await fs.copyFile(skillPath, path.join(workflowTarget, response.coreSkill, 'SKILL.md'));
+        }
       } catch (err) {}
     }
     
