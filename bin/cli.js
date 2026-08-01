@@ -210,18 +210,18 @@ async function main() {
     const workflowSource = path.join(SKILLS_ROOT, 'istm-workflow');
     
     try {
-      if (harness === '.cursorrules') {
-        await fs.mkdir(workflowTarget, { recursive: true });
-        
-        const dirs = await fs.readdir(workflowSource, { withFileTypes: true });
-        
-        for (const dirent of dirs) {
-          if (dirent.isDirectory()) {
-            try { await fs.copyFile(path.join(workflowSource, dirent.name, 'SKILL.md'), path.join(workflowTarget, `${dirent.name}.mdc`)); } catch (e) {}
+      await fs.mkdir(workflowTarget, { recursive: true });
+      const dirs = await fs.readdir(workflowSource, { withFileTypes: true });
+      
+      for (const dirent of dirs) {
+        if (dirent.isDirectory()) {
+          const sourceDir = path.join(workflowSource, dirent.name);
+          if (harness === '.cursorrules') {
+            try { await fs.copyFile(path.join(sourceDir, 'SKILL.md'), path.join(workflowTarget, `${dirent.name}.mdc`)); } catch (e) {}
+          } else {
+            try { await fs.cp(sourceDir, path.join(workflowTarget, dirent.name), { recursive: true }); } catch (e) {}
           }
         }
-      } else {
-        await fs.cp(workflowSource, workflowTarget, { recursive: true });
       }
       
 
