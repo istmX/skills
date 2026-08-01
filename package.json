@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "Context-as-a-Service (CaaS) for AI Coding Agents. Elite orchestrators for Cursor, Windsurf, Gemini, and Claude.",
   "type": "module",
-  "bin": {
-    "istmx-skills": "bin/cli.js"
-  },
+  "bin": "bin/cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
