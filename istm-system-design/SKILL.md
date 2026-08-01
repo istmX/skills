@@ -46,6 +46,8 @@ The main thread compiles the backend system.
 
 ### `Pre-flight` (main thread does this before anything else)
 
+**CRITICAL STEP:** Before analyzing any prompts, you MUST read the exact architectural constraints defined in the `principles/` directory of this skill. This includes `01-architecture-patterns.md`, `02-database-selection.md`, and all other core rulebooks. You must strictly enforce these heuristics (e.g., forbidding Microservices for MVPs, demanding Zod validation, etc.).
+
 Gather signals to determine the execution path:
 
 1. Flag check: Was a specific stack requested? → `STACK_FLAG`.
