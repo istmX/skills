@@ -76,8 +76,8 @@ async function main() {
     }
   ]);
 
-  if (!response.targetHarness) {
-    console.log(chalk.red('Installation cancelled.'));
+  if (!response.targetHarness || !response.coreSkill) {
+    console.log(chalk.red('\nInstallation cancelled by user.'));
     process.exit(1);
   }
 
