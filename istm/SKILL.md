@@ -14,8 +14,8 @@ Write everything this skill produces, files and messages alike, in plain simple 
 
 The apex router: listens to the user's ultimate goal and dynamically orchestrates the correct sub-skills to build the environment. 
 
-- Omni-Routing: Understands if the user is trying to build a standard SaaS, a premium Awwwards site, or just a backend API, and routes execution to the correct specialized orchestrator.
-- Global Context Aggregation: Ensures that all 4 Pillars (`agents.md`, `architecture.md`, `design.md`, `project-overview.md`) and any specialized files (`animate.md`) are generated in harmony.
+- Universal NLP Router: Analyzes the user's raw prompt and semantically maps it to the absolute best skill in the entire `@istmx/skills` ecosystem. Whether they need Day Zero architecture (`/istm-architecture`), premium UI (`/istm-awwward-designer`), feature implementation (`/istm-craft`), or a codebase audit (`/audit`), this skill finds it.
+- Global Context Aggregation: If architectural skills are chosen, it ensures all 4 Pillars (`agents.md`, `architecture.md`, `design.md`, `project-overview.md`) are generated in harmony.
 - The Self-Destruct Bootstrap: Acts as the initial installer that consumes the user's raw prompt, builds the `.istm-context/`, and then overwrites itself into the AI harness rulebook (e.g., `.cursorrules`).
 
 Does not write the blueprints itself; it delegates to the sub-skills (e.g., delegates UI logic to `/istm-design`).
@@ -39,12 +39,20 @@ Gather signals to determine the archetype:
 1. Flag check: Was a specific archetype requested? (e.g., `--type=saas`, `--type=premium`).
 2. Source count: Analyze `package.json` to detect if the project leans towards a standard build or a premium build.
 
-### Route to the selected phase
+### Route to the selected phase (Semantic Mapping)
 
-- Phase 1 (Standard Web App / SaaS): Delegate entirely to `/istm-architecture`. It will handle the standard 4 Pillars without heavy GSAP.
-- Phase 2 (Premium / Marketing / Awwwards): Delegate to `/istm-awwward-designer` and `/istm-system-design`. It will build the 4 Pillars with heavy GSAP and WebGL support.
-- Phase 3 (Backend Only): Delegate to `/istm-system-design`. It will bypass UI rules and focus purely on schema and APIs.
-- Phase 4 (UI Design Only): Delegate to `/istm-design` and `/istm-animate`. It will bypass database logic and focus purely on the visual tokens.
+Analyze the prompt and invoke the most appropriate sub-skill:
+
+1. **Day Zero / Foundation Creation**:
+   - Standard SaaS / Web App: Delegate to `/istm-architecture`.
+   - Premium Marketing Site (GSAP/WebGL): Delegate to `/istm-awwward-designer`.
+   - Backend APIs only: Delegate to `/istm-system-design`.
+   - UI Tokens only: Delegate to `/istm-design`.
+2. **Day-to-Day Execution**:
+   - Building a specific feature: Delegate to `/istm-craft`.
+   - Debugging an error: Delegate to `/debug`.
+   - Reviewing code quality: Delegate to `/audit` or `/check`.
+   - Writing tests: Delegate to `/test`.
 
 ### Phase 0: Classify (only when `pre-flight` is ambiguous)
 
