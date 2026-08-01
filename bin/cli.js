@@ -61,8 +61,8 @@ async function main() {
     { title: 'Gemini Antigravity CLI', description: 'GEMINI.md', value: 'GEMINI.md' },
     { title: 'Roo Code / Cline', description: '.clinerules', value: '.clinerules' },
     { title: 'GitHub Copilot', description: 'copilot-instructions.md', value: '.github/copilot-instructions.md' },
-    { title: 'OpenAI Codex', description: 'CODEX.md', value: 'CODEX.md' },
-    { title: 'Opencode', description: 'OPENCODE.md', value: 'OPENCODE.md' }
+    { title: 'OpenAI Codex / Opencode', description: 'AGENTS.md', value: 'AGENTS.md' },
+    { title: 'Other AI Agents', description: 'AGENTS.md', value: 'AGENTS.md' }
   );
 
   const response = await prompts([
@@ -105,8 +105,7 @@ async function main() {
     'GEMINI.md',
     '.clinerules',
     '.github/copilot-instructions.md',
-    'CODEX.md',
-    'OPENCODE.md'
+    'AGENTS.md'
   ];
   
   const harnessesToInstall = response.targetHarness === 'all' 
