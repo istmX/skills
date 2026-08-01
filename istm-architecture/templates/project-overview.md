@@ -1,178 +1,166 @@
-# ScribbleBox Project Overview
+# {project_name} Project Overview
 
 ## Product Name
 
-ScribbleBox
+{project_name}
 
 ---
 
 # Vision
 
-ScribbleBox transforms screenshots into memories.
+{project_vision}
 
-People take hundreds of screenshots.
-Most are forgotten.
-Months later they have no idea:
-- why they saved them
-- what they meant
-- why they mattered
+{vision_elaboration_paragraph_1}
 
-ScribbleBox solves this by letting users organize screenshots and attach context.
+{vision_elaboration_paragraph_2}
 
 ---
 
 # Problem Statement
 
-Modern screenshot collections become chaotic.
+{problem_statement_summary}
 
 Examples:
-- app ideas
-- travel plans
-- design inspiration
-- conversations
-- study material
-- shopping items
+- {problem_example_1}
+- {problem_example_2}
+- {problem_example_3}
+- {problem_example_4}
 
-Users remember saving them.
-They forget WHY.
+{problem_conclusion}
 
 ---
 
 # Solution
 
-Every screenshot can become a memory.
-A screenshot may contain:
-- note
-- collection
-- date
-- pin status
+{solution_summary}
 
-Users build a personal archive instead of a screenshot dump.
+A core entity may contain:
+- {core_entity_attribute_1}
+- {core_entity_attribute_2}
+- {core_entity_attribute_3}
+- {core_entity_attribute_4}
+
+{solution_conclusion}
 
 ---
 
 # Target Audience
 
 Primary Users:
-- students
-- designers
-- developers
-- creators
-- researchers
+- {primary_user_group_1}
+- {primary_user_group_2}
+- {primary_user_group_3}
+- {primary_user_group_4}
 
 Secondary Users:
-- travelers
-- planners
-- collectors
+- {secondary_user_group_1}
+- {secondary_user_group_2}
+- {secondary_user_group_3}
 
 ---
 
-# Core User Journey (Project Creation & Refinement)
+# Core User Journey
 
-User inputs project idea / prompt on Dashboard
+User inputs intent / starting action
        ↓
-Enters conversational refinement wizard (interactive QuestionCard with options / "Let Zenix decide")
+{core_user_journey_step_1}
        ↓
-Wizard completes (either step 10+ bypass or AI decides context is sufficient)
+{core_user_journey_step_2}
        ↓
-Directly transitions to the Developer Chat Sandbox (MessageScroller interface)
+{core_user_journey_step_3}
        ↓
-AI generates context files (Agents.md, build-plan.md, etc.) on request via backend APIs
+{core_user_journey_completion_state}
 
 ---
 
-# Legacy User Journey (Screenshot Journal)
+# Secondary User Journey
 
 User opens app
        ↓
-Imports screenshot
+{secondary_user_journey_step_1}
        ↓
-Places screenshot into collection
+{secondary_user_journey_step_2}
        ↓
-Adds memory note
+{secondary_user_journey_step_3}
        ↓
-Screenshot becomes searchable / appears in timeline or pinned list
+{secondary_user_journey_completion_state}
 
 ---
 
 # Primary Screens
 
-1. Onboarding
-2. Authentication
-3. Home
-4. Collections
-5. Collection Details
-6. Screenshot Details
-7. Timeline
-8. Settings
+1. {screen_1_name}
+2. {screen_2_name}
+3. {screen_3_name}
+4. {screen_4_name}
+5. {screen_5_name}
+6. {screen_6_name}
+7. {screen_7_name}
+8. {screen_8_name}
 
 ---
 
-# Home Screen
+# {screen_1_name} Screen Details
 
 Purpose:
-Provide quick access to important memories.
+{screen_1_purpose}
 
 Contains:
-- greeting
-- pinned memories
-- recent screenshots
-- import action
+- {screen_1_element_1}
+- {screen_1_element_2}
+- {screen_1_element_3}
+- {screen_1_element_4}
 
 ---
 
-# Collections Screen
+# {screen_2_name} Screen Details
 
 Purpose:
-Organize screenshots by topic.
+{screen_2_purpose}
 
 Examples:
-- Travel
-- Design
-- Study
-- AI Ideas
-- Personal
+- {screen_2_example_1}
+- {screen_2_example_2}
+- {screen_2_example_3}
 
-Collections are visual and colorful.
+{screen_2_design_note}
 
 ---
 
-# Screenshot Details Screen
+# {screen_3_name} Screen Details
 
 Purpose:
-Attach meaning to screenshots.
+{screen_3_purpose}
 
 Contains:
-- image preview
-- note
-- date
-- collection
-- pin toggle
+- {screen_3_element_1}
+- {screen_3_element_2}
+- {screen_3_element_3}
+- {screen_3_element_4}
 
-This is the most important screen in the app.
+This is the most critical interaction view.
 
 ---
 
-# Timeline Screen
+# {screen_4_name} Screen Details
 
 Purpose:
-Help users remember events.
+{screen_4_purpose}
 
-Screenshots appear on the dates they were saved.
-The timeline should feel like a journal.
-Not a database.
+{screen_4_behavior_rule}
+The layout should feel like a {screen_4_metaphor}.
+Not a generic database table.
 
 ---
 
-# Settings Screen
+# {screen_5_name} Screen Details
 
 Contains:
-- profile
-- storage usage
-- import
-- export
-- theme
-- clear data
+- {screen_5_element_1}
+- {screen_5_element_2}
+- {screen_5_element_3}
+- {screen_5_element_4}
+- {screen_5_element_5}
 
 ---
 
@@ -184,58 +172,44 @@ They should feel:
 - motivating
 - warm
 
-Every empty state uses illustrations.
+Every empty state uses {empty_state_visual_requirement}.
 
 ---
 
 # Future Features
 
 Not MVP:
-- cloud sync
-- OCR
-- AI tagging
-- AI summaries
-- collaboration
+- {future_feature_1}
+- {future_feature_2}
+- {future_feature_3}
+- {future_feature_4}
+- {future_feature_5}
 
-These features are intentionally excluded.
+These features are intentionally excluded from the initial build.
 
 ---
 
 # Success Metric
 
 The app succeeds when users can answer:
-"Why did I save this screenshot?"
+"{success_metric_question}"
 without guessing.
 
 ---
 
 # Progress Tracker Log
 
-## 2026-06-18
+## {current_date}
 
 ### Completed
 
 - Read the project instructions and context documents before implementation.
-- Installed approved MVP dependencies and Expo SDK 54-compatible native packages.
-- Confirmed Expo dependency alignment with `npx expo install --check`.
-- Configured NativeWind with Tailwind, Babel, Metro, global CSS, and TypeScript declarations.
-- Added ScribbleBox design tokens for colors, typography, spacing, radius, and shadows.
-- Updated the root layout to use the ScribbleBox background and NativeWind global styles.
-- Replaced the placeholder app screen with a basic scrapbook-inspired ScribbleBox entry screen.
-- Updated Expo app metadata from the template app name to ScribbleBox.
-- Built backend conversational prompt engine with Groq integration, pre-filled AI guidelines, and "no manual typing" options constraints.
-- Integrated standard design asset schemas including `color_theory.md`, `sans_serif_fonts.md`, `product_design.md`, `storytelling.md`, and `animations.md`.
-- Implemented `MessageScroller` turn-anchoring, scroll-following, and prepending-preservation UI layout.
-- Embedded `ProjectChatPage` developer playground directly inside the completed wizard route view.
-- Added transactional cascade deletion in backend `project.service.js` to purge linked Ideas, Briefs, Tasks, Contexts, and Generations.
+- (AI will dynamically log tasks here)
 
 ### Verification
 
-- Frontend production build (`npm run build`) compiles cleanly with no errors.
-- Backend conversational model orchestration endpoints verified.
-- Database cascade deletes verified.
+- (AI will dynamically log verifications here)
 
 ### Notes
 
-- Designed spec output format explicitly targeting downstream AI developer agents.
-- Wrapped all hex values inside `ui-tokens.md` in backticks for standard parser compliance.
+- (AI will dynamically log notes here)

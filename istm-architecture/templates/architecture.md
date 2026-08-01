@@ -3,11 +3,10 @@
 ## Architecture Goals
 
 The architecture should be:
-
-- local-first
 - maintainable
 - understandable
-- scalable enough for MVP
+- scalable according to project constraints
+- {architecture_primary_goals}
 
 Avoid unnecessary complexity.
 
@@ -15,258 +14,98 @@ Avoid unnecessary complexity.
 
 # System Overview
 
-User Prompt / Input
-       ↓
-Web React Frontend Routes (Vite, React Router, Zustand)
-       ↓
-Backend AI Orchestrator / Prompt Generator (Node.js & Express)
-       ↓
-AI APIs (Groq / Mistral) & MongoDB Storage
-       ↓
-Project Chat Sandbox (MessageScroller) & Context Documents
+{system_data_flow_diagram}
 
 ---
 
-# Storage Layers
+# Tech Stack
 
-## Layer 1
+## Frontend
+- Framework: {frontend_framework}
+- Styling: {styling_engine}
+- State Management: {state_management}
 
-Image Storage
+## Backend / API
+- Framework: {backend_framework}
+- Database: {database_type}
+- ORM/Query Builder: {orm_tool}
 
-Technology:
-
-Expo FileSystem
-
-Stores:
-
-- screenshot files
-
-Never store images in AsyncStorage.
-
----
-
-## Layer 2
-
-Metadata Storage
-
-Technology:
-
-AsyncStorage
-
-Stores:
-
-- collections
-- notes
-- settings
-- pinned states
-- screenshot metadata
-
----
-
-## Layer 3
-
-Application State
-
-Technology:
-
-Zustand
-
-Stores:
-
-- active collection
-- UI state
-- selected screenshot
-- filters
+## Infrastructure
+- Hosting: {hosting_provider}
+- Deployment: {deployment_strategy}
 
 ---
 
 # Folder Structure
 
-src/
+{directory_structure_tree}
 
-app/
-
-components/
-
-features/
-
-hooks/
-
-services/
-
-store/
-
-types/
-
-utils/
-
-assets/
-
-context/
-
----
-
-# Feature Structure
-
-features/
-
-home/
-
-collections/
-
-timeline/
-
-settings/
-
-auth/
-
-onboarding/
-
-screenshots/
-
-Each feature owns:
-
+Each feature module must own its own:
 - components
 - hooks
 - services
 - types
 
-Avoid giant shared folders.
+Avoid giant shared folders. Maintain a strict Feature-Based Architecture.
 
 ---
 
 # State Management Rules
 
-Use Zustand.
+Use {state_management}.
 
-Do NOT use:
-
-- Redux
-- MobX
-- Recoil
-
-Keep stores focused.
-
-Avoid monolithic stores.
+Do NOT use legacy or unnecessarily complex patterns unless explicitly required.
+Keep stores focused. Avoid monolithic state objects.
 
 ---
 
-# Async Data
+# Data Fetching & Caching
 
-Use TanStack Query.
+Use {data_fetching_strategy}.
 
 Responsibilities:
-
 - caching
 - invalidation
 - async operations
 
-Do not misuse Zustand for server-state patterns.
+Do not misuse UI state managers for server-state patterns.
 
 ---
 
 # Authentication
 
-Provider:
-
-Clerk
+Provider: {auth_provider}
 
 Methods:
+{auth_methods_list}
 
-- Google
-- Apple
-- Email
-
-Authentication must remain isolated from application state.
+Authentication state must remain isolated from general application state.
 
 ---
 
-# Navigation
+# Core Workflows
 
-Bottom Tabs:
+## Workflow 1: {core_workflow_1_name}
+{core_workflow_1_steps}
 
-Home
-
-Collections
-
-Timeline
-
-Settings
-
-Use Expo Router.
-
----
-
-# Import Flow
-
-User selects image
-
-↓
-
-File copied into app storage
-
-↓
-
-Metadata generated
-
-↓
-
-Metadata saved
-
-↓
-
-Store updated
-
-↓
-
-UI refreshed
-
----
-
-# Export Flow
-
-Export metadata
-
-↓
-
-Export screenshots
-
-↓
-
-Create backup package
-
-↓
-
-User chooses destination
+## Workflow 2: {core_workflow_2_name}
+{core_workflow_2_steps}
 
 ---
 
 # Performance Rules
 
 Use:
-
-- FlatList
-- FlashList if needed
+- {performance_best_practice_1}
+- {performance_best_practice_2}
 
 Avoid:
-
 - unnecessary re-renders
-- expensive animations
-
-Images must be lazy-loaded.
-
----
-
-# Offline First and Authentication Boundaries
-
-The app supports offline access for local screenshot and basic memory-curation features, but:
-- **Authenticated Generation**: Accessing conversational prompts, projects creation, and managing workspaces requires authentication (JWT tokens).
-- **Project-Chat & Context Sandbox**: Accessing the AI spec engine, context generation APIs, and ProjectChatPage sandbox requires an active network connection and valid session.
+- unoptimized assets
+- {performance_anti_pattern_1}
 
 ---
 
-# Future Expansion
+# Future Expansion & Scalability
 
-Future cloud sync features for local screenshot metadata must remain optional.
-The core repository supports a hybrid model: local-first tools enhanced by cloud-backed developer utilities.
-Cloud sync is an enhancement, not a blocker for local viewing, but a dependency for active AI context features.
+{future_scalability_considerations}
