@@ -65,8 +65,8 @@ async function main() {
       name: 'coreSkill',
       message: 'Which Core Architecture Skill do you want to initialize?',
       choices: [
-        { title: 'Universal Router (God Mode)', description: 'istm', value: 'istm' },
-        { title: 'Standard SaaS', description: 'istm-architecture', value: 'istm-architecture' },
+        { title: 'All the skills (God Mode)', description: 'istm', value: 'istm' },
+        { title: 'A Full Stack App', description: 'istm-architecture', value: 'istm-architecture' },
         { title: 'Premium Awwwards Site', description: 'istm-awwward-designer', value: 'istm-awwward-designer' },
         { title: 'Backend / APIs Only', description: 'istm-system-design', value: 'istm-system-design' },
         { title: 'UI Tokens Only', description: 'istm-design', value: 'istm-design' },
