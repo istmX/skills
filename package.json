@@ -1,0 +1,21 @@
+{
+  "name": "skills",
+  "version": "1.0.0",
+  "description": "Ahahhahahahhaha skills for ai and shi",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/istmX/skills.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/istmX/skills/issues"
+  },
+  "homepage": "https://github.com/istmX/skills#readme"
+}
