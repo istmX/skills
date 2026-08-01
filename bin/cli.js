@@ -168,15 +168,19 @@ async function main() {
         
         /**
          * Register the master orchestrator as a native autocomplete slash command
-         * so the user can explicitly trigger it via `/istm` or `/istm-architecture`.
+         * We deliberately rename it to `/istm` so the user always has a consistent God Mode command.
          */
         await fs.mkdir(workflowTarget, { recursive: true });
         
+        // Read the file and replace its name frontmatter to 'name: istm'
+        let skillContent = await fs.readFile(skillPath, 'utf8');
+        skillContent = skillContent.replace(/^name:\s*.*$/m, 'name: istm');
+        
         if (harness === '.cursorrules') {
-          await fs.copyFile(skillPath, path.join(workflowTarget, `${response.coreSkill}.mdc`));
+          await fs.writeFile(path.join(workflowTarget, 'istm.mdc'), skillContent);
         } else {
-          await fs.mkdir(path.join(workflowTarget, response.coreSkill), { recursive: true });
-          await fs.copyFile(skillPath, path.join(workflowTarget, response.coreSkill, 'SKILL.md'));
+          await fs.mkdir(path.join(workflowTarget, 'istm'), { recursive: true });
+          await fs.writeFile(path.join(workflowTarget, 'istm', 'SKILL.md'), skillContent);
         }
       } catch (err) {}
     }
@@ -235,7 +239,7 @@ async function main() {
   console.log(`Your AI is now operating under the ${chalk.bold('istmX')} Architecture (${response.coreSkill}).`);
   
   console.log('\n' + chalk.bold('You are now in God Mode. Try your first prompt:'));
-  console.log(chalk.cyan(`> /${response.coreSkill} build me a sleek dashboard\n`));
+  console.log(chalk.cyan(`> /istm build me a sleek dashboard\n`));
   
   console.log(chalk.bold('💡 PRO TIP:') + ' You also just unlocked the istm-workflow skillset!');
   console.log('Whenever you are stuck, use these commands instead of chatting:');
