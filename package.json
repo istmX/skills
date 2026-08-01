@@ -1,0 +1,28 @@
+{
+  "name": "@istmx/skills",
+  "version": "1.0.0",
+  "description": "The ISTM Master Orchestrator and Context Engine",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "istmx-skills": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/istmX/skills.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/istmX/skills/issues"
+  },
+  "homepage": "https://github.com/istmX/skills#readme",
+  "dependencies": {
+    "chalk": "^6.0.0",
+    "prompts": "^2.4.2"
+  }
+}
