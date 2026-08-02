@@ -1,66 +1,72 @@
-# @istmx/skills | Context-as-a-Service (CaaS) for AI Agents
+<div align="center">
+  <h1>@istmx/skills</h1>
+  <p><b>The Elite AI Orchestration Engine for Cursor, Windsurf, Claude Code, & Gemini</b></p>
+  <a href="https://istmskills.vercel.app">Website</a> • <a href="https://istmskills.vercel.app/docs">Documentation</a> • <a href="https://github.com/istmX/skills">GitHub</a>
+</div>
 
-**The Ultimate AI Orchestrator and Context Engine for Cursor, Windsurf, Claude Code, and Gemini.**
+<br/>
 
-Most AI coding assistants fail when building large-scale applications. They lose context, hallucinate tech stacks, write generic "AI slop", and completely ignore your design system. 
+Most AI coding assistants fail at scale. They lose context, hallucinate architectures, generate generic "AI slop," and completely ignore your design system.
 
-`@istmx/skills` is a revolutionary **Context-as-a-Service (CaaS)** framework. It hijacks your AI agent's harness (like `.cursorrules`, `.cline`, or `GEMINI.md`) and injects an **Elite Orchestration Engine**. By enforcing strict system design and premium UI/UX rules, it forces your LLM to write modular, production-ready blueprints before it ever touches a line of code.
+`@istmx/skills` is a revolutionary **Agentic Orchestration Framework**. It hijacks your AI agent's environment (via `.cursorrules`, `.cline`, or `AGENTS.md`) and injects a deterministic orchestration engine. By enforcing strict system design boundaries and premium UI/UX rules, it forces your LLM to write modular, production-ready blueprints before it ever touches a line of code.
 
 ---
 
-## 🚀 Installation & Setup
+## ⚡ Quick Start
 
-Run the CLI inside the root of your project:
+Initialize the framework in your project root:
 
 ```bash
 npx @istmx/skills init
 ```
 
-The CLI automatically detects your AI IDE (Cursor, Windsurf, Roo Code, GitHub Copilot) and injects the master orchestrator, instantly upgrading your developer experience (DX).
+The CLI automatically detects your IDE (Cursor, Windsurf, Roo Code, GitHub Copilot) and instantly upgrades your AI's reasoning capabilities by injecting the master orchestrator.
 
 ---
 
-## 🧠 Core Orchestrators (The "God Mode" Skills)
+## 🧠 The Orchestrators (God Mode)
 
-When you run `init`, you can inject specialized orchestrators tailored to your exact project domain. These are the master brains that structure your entire application.
+These master brains structure your entire application.
 
-- **`/istm` (Universal NLP Router)**: The apex orchestrator. Type `/istm I need a new auth feature`, and it dynamically parses your intent, finds the absolute best skill in the ecosystem, and routes your prompt for flawless execution.
-- **`/istm-architecture` (Fullstack System Design)**: The master Day-Zero planner. It establishes the "4 Pillars of Truth" (`project-overview.md`, `architecture.md`, `design.md`, `agents.md`). Perfect for Next.js, React, and strict TypeScript stacks.
-- **`/istm-awwward-designer` (Premium UI Engine)**: Builds Awwwards-winning marketing sites. Explicitly enforces **GSAP**, **WebGL**, **Lenis smooth scrolling**, and strict typography scaling. It refuses to write boring generic templates.
-- **`/istm-system-design` (Backend Architect)**: The backend brain. Owns database schema design, REST/GraphQL API routing, and infrastructure planning (PostgreSQL, Drizzle, Prisma) with enforced security best practices.
-- **`/istm-design` (Visual Token Core)**: Establishes your foundational design tokens (colors, typography, spacing). It explicitly forbids generic "AI slop" CSS and ensures premium UI aesthetics.
-- **`/istm-animate` (Motion Pipeline)**: The dedicated hardware-accelerated motion orchestrator. Handles advanced choreography, GSAP timelines, and physics-based interactions.
-
----
-
-## 🛠️ Day-to-Day Execution (Workflow Skills)
-
-Once initialized, your IDE is armed with specialized workflow tools. Stop chatting with your AI blindly—use these highly deterministic commands:
-
-- **`/istm-scope`**: Turns a product idea into a living, course scope. Plans the next slice and records exactly *what* to build.
-- **`/istm-craft`**: Give it a feature idea. It strictly reads your `.istm-context/` blueprints and writes a detailed technical spec, preventing hallucinations.
-- **`/istm-develop`**: The execution engine. It reads the specs from `/istm-craft` and autonomously writes the clean code to build the UI or backend feature.
-- **`/istm-test`**: Writes a comprehensive test suite for the code you just built, covering happy paths, edge cases, error states, and accessibility.
-- **`/istm-check`**: Run this before merging. It reviews the code, proves behavior against the spec, and confirms every surface is built correctly.
-- **`/istm-audit`**: Checks your codebase for tech debt, unused variables, and architectural drift.
-- **`/istm-debug`**: Did you hit a massive wall? This agent hunts down root causes via hypothesize-and-test loops, fixes the code, and writes a regression test.
-- **`/istm-document`**: Automatically writes human-facing prose (PR descriptions, changelogs, postmortems) by analyzing your raw commits and diffs.
-- **`/istm-sync`**: Run this after shipping a feature to reconcile your scope, update your durable knowledge base, and keep the AI's memory perfectly current.
+| Orchestrator | Domain | Description |
+|---|---|---|
+| **`/istm`** | Universal | The apex NLP router. Analyzes your prompt and dynamically routes execution to the best skill in the ecosystem. |
+| **`/istm-architecture`** | Full-Stack | The master Day-Zero planner. Establishes the "4 Pillars of Truth" (`project-overview.md`, `architecture.md`, `design.md`, `agents.md`). |
+| **`/istm-awwward-designer`** | Premium UI | Builds Awwwards-winning frontend marketing sites. Enforces GSAP, WebGL, Lenis smooth scrolling, and strict typography. |
+| **`/istm-system-design`** | Backend | The infrastructure architect. Owns database schemas, API routing, and backend stack configuration (PostgreSQL, Prisma, Drizzle). |
+| **`/istm-design`** | Design System | Establishes foundational design tokens (colors, typography). Strictly forbids generic "AI slop" CSS. |
+| **`/istm-animate`** | Motion | The hardware-accelerated motion orchestrator. Handles advanced choreography and GSAP timelines. |
 
 ---
 
-## 📁 How It Works: The `.istm-context` Architecture
+## 🛠️ The Workflows (Day-to-Day)
 
-We believe in **Blueprint Centralization** and Retrieval-Augmented Generation (RAG) principles. 
-When your AI runs an orchestrator, it generates a `.istm-context/` folder. This acts as the single source of truth for your app's architecture and design system. 
+Stop chatting blindly with your AI. Use these deterministic commands to execute precise actions:
 
-Every single time you ask your AI to build a new feature, it is forced to read `.istm-context/design.md` (to get the exact UI tokens) and `.istm-context/architecture.md` (to verify the tech stack) before it outputs a single line of code.
+- **`/istm-scope`**: Turns a raw product idea into a living, coarse scope.
+- **`/istm-craft`**: Writes a detailed technical spec strictly bound to your blueprints, preventing hallucinations.
+- **`/istm-develop`**: The execution engine. Autonomously writes clean code based on the specifications.
+- **`/istm-test`**: Generates comprehensive test suites for new features or fixes.
+- **`/istm-check`**: Pre-merge code review. Verifies behavior against the spec and confirms logic.
+- **`/istm-audit`**: Scans the codebase for tech debt, architectural drift, and unused code.
+- **`/istm-debug`**: Hunts down root causes, fixes code, and writes regression tests.
+- **`/istm-document`**: Analyzes commits/diffs to auto-generate PR descriptions, changelogs, and postmortems.
+- **`/istm-sync`**: Reconciles scope and updates the durable knowledge base after shipping a feature.
 
 ---
 
-## 🤝 Open Source & Community
+## 📁 The `.istm-context` Architecture
 
-We are open-sourcing the ultimate AI agent UI and context skills to end the era of generic AI code scaffolding. Join the movement and let's build beautiful, scalable software that feels human again.
+We believe in **Blueprint Centralization** and Deterministic Execution. 
+When your AI runs an orchestrator, it generates a `.istm-context/` directory in your project. This is the ultimate source of truth. 
+
+Before generating a single line of code, every agent is forced to read `.istm-context/design.md` (for exact UI tokens) and `.istm-context/architecture.md` (to verify the stack), ensuring perfect alignment and zero hallucinations.
+
+---
+
+## 🤝 Open Source
+
+We are open-sourcing the ultimate AI orchestration framework to end the era of generic AI code scaffolding. Join the movement and let's build beautiful, scalable software that feels human again.
 
 **Author:** Aryan  
 **License:** MIT
@@ -68,5 +74,5 @@ We are open-sourcing the ultimate AI agent UI and context skills to end the era 
 ---
 <!-- SEO Metadata & Discovery Tags (DO NOT REMOVE) -->
 <!-- 
-Keywords: AI coding agents, Open source AI coding agents, AI agent framework for software development, LLM-based coding assistant tutorial, Cursor vs Claude Code, AI coding agent performance benchmarks, Cloud-based software development tools, DevOps automation tools, API documentation generator, SaaS development framework, UI/UX design systems, Design system architecture, UI component library best practices, Atomic design methodology 2026, Glassmorphism UI dashboards, Brutalism web design, Dark mode UI system, Developer tools, Developer experience, DX, Context-as-a-Service, RAG, Knowledge base, Best AI agent for GitHub projects, istm ai templates, istmx ai templates, istm nextjs templates, istm ui components, istm skills ai framework, istmx vs istm, istm react template, istm agent templates, istm developer tools, istm coding assistant, .cursorrules alternative, cursor rules directory, AGENTS.md standard, claude code agents.md, windsurf rules, aider coding agent, zed ai editor, roo code context, cline mcp server, cursor vs windsurf, claude code vs cursor, best ai agent configuration, model context protocol, awwwards level ui generator, gsap ai coding skills, threejs webgl ai agent, premium frontend ai architect, ai design.md templates, ui tokens ai generation, design system ai scaffolding, gsap scrolltrigger ai templates, motion physics ai rules, database schema ai architect, nextjs fullstack ai system design, ai code review agent, agentic debugging workflow, ai pr generator, agentic skills frontend, istm-awwward-designer
+Keywords: AI coding agents, Open source AI coding agents, AI agent framework for software development, LLM-based coding assistant tutorial, Cursor vs Claude Code, AI coding agent performance benchmarks, Cloud-based software development tools, DevOps automation tools, API documentation generator, SaaS development framework, UI/UX design systems, Design system architecture, UI component library best practices, Atomic design methodology 2026, Glassmorphism UI dashboards, Brutalism web design, Dark mode UI system, Developer tools, Developer experience, DX, Deterministic Execution, Orchestration Engine, RAG, Knowledge base, Best AI agent for GitHub projects, istm ai templates, istmx ai templates, istm nextjs templates, istm ui components, istm skills ai framework, istmx vs istm, istm react template, istm agent templates, istm developer tools, istm coding assistant, .cursorrules alternative, cursor rules directory, AGENTS.md standard, claude code agents.md, windsurf rules, aider coding agent, zed ai editor, roo code context, cline mcp server, cursor vs windsurf, claude code vs cursor, best ai agent configuration, model context protocol, awwwards level ui generator, gsap ai coding skills, threejs webgl ai agent, premium frontend ai architect, ai design.md templates, ui tokens ai generation, design system ai scaffolding, gsap scrolltrigger ai templates, motion physics ai rules, database schema ai architect, nextjs fullstack ai system design, ai code review agent, agentic debugging workflow, ai pr generator, agentic skills frontend, istm-awwward-designer
 -->
