@@ -74,7 +74,8 @@ Pick the phase based on these signals:
 
 ### Route to the selected phase
 
-- Phase 1 (Greenfield Setup): Evaluate the desired aesthetic (minimal, playful, corporate, brutalist). Interview the user on primary colors and font pairings. Generate a comprehensive `design.md` with strict H1-H6 scaling and semantic color variables.
+- **Step 0 (Mandatory Reading)**: Before suggesting any design or generating files, you MUST recursively read all rule files inside `istm-design/colors/`, `istm-design/styles/`, `istm-design/typography/`, and `istm-design/ux/`. You must understand these massive, rich design rules first.
+- Phase 1 (Greenfield Setup): Analyze the user's prompt to extract their exact aesthetic vision. **Do NOT force them to pick from generic styles (e.g., minimal, brutalist, corporate).** If their prompt says "massive fonts and vibrant colors", use the rules from Step 0 to generate a bespoke `design.md` that perfectly captures that unique vibe with strict H1-H6 scaling and custom semantic color variables. Interview the user ONLY if the prompt is completely blank on design direction.
 - Phase 2 (Reverse Engineering): Do not interview. Read `tailwind.config.js`, `globals.css`, or equivalent. Reverse-engineer the color palette and typography scale. Hydrate `design.md`.
 - Phase 3 (Gap Fill): Read existing `design.md`. Identify missing tokens (e.g., missing success/error states). Update existing blueprints carefully.
 

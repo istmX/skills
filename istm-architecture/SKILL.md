@@ -20,6 +20,15 @@ The master context orchestrator: evaluates user prompts, resolves structural amb
 
 Does not create production application code (the implementation agent owns that), audit for accessibility (/audit owns that), or write the feature scope (/scope owns that).
 
+
+## Folder Structure & Component Architecture
+
+1. **Just-In-Time Scaffolding**: Never create massive folder trees upfront. Folders should only be created when a specific feature is being built.
+2. **Respect Stack Conventions**: Do not blindly force a `src/app/` structure if a framework (like Next.js) already uses a root `app/` structure. Analyze the existing structure first.
+3. **Private vs Public Components**: Strictly enforce Feature-Based Architecture:
+   - **Public Components**: Reusable, generic UI components (buttons, inputs) belong in `shared/components/` (or `components/ui/` for shadcn).
+   - **Private Components**: Components specific to a single feature (e.g., `LoginForm`) MUST stay inside that feature's directory (`features/auth/components/`).
+
 ## Blueprint file convention (The 4 Pillars)
 
 Durable context lives in the `.istm-context/` directory. These files govern all future logic:
@@ -71,7 +80,7 @@ Pick the phase based on these signals:
 
 ### Route to the selected phase
 
-- Phase 1 (Greenfield Setup): Evaluate the domain (e-commerce, real-time, etc.). Identify missing context (Auth, DB). Interview the user. Apply Smart Defaults. Hydrate templates.
+- Phase 1 (Greenfield Setup): Evaluate the domain (e-commerce, real-time, etc.). Identify missing context (Auth, DB). Interview the user. Apply Smart Defaults. Hydrate templates. **CRITICAL: When generating `design.md`, analyze the user's prompt to extract their exact aesthetic vision (e.g., massive fonts, vibrant colors). Do NOT force them to pick from generic styles like minimal or brutalist.**
 - Phase 2 (Reverse Engineering): Do not interview. Read `package.json`, `tsconfig.json`, and root schemas. Reverse-engineer the tech stack. Hydrate templates.
 - Phase 3 (Gap Fill): Read existing blueprints. Identify what the new prompt requires. Update existing blueprints carefully.
 
