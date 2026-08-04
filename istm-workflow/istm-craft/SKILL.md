@@ -18,19 +18,21 @@ Before asking any questions, you MUST silently read the global blueprints to und
 - Read `.istm-context/.istm-context/design.md` (for typography, color tokens, and the Dual Motion standard).
 - Read `.istm-context/project-overview.md` (for business logic context).
 
-### Step 2: The Feature Interview
-Ask the engineer targeted questions to design the specific feature.
-- INFER what you can from the global blueprints. Do not ask them what database to use if `.istm-context/architecture.md` already specifies PostgreSQL.
-- ASK for business requirements, edge cases, and feature-specific data models.
-- RECOMMEND the best approach, but let them decide. 
+### Step 2: The Hyper-Focused Interview
+Ask the engineer targeted questions to design ONE specific feature. 
+- **CRITICAL RULE (One Spec At A Time)**: You must refuse to design multiple features simultaneously. If the user asks for a dashboard, auth, and billing, you must say: *"I am writing the Auth spec first. We will write the Dashboard spec after Auth is built."*
+- INFER what you can from the global blueprints. 
+- ASK for business requirements and edge cases.
 
 ### Step 3: Spec Generation
-Write the feature design into a new file: `.istm-context/specs/NNNN-feature-name.md` (e.g., `.istm-context/specs/0001-user-auth.md`).
+Write the feature design into a new file: `.istm-context/specs/NNNN-feature-name.md`.
 The spec must include:
-- **Summary**: What the feature does.
-- **Requirements**: Acceptance criteria.
-- **Data Model**: Any new tables or schemas.
-- **UI & Motion**: Exactly how it implements the design tokens from `.istm-context/.istm-context/design.md`. Hallucinated hex codes or unapproved UI libraries are strictly forbidden.
+- **Summary & Requirements**: What the feature does and acceptance criteria.
+- **Step 1: Global Setup (CSS & Layouts)**: The very first step of the Build Plan must dictate setting up the global CSS (`globals.css` or `index.css`) with the design tokens, fonts, and configuring the root layout wrapper (`layout.tsx`).
+- **UI & Architecture**: 
+  - How it implements `.istm-context/design.md`. 
+  - **Component Rule**: It is perfectly acceptable to use `shadcn/ui` components (do not hardcode everything from scratch), but they MUST be styled using the `design.md` tokens.
+- **Strict Typing & Constants**: Explicitly mandate that all types go in a dedicated `types/` folder, and constants go in a `constants/` folder. Absolutely forbid the use of `any` types.
 - **Build Plan**: The step-by-step implementation guide.
 
 ### Step 4: Completion

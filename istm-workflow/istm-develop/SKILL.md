@@ -10,6 +10,14 @@ description: "Run /istm-develop to build a feature, UI or backend, from an appro
 Write everything this skill produces, files and messages alike, in plain simple language. Keep technical terms that carry real meaning; explain each in plain words. Never use a dash or a hyphen as punctuation: no em dash, no en dash, and no hyphenated compounds. Write `read only`, not `read-only`. Say it in simple words, or reword the sentence. Code, file paths, command flags, and values other skills match on keep their hyphens. Use short sentences, commas, or parentheses. Clear beats clever.
 <!-- OUTPUT-STYLE:END -->
 
+
+## Strict Development Rules
+
+1. **Global CSS & Layouts First**: If the spec dictates setting up global CSS/fonts or layouts, do this first before building components.
+2. **shadcn/ui is Allowed**: Do not reinvent the wheel if shadcn is available, but ensure it perfectly matches the `.istm-context/design.md` tokens.
+3. **Types & Constants**: Strictly enforce `No any`. Place all types in `types/` folders and hardcoded values in `constants/` folders.
+4. **Private vs Public Components**: Feature-specific components stay in `features/<name>/components/`. Only truly reusable components go to `shared/components/`.
+
 ## What this skill does
 
 The builder: turns a spec plus project conventions into working code. Tracks: **UI** (components, pages, layouts; `ui-guide.md`), **Logical** (APIs, services, data layers, business logic, integrations; `logical-guide.md`), or both (e.g. "auth" = sign in pages plus session logic → run both). Step 0 gates on the spec so load bearing choices (an auth approach, a payment provider) are decided in `/architect`, not silently invented partway through the build.
