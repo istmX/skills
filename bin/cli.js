@@ -51,13 +51,14 @@ async function main() {
     harnessChoices.push({ title: `Auto-Detect (${autoDetectedHarness})`, value: autoDetectedHarness });
   }
   harnessChoices.push(
-    { title: 'Cursor (.cursorrules)', value: '.cursorrules' },
-    { title: 'Windsurf (.windsurfrules)', value: '.windsurfrules' },
-    { title: 'Claude Code (CLAUDE.md)', value: 'CLAUDE.md' },
-    { title: 'Gemini Antigravity CLI (GEMINI.md)', value: 'GEMINI.md' },
-    { title: 'Roo Code / Cline (.clinerules)', value: '.clinerules' },
-    { title: 'GitHub Copilot (.github/copilot-instructions.md)', value: '.github/copilot-instructions.md' },
-    { title: 'Other AI Agents (AGENTS.md)', value: 'AGENTS.md' }
+    { title: chalk.bold.blue('Claude Code') + chalk.dim(' (CLAUDE.md)'), value: 'CLAUDE.md' },
+    { title: chalk.bold.green('OpenAI Codex / Opencode') + chalk.dim(' (AGENTS.md)'), value: 'AGENTS.md' },
+    { title: chalk.bold.cyan('Gemini Antigravity CLI') + chalk.dim(' (GEMINI.md)'), value: 'GEMINI.md' },
+    { title: chalk.bold.white('Cursor') + chalk.dim(' (.cursorrules)'), value: '.cursorrules' },
+    { title: chalk.bold.magenta('Windsurf') + chalk.dim(' (.windsurfrules)'), value: '.windsurfrules' },
+    { title: chalk.bold.yellow('Roo Code / Cline') + chalk.dim(' (.clinerules)'), value: '.clinerules' },
+    { title: chalk.bold.white('GitHub Copilot') + chalk.dim(' (.github/copilot-instructions.md)'), value: '.github/copilot-instructions.md' },
+    { title: chalk.bold.gray('Other AI Agents') + chalk.dim(' (AGENTS.md)'), value: 'AGENTS.md' }
   );
 
   const response = await prompts([
@@ -65,6 +66,7 @@ async function main() {
       type: 'multiselect',
       name: 'targetHarnesses',
       message: 'Which AI Agent Harnesses are you targeting? (Space to select)',
+      instructions: false,
       choices: harnessChoices,
       min: 1
     },
@@ -72,11 +74,13 @@ async function main() {
       type: 'multiselect',
       name: 'domainSkills',
       message: 'Which Core Architecture Skills do you want to initialize? (Space to select)',
+      instructions: false,
       choices: [
-        { title: 'Architect (Full Stack / Standard UI)', value: 'istm-architecture' },
-        { title: 'Awwward Designer (GSAP Motion / Premium Specs)', value: 'istm-awwward-designer' },
-        { title: 'Design (Visual Tokens & Static UI)', value: 'istm-design' },
-        { title: 'System Design (Backend & APIs)', value: 'istm-system-design' }
+        { title: chalk.bold.red('God Mode') + chalk.dim(' (Universal Router)'), value: 'istm' },
+        { title: chalk.bold.blue('Architect') + chalk.dim(' (Full Stack / Standard UI)'), value: 'istm-architecture' },
+        { title: chalk.bold.magenta('Awwward Designer') + chalk.dim(' (GSAP Motion / Premium Specs)'), value: 'istm-awwward-designer' },
+        { title: chalk.bold.cyan('Design') + chalk.dim(' (Visual Tokens & Static UI)'), value: 'istm-design' },
+        { title: chalk.bold.green('System Design') + chalk.dim(' (Backend & APIs)'), value: 'istm-system-design' }
       ],
       min: 1
     }
@@ -158,17 +162,19 @@ async function main() {
       }
     } catch (err) {}
 
-    /* 2. ALWAYS Drop the Universal NLP Router (/istm) */
-    const routerPath = path.join(SKILLS_ROOT, 'istm', 'SKILL.md');
-    try {
-      await fs.mkdir(workflowTarget, { recursive: true });
-      if (harness === '.cursorrules') {
-        await fs.copyFile(routerPath, path.join(workflowTarget, 'istm.mdc'));
-      } else {
-        await fs.cp(path.join(SKILLS_ROOT, 'istm'), path.join(workflowTarget, 'istm'), { recursive: true });
-      }
-      console.log(chalk.dim(`  - Injected Master Orchestrator (/istm)`));
-    } catch (err) {}
+    /* 2. Inject the Universal NLP Router (/istm) IF selected */
+    if (response.domainSkills.includes('istm')) {
+      const routerPath = path.join(SKILLS_ROOT, 'istm', 'SKILL.md');
+      try {
+        await fs.mkdir(workflowTarget, { recursive: true });
+        if (harness === '.cursorrules') {
+          await fs.copyFile(routerPath, path.join(workflowTarget, 'istm.mdc'));
+        } else {
+          await fs.cp(path.join(SKILLS_ROOT, 'istm'), path.join(workflowTarget, 'istm'), { recursive: true });
+        }
+        console.log(chalk.dim(`  - Injected Master Orchestrator (/istm)`));
+      } catch (err) {}
+    }
     
     /* 3. Inject selected domain skills into autocomplete */
     let injectedDeps = false;
@@ -206,8 +212,13 @@ async function main() {
   console.log(chalk.bold.magenta('\n✨ Initialization Complete!'));
   console.log(`Your AI is now operating under the ${chalk.bold('istmX')} Architecture.`);
   
-  console.log('\n' + chalk.bold('You are now in God Mode. Try your first prompt:'));
-  console.log(chalk.cyan(`> /istm build me a sleek dashboard\n`));
+  if (response.domainSkills.includes('istm')) {
+    console.log('\n' + chalk.bold('You are now in God Mode. Try your first prompt:'));
+    console.log(chalk.cyan(`> /istm build me a sleek dashboard\n`));
+  } else {
+    console.log('\n' + chalk.bold('Setup complete. Ready to plan your first feature?'));
+    console.log(chalk.cyan(`> /istm-craft I want to build a user authentication system\n`));
+  }
   
   console.log(chalk.bold('💡 PRO TIP:') + ' You also just unlocked the istm-workflow skillset!');
   console.log('Whenever you are stuck, use these commands instead of chatting:');
