@@ -1,6 +1,6 @@
-# /check review (fresh model code review)
+# /istm-check review (fresh model code review)
 
-The `review` mode of `/check`: a senior code review, before merge, on a different model than wrote the code. Follow it fully.
+The `review` mode of `/istm-check`: a senior code review, before merge, on a different model than wrote the code. Follow it fully.
 
 ## What this skill does
 
@@ -16,7 +16,7 @@ Owns review findings (`.istm-context/reviews/`). Does not write code, tests, spe
 
 Acts, with one deliberate exception: it confirms which model wrote the code before reviewing (a single MCQ, with the detected value selected by default), because the model can't reliably detect itself and a wrong guess silently breaks the cross model guarantee (see Step 1). Everything else (scoping, reviewing, writing findings) it does without asking. It states which model is reviewing so you can still redirect, and pauses if there is nothing to review (clean tree, no branch diff). The confirm is skipped when you pass an explicit `with <model>` override and detection was unambiguous.
 
-Steering: `/check review` (default contrasting model), `/check review with opus` (force a reviewer), or `/check review uncommitted` (scope to working tree changes only).
+Steering: `/istm-check review` (default contrasting model), `/istm-check review with opus` (force a reviewer), or `/istm-check review uncommitted` (scope to working tree changes only).
 
 ## Artifact ownership
 
@@ -89,13 +89,13 @@ If the user passed `uncommitted`, force `MODE=uncommitted` regardless of branch.
 
 De-duplicate the file list. Exclude lock files and generated output (`dist/`, `build/`, `.next/`, `coverage/`) from the count, but the subagent still sees the full diff.
 
-If the change set is empty: stop and tell the engineer there's nothing to review (make a change first, or point /check review at a branch). Do not spawn.
+If the change set is empty: stop and tell the engineer there's nothing to review (make a change first, or point /istm-check review at a branch). Do not spawn.
 
 ### 3. Gather lightweight pointers (do NOT read heavy files here)
 
 Paths and cheap signals only; the subagent reads on demand. Using your file tools: list the 3 most-recent spec files under `.istm-context/specs/` (paths only), and resolve the test signal, one of three states, not a yes/no:
 - `TESTS = configured`: `test-preferences.json` sets `"tool"` to a framework (a runner is set up). Judge test adequacy normally.
-- `TESTS = none-by-design`: `test-preferences.json` has `"tool": null` and a `"gate"` (e.g. `"typecheck+verify"`), or the nearest `.istm-context/agents.md`/governing spec states a "no test runner" convention. Deliberate: the gate is typecheck + `/check verify`, not a suite.
+- `TESTS = none-by-design`: `test-preferences.json` has `"tool": null` and a `"gate"` (e.g. `"typecheck+verify"`), or the nearest `.istm-context/agents.md`/governing spec states a "no test runner" convention. Deliberate: the gate is typecheck + `/istm-check verify`, not a suite.
 - `TESTS = none-yet`: no `test-preferences.json` at all, and no stated convention. A genuine gap.
 
 Pass to the subagent: project-context contents inline (read `.istm-context/agents.md`, canonical, or `CLAUDE.md` as fallback; short), the 3 recent spec paths, the base ref / merge-base, and the diff scope. The subagent reads a governing spec's **build-spec sections only** (`index.md`: Requirements, Decision, the design section, Consequences), the contract to review against; not `rationale.md` (decision history), unless a specific finding hinges on the reasoning. It runs `git diff` itself and reads the changed files and their tests.
@@ -120,7 +120,7 @@ Resolve this skill's folder to an absolute path (you, the main agent, already re
 If the subagent errored or wrote no findings file, report the failure and offer to re-run; don't relay an empty or fabricated review. Otherwise it writes the findings file and returns a compact summary. Relay:
 
 ```
-## /check review complete
+## /istm-check review complete
 
 **Reviewed by**: <reviewer-model> (you're on <author-model>)
 **Scope**: <N> files, <branch vs base | uncommitted>
@@ -142,11 +142,11 @@ If the subagent errored or wrote no findings file, report the failure and offer 
 Show all blockers and majors in chat; collapse minors/nits to a count with a pointer to the file. If there are zero blockers and zero majors, lead with the verdict and keep it short.
 
 For a high-stakes change (verdict was Blocked or Changes requested, or the change is high/critical severity), append one line:
-> "For an independent second opinion from a different provider, switch your model with `/model` (or paste the diff into another assistant) and re-run /check review, no API keys needed."
+> "For an independent second opinion from a different provider, switch your model with `/model` (or paste the diff into another assistant) and re-run /istm-check review, no API keys needed."
 
-**Tick the scope box (closing gate).** If the reviewed feature has a row in `.istm-context/scope/`, tick its `Review it` box (the review ran; the box marks that, not that it passed) and confirm it in the report: "Scope: ticked `Review it`." No matching row → say so ("no scope row matched `<feature>`, tick it manually or enroll it"). This is the only scope edit review makes; it writes no code, tests, or specs.
+**Tick the scope box (closing gate).** If the reviewed feature has a row in `.istm-context/istm-scope/`, tick its `Review it` box (the review ran; the box marks that, not that it passed) and confirm it in the report: "Scope: ticked `Review it`." No matching row → say so ("no scope row matched `<feature>`, tick it manually or enroll it"). This is the only scope edit review makes; it writes no code, tests, or specs.
 
-This skill is complete after relaying. It does not fix the findings (the implementer does that) and does not invoke other skills. If the engineer wants the issues fixed, that's a normal follow-up; /check review's job is the assessment.
+This skill is complete after relaying. It does not fix the findings (the implementer does that) and does not invoke other skills. If the engineer wants the issues fixed, that's a normal follow-up; /istm-check review's job is the assessment.
 
 ---
 

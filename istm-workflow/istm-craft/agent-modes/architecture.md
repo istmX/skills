@@ -49,7 +49,7 @@ Reason in the durable CATEGORY, then pick the current product fresh. The table n
 
 **Step 4: Write the spec**
 
-This is a **decision spec**: record the decision, not an implementation plan. Apply `Decision-only specs` under "Expert rules that apply to all modes": no `## Build plan` of scaffold steps (init the framework, create the project, add the health route, and so on), no meta acceptance criteria like "spec records the stack." The spec IS `## Proposed stack`; scaffold work is executed by this feature's scaffold sub task and derived by `/develop` from the Proposed stack at build time.
+This is a **decision spec**: record the decision, not an implementation plan. Apply `Decision-only specs` under "Expert rules that apply to all modes": no `## Build plan` of scaffold steps (init the framework, create the project, add the health route, and so on), no meta acceptance criteria like "spec records the stack." The spec IS `## Proposed stack`; scaffold work is executed by this feature's scaffold sub task and derived by `/istm-develop` from the Proposed stack at build time.
 
 Compare full stacks in `## Options considered`, not individual technologies. Include required `## Proposed stack` section:
 

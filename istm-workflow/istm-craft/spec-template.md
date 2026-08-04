@@ -20,17 +20,17 @@ of any kind.>
 
 ## Context
 
-<!-- DECISION RECORD (the WHY, human context; in a directory spec this section lives in rationale.md, not index.md; /develop skips it) -->
+<!-- DECISION RECORD (the WHY, human context; in a directory spec this section lives in rationale.md, not index.md; /istm-develop skips it) -->
 <What is the problem or decision to be made? What forces are at play (technical constraints,
 team capabilities, cost, performance requirements, compliance)? What is the consequence of not
 deciding? 2 to 4 paragraphs. Do not mention options here, only the problem space.>
 
 ## Requirements
 
-<!-- BUILD SPEC (the WHAT, /develop builds to this; /check verify checks against it) -->
+<!-- BUILD SPEC (the WHAT, /istm-develop builds to this; /istm-check verify checks against it) -->
 <!-- The contract. Seed the user stories + acceptance criteria from the scope feature's intent
      and its acceptance-criteria seeds when a scope row exists, then refine with the engineer.
-     Acceptance criteria are the contract /develop builds to and /check verify checks. -->
+     Acceptance criteria are the contract /istm-develop builds to and /istm-check verify checks. -->
 
 **User stories**:
 - As a <role>, I want <capability> so that <outcome>.
@@ -45,7 +45,7 @@ deciding? 2 to 4 paragraphs. Do not mention options here, only the problem space
 
 ## Options considered
 
-<!-- DECISION RECORD (the WHY, human context; in a directory spec this section lives in rationale.md, not index.md; /develop skips it) -->
+<!-- DECISION RECORD (the WHY, human context; in a directory spec this section lives in rationale.md, not index.md; /istm-develop skips it) -->
 ### Option 1: <Name>
 
 <One paragraph describing this option.>
@@ -71,7 +71,7 @@ deciding? 2 to 4 paragraphs. Do not mention options here, only the problem space
 
 ## Decision
 
-<!-- BUILD SPEC (the WHAT, /develop reads this) -->
+<!-- BUILD SPEC (the WHAT, /istm-develop reads this) -->
 **Chosen option**: Option N: <Name>
 
 <One sentence stating the decision clearly.>
@@ -81,12 +81,12 @@ deciding? 2 to 4 paragraphs. Do not mention options here, only the problem space
 
 ## Rationale
 
-<!-- DECISION RECORD (the WHY, human context; in a directory spec this section lives in rationale.md, not index.md; /develop skips it) -->
+<!-- DECISION RECORD (the WHY, human context; in a directory spec this section lives in rationale.md, not index.md; /istm-develop skips it) -->
 <Why this option over the others? Reference the specific constraints and forces from Context.
 Do not repeat the pros/cons list, explain the reasoning. 1 to 3 paragraphs.>
 
 <!-- Feature design mode only. Include immediately after Rationale. -->
-<!-- BUILD SPEC (the WHAT, /develop reads this) -->
+<!-- BUILD SPEC (the WHAT, /istm-develop reads this) -->
 ## Feature design
 
 **Data model sketch**:
@@ -124,7 +124,7 @@ Do not repeat the pros/cons list, explain the reasoning. 1 to 3 paragraphs.>
 - Auth/permission: <who is denied and what they receive>, verifies **AC-N**
 
 <!-- Architecture mode only. Include immediately after Rationale. -->
-<!-- BUILD SPEC (the WHAT, /develop reads this) -->
+<!-- BUILD SPEC (the WHAT, /istm-develop reads this) -->
 ## Proposed stack
 
 | Layer | Choice | Reason |
@@ -136,7 +136,7 @@ Do not repeat the pros/cons list, explain the reasoning. 1 to 3 paragraphs.>
 | Hosting | | |
 | Observability | | |
 
-<!-- BUILD SPEC (the WHAT, /develop builds these in order; /check verify checks the AC each satisfies) -->
+<!-- BUILD SPEC (the WHAT, /istm-develop builds these in order; /istm-check verify checks the AC each satisfies) -->
 ## Build plan
 
 <!-- Ordered build tasks DERIVED from the surface above (data model, API, stack) and the acceptance
@@ -155,7 +155,7 @@ N. <Build task>, satisfies **AC-N**
 
 ## Consequences
 
-<!-- BUILD SPEC (the WHAT, /develop reads this: the constraints the build must honor) -->
+<!-- BUILD SPEC (the WHAT, /istm-develop reads this: the constraints the build must honor) -->
 **Positive**:
 - <what improves>
 
@@ -239,28 +239,28 @@ The spec's status mirrors its feature's build lifecycle (scope: planned→`Propo
 | Status | Meaning |
 |---|---|
 | `Proposed` | spec written, decision agreed, feature NOT yet built. Set by /architect at creation. |
-| `In Progress` | The feature governed by this spec is being built. Set by /develop when the feature goes in-progress. |
-| `Accepted` | The feature is built and verified (scope `done`), the "done and dusted" state. A spec is NOT `Accepted` until its feature ships. Set by /develop on completion or reconciled by /sync. |
+| `In Progress` | The feature governed by this spec is being built. Set by /istm-develop when the feature goes in-progress. |
+| `Accepted` | The feature is built and verified (scope `done`), the "done and dusted" state. A spec is NOT `Accepted` until its feature ships. Set by /istm-develop on completion or reconciled by /istm-sync. |
 | `Superseded by [NNNN](NNNN-title.md)` | Replaced by a newer spec |
 
 **Which status behavior applies depends on whether a buildable scope feature links this spec:**
-- **Feature linked spec** (a `.istm-context/scope/` row's `spec` cell points to it) → **feature mirrored**: `Proposed` → `In Progress` → `Accepted`, tracking the feature's build lifecycle (table above). Confirmation ratifies content but does not set `Accepted`; /develop advances it.
+- **Feature linked spec** (a `.istm-context/istm-scope/` row's `spec` cell points to it) → **feature mirrored**: `Proposed` → `In Progress` → `Accepted`, tracking the feature's build lifecycle (table above). Confirmation ratifies content but does not set `Accepted`; /istm-develop advances it.
 - **Standalone decision spec** (a foundational/stack or cross cutting standard with **no linked buildable feature**) → **decision status**: `Proposed` when written, then **`Accepted` once the engineer ratifies it** (on confirmation). There's no build phase to gate on, so it is not feature mirrored.
 - **spec documenting already shipped work** (the "already built" path, or a feature already `existing`) → **born `Accepted`**, it describes reality that already exists.
 
-**Umbrella child specs carry no lifecycle status.** In an umbrella directory (`NNNN-<x>/`), only the `index.md` has a `**Status**:` line, it mirrors the feature. The **child specs are spec content**, so **omit the `**Status**:` line on children** (they're governed by the umbrella). `/develop` and `/sync` advance the umbrella `index.md`'s status only, never a child's.
+**Umbrella child specs carry no lifecycle status.** In an umbrella directory (`NNNN-<x>/`), only the `index.md` has a `**Status**:` line, it mirrors the feature. The **child specs are spec content**, so **omit the `**Status**:` line on children** (they're governed by the umbrella). `/istm-develop` and `/istm-sync` advance the umbrella `index.md`'s status only, never a child's.
 
 **A directory spec splits build spec from reasoning.** A directory spec (`NNNN-<x>/`) always contains exactly two core files, plus optional extras:
-- **`index.md`**: the build spec `/develop` reads: `## Summary`, `## Requirements`, `## Decision`, the design/spec section, `## Build plan`, `## Consequences`, `## Follow-up`, and a one line `## Rationale` pointer to `rationale.md`. For an umbrella, `index.md` also opens with a **`## Structure`** section listing and linking every child spec (one line each: what it is + which decision it supports) and holds any **cross child contract**.
-- **`rationale.md`**: everything in the decision record that `/develop` does not need: `## Context`, `## Options considered`, `## Rationale`, the `## References` section, and any supporting evidence (inventories, audits, a landscape scan). There is no separate `research/` folder; bulky evidence goes here, under its own subheading. This is read by humans and by `/architect` on update or supersede, never during a build.
+- **`index.md`**: the build spec `/istm-develop` reads: `## Summary`, `## Requirements`, `## Decision`, the design/spec section, `## Build plan`, `## Consequences`, `## Follow-up`, and a one line `## Rationale` pointer to `rationale.md`. For an umbrella, `index.md` also opens with a **`## Structure`** section listing and linking every child spec (one line each: what it is + which decision it supports) and holds any **cross child contract**.
+- **`rationale.md`**: everything in the decision record that `/istm-develop` does not need: `## Context`, `## Options considered`, `## Rationale`, the `## References` section, and any supporting evidence (inventories, audits, a landscape scan). There is no separate `research/` folder; bulky evidence goes here, under its own subheading. This is read by humans and by `/architect` on update or supersede, never during a build.
 - Optional: **`verify.md`** (verify steps), and **child specs** `NNNN-<child>.md` for an umbrella (each sufficient on its own to build from, each with a short inline rationale rather than its own `rationale.md`; promote a child to its own directory only if it grows heavy).
 
 ## Audience split: build spec vs decision record
 
 A spec serves two audiences, and its sections divide cleanly between them:
 
-- **Build spec** (what `/develop` reads to build): **`## Requirements`** (the acceptance criteria contract), **`## Decision`**, the design/spec section (**`## Feature design`** for a FEATURE spec, **`## Proposed stack`** for an ARCHITECTURE spec, or the equivalent spec table, e.g. `## Standard definition`), **`## Build plan`** (the ordered tasks derived from the surface + acceptance criteria), and **`## Consequences`** (the constraints the build must honor). This is the WHAT, the implementable spec. The **acceptance criteria in `## Requirements` are the contract `/develop` builds to and `/check verify` checks.**
-- **Decision record** (human / future decision maker context, the WHY): **`## Context`**, **`## Options considered`**, **`## Rationale`**, and the **`## References`** section. This is decision history, not build input; `/develop` skips it. (**`## Summary`** stays with the build spec in `index.md`, it is the human quick read that orients before the spec.)
+- **Build spec** (what `/istm-develop` reads to build): **`## Requirements`** (the acceptance criteria contract), **`## Decision`**, the design/spec section (**`## Feature design`** for a FEATURE spec, **`## Proposed stack`** for an ARCHITECTURE spec, or the equivalent spec table, e.g. `## Standard definition`), **`## Build plan`** (the ordered tasks derived from the surface + acceptance criteria), and **`## Consequences`** (the constraints the build must honor). This is the WHAT, the implementable spec. The **acceptance criteria in `## Requirements` are the contract `/istm-develop` builds to and `/istm-check verify` checks.**
+- **Decision record** (human / future decision maker context, the WHY): **`## Context`**, **`## Options considered`**, **`## Rationale`**, and the **`## References`** section. This is decision history, not build input; `/istm-develop` skips it. (**`## Summary`** stays with the build spec in `index.md`, it is the human quick read that orients before the spec.)
 
 Where each audience's sections physically live depends on the spec shape:
 - **Single file spec** (`NNNN-title.md`): both audiences share the one file; the decision record sections stay inline, written tight. Small specs are not split.

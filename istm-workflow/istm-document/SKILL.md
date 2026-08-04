@@ -1,7 +1,7 @@
 ---
-name: document
+name: istm-document
 allowed-tools: Bash, Read, Grep, Glob, Write, Edit, Agent, AskUserQuestion
-description: "Run /document `pr` | `changelog` | `release-note` | `postmortem` (or let it ask) to write the human facing prose about a change. Drafts from the real commits and diff, writing to the right place. Does not write code, tests, or specs."
+description: "Run /istm-document `pr` | `changelog` | `release-note` | `postmortem` (or let it ask) to write the human facing prose about a change. Drafts from the real commits and diff, writing to the right place. Does not write code, tests, or specs."
 ---
 
 ## Output style (plain words, no dashes, no hyphens)
@@ -21,7 +21,7 @@ Generates one of four document types from the real change history. The main thre
 | `pr` | branch commits + diff vs base | reviewers | PR title + body (chat; optionally `gh pr` create/edit) |
 | `changelog` | merged change | developers | entry appended to `CHANGELOG.md` (Keep a Changelog) |
 | `release-note` | a tag/version range | end users | `.istm-context/releases/<version>.md` (or chat) |
-| `postmortem` | an incident (described by the engineer, plus any /debug record) | team | `.istm-context/postmortems/<date>-<slug>.md` |
+| `postmortem` | an incident (described by the engineer, plus any /istm-debug record) | team | `.istm-context/postmortems/<date>-<slug>.md` |
 
 Acts. Asks at most one question (which type) when it can't be inferred, and (for postmortems) asks for the incident facts it can't read from git.
 
@@ -84,7 +84,7 @@ git tag --sort=-creatordate
 **Per type edge handling the main thread resolves before writing:**
 - **`release-note` range**: if tags exist, the range is `<previous-tag>..<latest-tag>` (or a range the engineer named). **If `NO_TAGS`**, don't guess, ask: "No version tags found. Give me a version name and range (e.g. `v1.0.0`, covering `<commit>..HEAD`), or I'll cover all commits since the first one." Pass the resolved range/version to the subagent.
 - **pr + gh**: only offer to create/update the PR via `gh` when **`GH_INSTALLED` and `HAS_REMOTE`**. If `PR_EXISTS`, the action is `gh pr edit` (update the body), **not** `gh pr create`. If gh isn't usable or no remote, the PR text is chat only, don't attempt `gh`. **Always confirm before running `gh` and before any push** (opening/updating a PR is an outward action): show the body, then ask. This holds regardless of the `.istm-context/agents.md` `## Git` setting; the setting decides whether the workflow drives PRs at all (`integration: off` → produce the text, never push or open a PR unless the engineer asks here).
-- **postmortem**: git won't contain the incident narrative. Ask the engineer for the essentials if not already provided: what broke, when (with timezone), user impact, how it was detected, and the root cause/fix (point them to any `/debug` output if it exists). Pass their account as the incident facts. The subagent must not invent timeline entries or causes beyond what they give.
+- **postmortem**: git won't contain the incident narrative. Ask the engineer for the essentials if not already provided: what broke, when (with timezone), user impact, how it was detected, and the root cause/fix (point them to any `/istm-debug` output if it exists). Pass their account as the incident facts. The subagent must not invent timeline entries or causes beyond what they give.
 
 ### 3. Write the document (main thread)
 
@@ -102,7 +102,7 @@ The inputs to apply:
 ### 4. Relay the result
 
 ```
-## /document complete
+## /istm-document complete
 
 **Type**: <pr | changelog | release-note | postmortem>
 **Written to**: <PR body shown below | CHANGELOG.md | .istm-context/releases/<v>.md | .istm-context/postmortems/<file>>
@@ -113,7 +113,7 @@ The inputs to apply:
 
 For `pr`, always show the full text in chat (so it's usable even without `gh`). For the file types, show a short preview and the path. This skill does not commit, push, or merge. It produces the prose.
 
-**Tick the scope box (closing gate).** If the documented feature has a row in `.istm-context/scope/`, tick its `Document it` box and confirm it in the report ("Scope: ticked `Document it`"). No matching row → say so. This is the only scope edit `/document` makes; it writes no code or specs.
+**Tick the scope box (closing gate).** If the documented feature has a row in `.istm-context/istm-scope/`, tick its `Document it` box and confirm it in the report ("Scope: ticked `Document it`"). No matching row → say so. This is the only scope edit `/istm-document` makes; it writes no code or specs.
 
 ---
 

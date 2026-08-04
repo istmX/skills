@@ -1,6 +1,6 @@
-# /develop: UI track guide
+# /istm-develop: UI track guide
 
-UI build track for `/develop`, read after the spec gate (`SKILL.md` Step 0) classifies a task as UI: components, pages, or full layouts with semantic HTML, design tokens, and strict accessibility. Any web stack (Next.js, Vite, Nuxt, Svelte, plain HTML). The project's `.istm-context/design.md` holds the art direction (character, the build mandate, composition and component rules, and pointers to where the real tokens live); the token values themselves live in the project's CSS (`globals.css` / tailwind config), never duplicated in `.istm-context/design.md`. Read the bar below before you build anything.
+UI build track for `/istm-develop`, read after the spec gate (`SKILL.md` Step 0) classifies a task as UI: components, pages, or full layouts with semantic HTML, design tokens, and strict accessibility. Any web stack (Next.js, Vite, Nuxt, Svelte, plain HTML). The project's `.istm-context/design.md` holds the art direction (character, the build mandate, composition and component rules, and pointers to where the real tokens live); the token values themselves live in the project's CSS (`globals.css` / tailwind config), never duplicated in `.istm-context/design.md`. Read the bar below before you build anything.
 
 ## The bar: read this first, it is the definition of done
 
@@ -43,7 +43,7 @@ Any Agent Skills client, macOS/Linux/Windows. Detection snippets (`find`, `cat |
 
 ## Step 0: Where the design comes from (one decision, made once)
 
-Check the governing spec first (`/develop` read it in Step 2). The design source is the engineer's choice and `/architect` already grilled them on it, so follow what the spec recorded, never ask again, and never default to Figma just because an MCP is connected.
+Check the governing spec first (`/istm-develop` read it in Step 2). The design source is the engineer's choice and `/architect` already grilled them on it, so follow what the spec recorded, never ask again, and never default to Figma just because an MCP is connected.
 
 Route on what the spec recorded, using the *Design source* table above:
 - Figma or another design MCP → `ui/mcp.md`.

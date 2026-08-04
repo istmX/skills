@@ -1,8 +1,8 @@
 ---
-name: check
+name: istm-check
 allowed-tools: Bash, Read, Grep, Glob, Write, Agent
 argument-hint: [verify | review]
-description: "Run /check before merge to confirm a change is sound. Two modes: `/check verify` drives the real app and proves behavior against the spec (every acceptance criterion met, every specced surface built); `/check review` runs a senior code review on a different model than wrote the code. Verify after /develop, review before a PR. Writes findings to .istm-context/reviews/; never edits your code."
+description: "Run /istm-check before merge to confirm a change is sound. Two modes: `/istm-check verify` drives the real app and proves behavior against the spec (every acceptance criterion met, every specced surface built); `/istm-check review` runs a senior code review on a different model than wrote the code. Verify after /istm-develop, review before a PR. Writes findings to .istm-context/reviews/; never edits your code."
 ---
 
 ## Output style (plain words, no dashes, no hyphens)
@@ -13,20 +13,20 @@ Write everything this skill produces, files and messages alike, in plain simple 
 
 ## What this skill does
 
-`/check` is the gate before merge. It confirms a change is sound in two different ways, run as two modes; they are separate jobs and you usually run both, verify first:
+`/istm-check` is the gate before merge. It confirms a change is sound in two different ways, run as two modes; they are separate jobs and you usually run both, verify first:
 
-- **`verify`** (runtime proof): run the real app and watch the change behave. Proves the feature actually works and conforms to the spec (every acceptance criterion met, every specced surface built), which green tests never reveal. Read only on code, owns no durable files. Runs on the main thread. Typically after `/develop`.
+- **`verify`** (runtime proof): run the real app and watch the change behave. Proves the feature actually works and conforms to the spec (every acceptance criterion met, every specced surface built), which green tests never reveal. Read only on code, owns no durable files. Runs on the main thread. Typically after `/istm-develop`.
 - **`review`** (fresh model code review): a rigorous senior read of the diff, on a **different model than wrote the code**, because a model reviewing its own output shares its blind spots. Writes findings ranked by severity to `.istm-context/reviews/`. Read only on code. Typically before opening a PR.
 
-Neither mode edits your code. `verify` points failures at `/debug` or `/develop`; `review` reports findings for the implementer to fix.
+Neither mode edits your code. `verify` points failures at `/istm-debug` or `/istm-develop`; `review` reports findings for the implementer to fix.
 
 ## Pick the mode (route before doing anything else)
 
-This is the first step, always, before reading any mode file or touching the repo. Look at what followed `/check`:
+This is the first step, always, before reading any mode file or touching the repo. Look at what followed `/istm-check`:
 
 - The argument **starts with `verify` (or `run`)** → runtime proof. Read `modes/verify.md` and follow it fully. Pass any remaining arguments (a feature name, a scope) through.
-- The argument **starts with `review`** → code review. Read `modes/review.md` and follow it fully. Pass the review steering through unchanged (e.g. `/check review with opus`, `/check review uncommitted`).
-- **No mode word, or anything ambiguous** (bare `/check`, or a feature name with no mode like `/check auth`) → do NOT guess and do NOT default to a mode. Show the two options as a plain text panel and **stop and wait** for the engineer to type their choice. This is the case that makes `/check` safe to type with nothing after it.
+- The argument **starts with `review`** → code review. Read `modes/review.md` and follow it fully. Pass the review steering through unchanged (e.g. `/istm-check review with opus`, `/istm-check review uncommitted`).
+- **No mode word, or anything ambiguous** (bare `/istm-check`, or a feature name with no mode like `/istm-check auth`) → do NOT guess and do NOT default to a mode. Show the two options as a plain text panel and **stop and wait** for the engineer to type their choice. This is the case that makes `/istm-check` safe to type with nothing after it.
 
 **How to present the choice (plain text, works on every agent, no interactive modal):**
 
@@ -34,14 +34,14 @@ Print exactly this, then stop and wait for the reply. Do not proceed, do not ass
 
 ```
 Which check do you want to run? Type one:
-  • verify  run the real app and prove the change works against its spec (usually right after /develop)
+  • verify  run the real app and prove the change works against its spec (usually right after /istm-develop)
   • review  a fresh model senior read of the diff, ranked findings (usually right before a PR)
   • both    verify first, then review
 ```
 
 Do not use an interactive picker or modal for this; it is a typed choice shown inline, so it behaves the same in every AI tool. (The `argument-hint` in this skill's frontmatter also surfaces `verify | review` in Claude Code's own autocomplete as you type, before submit; other tools ignore that field, which is why this inline panel is the portable path.)
 
-If a feature name was passed with no mode (`/check auth`), carry it through as the target once the engineer picks the mode; still ask the mode.
+If a feature name was passed with no mode (`/istm-check auth`), carry it through as the target once the engineer picks the mode; still ask the mode.
 
 Do not mix the two in one run. If the engineer types **both**, do `verify` first (confirm it works), and only then offer `review` as the next step.
 

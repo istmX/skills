@@ -1,6 +1,6 @@
 # Audit Mode: area scan (Phase 3)
 
-Trigger: a path or area name was given (e.g. `/audit src/auth`).
+Trigger: a path or area name was given (e.g. `/istm-audit src/auth`).
 
 Pre-flight additionally:
 1. Check the area path exists. If not: stop immediately, tell the engineer "Path `<area>` not found. Check the path and try again.", and do nothing further.

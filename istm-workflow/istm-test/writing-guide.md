@@ -6,7 +6,7 @@ The main thread reads this file in full at write time (Step 8), just before it w
 
 ## Rules of engagement
 
-**You must not modify application source files.** /test writes tests; it never changes the code under test to make a test pass.
+**You must not modify application source files.** /istm-test writes tests; it never changes the code under test to make a test pass.
 
 ### Existing tests: extend, never duplicate or clobber
 

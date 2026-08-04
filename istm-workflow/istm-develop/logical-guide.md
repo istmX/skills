@@ -1,6 +1,6 @@
-# /develop: logical track guide
+# /istm-develop: logical track guide
 
-The backend/logic build track for `/develop`. The main agent reads this after the spec gate (Step 0 in `SKILL.md`) classifies a task as logical: APIs, services, data layers, business logic, integrations, background jobs, anything that is not rendered UI.
+The backend/logic build track for `/istm-develop`. The main agent reads this after the spec gate (Step 0 in `SKILL.md`) classifies a task as logical: APIs, services, data layers, business logic, integrations, background jobs, anything that is not rendered UI.
 
 You are a **senior backend engineer** on this project. You implement the decision that `/architect` already made; you do not litigate it again. The spec is your spec, the `.istm-context/agents.md` beside the source is your conventions, and the existing code is your style guide.
 
@@ -28,7 +28,7 @@ You are a **senior backend engineer** on this project. You implement the decisio
 ### Phase 2: Data layer
 
 - Implement the schema/migrations to match the spec's data model sketch: field types, nullability, FK relationships, unique constraints.
-- **A data layer change isn't done until the migration is applied and verified.** Generating a migration is not the same as running it. **Generate the migration *and* run it** against the target database, then **confirm the schema is live**, the tables/columns/relationships actually exist. **Prefer a connected database MCP** to query the real schema (the most reliable proof it is there); else the project's own introspection or a describe query. **Never just eyeball the migration file.** A generated but unapplied migration is a task still not done: **do not tick a data layer task until the schema is confirmed present.** (This is the not applied schema bug the per slice migration rule exists to prevent, and `/check verify` checks it again at Step 4b with the same DB MCP.)
+- **A data layer change isn't done until the migration is applied and verified.** Generating a migration is not the same as running it. **Generate the migration *and* run it** against the target database, then **confirm the schema is live**, the tables/columns/relationships actually exist. **Prefer a connected database MCP** to query the real schema (the most reliable proof it is there); else the project's own introspection or a describe query. **Never just eyeball the migration file.** A generated but unapplied migration is a task still not done: **do not tick a data layer task until the schema is confirmed present.** (This is the not applied schema bug the per slice migration rule exists to prevent, and `/istm-check verify` checks it again at Step 4b with the same DB MCP.)
 - Enforce invariants at the database where possible (constraints, not just app checks).
 - Follow the project's migration discipline: in a live system, add column nullable → backfill → add constraint; never add a `NOT NULL` column without a default.
 - Use the project's existing ORM/query layer and naming conventions.
@@ -76,7 +76,7 @@ Not a final checklist, built into every phase, enforced here:
 ## Report
 
 ```
-## /develop complete (logical)
+## /istm-develop complete (logical)
 
 **Feature**: <name>
 **Spec**: <path (the decision implemented)>
@@ -91,7 +91,7 @@ Not a final checklist, built into every phase, enforced here:
 **Open questions left for you**: <ambiguous business rules the spec didn't settle> | none
 **Verify steps (from acceptance criteria)**: emit these, then offer to save to `verify.md` (`SKILL.md` Step 4):
 - `<command / action>` → `<expected>` → AC-N
-**What /test should verify**:
+**What /istm-test should verify**:
 - Happy path: <main flow end to end>
 - Failure case: <timeout / concurrent write / invalid transition>
 - Auth/permission: <who is denied and what they receive>
