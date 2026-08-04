@@ -34,4 +34,4 @@ The spec must include:
 - **Build Plan**: The step-by-step implementation guide.
 
 ### Step 4: Completion
-Do not write application code. Once the spec is written, instruct the user to run `/develop` (or equivalent) to begin the implementation phase based on your spec.
+Do not write application code. Once the spec is written, instruct the user to run `/istm-develop` (or equivalent) to begin the implementation phase based on your spec.

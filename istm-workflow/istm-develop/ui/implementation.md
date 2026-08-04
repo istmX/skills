@@ -248,7 +248,7 @@ The build is not done until you have checked it. Ambition in prose is not enough
 ## Report
 
 ```
-## /develop complete (UI)
+## /istm-develop complete (UI)
 
 **Build type**: Component | Screen
 **Stack**: Next.js | Vite | Nuxt | SvelteKit | Plain HTML
@@ -270,7 +270,7 @@ The build is not done until you have checked it. Ambition in prose is not enough
 **Semantic HTML**: correct elements used | <issues noted>
 **Keyboard**: fully navigable | <gaps>
 **Screen reader**: announced correctly | <gaps>
-**What /test should verify**:
+**What /istm-test should verify**:
 - <observable behaviour>
 - Keyboard-only navigation through all interactive elements
 - VoiceOver / NVDA announces interactive elements and live regions correctly

@@ -1,12 +1,12 @@
-Scope structure `/scope` writes to: the reference shapes read while writing the scope and the completion report. All rules and guidance live in `SKILL.md`.
+Scope structure `/istm-scope` writes to: the reference shapes read while writing the scope and the completion report. All rules and guidance live in `SKILL.md`.
 
 ## What keeps it readable (the format rules)
 
 - **Two parts:** a slim **At a glance** table for a quick scan, then **the plan** as clean feature sections grouped by phase. Build order is just the section order. There is no separate "build order" list to keep in sync.
 - **Clean headings.** A heading is `### <N>. <Feature name>` plus a short status word and short tags **only when they carry real information** (`needs a decision`, a per feature approach override, a workflow tier override like `· Full`). Never a pipe delimited metadata row like `Title | P0 | inherit | …`.
 - **Each fact appears once.** Intent, the definition of done, tasks, and pointers live in the section; the At a glance table is the quick index. Status is shown in the table and beside the heading, and nowhere else.
-- **Only what is set.** No `n/a`, no `inherit`, no empty fields. A pointer line (`spec <n> · code in <path>`) appears **only once those exist**: the spec link added by `/architect` at capture, the code path by `/develop`.
-- **A feature grows a defined shape.** It has a one or two line **intent**, a single **Done when:** line (the acceptance criteria seeds), and **checkbox steps**. A **not yet designed** feature has **one box** (its entry command: `/architect` when it `needs a decision`, else `/develop`, or `/audit` for standards & tooling). **When its spec is captured, `/architect` fills in the built ready shape:** `Design it` (ticked) → `Build it: /develop <feature>` with **2 to 5 milestone sub items rolled up from the spec** → `Verify it: /check verify <feature>` → `Test it: /test <feature>`. **The atomic build tasks stay in the spec's `## Build plan`, never here**. The scope carries only the milestone rollup. The next step is always the first unticked box.
+- **Only what is set.** No `n/a`, no `inherit`, no empty fields. A pointer line (`spec <n> · code in <path>`) appears **only once those exist**: the spec link added by `/architect` at capture, the code path by `/istm-develop`.
+- **A feature grows a defined shape.** It has a one or two line **intent**, a single **Done when:** line (the acceptance criteria seeds), and **checkbox steps**. A **not yet designed** feature has **one box** (its entry command: `/architect` when it `needs a decision`, else `/istm-develop`, or `/istm-audit` for standards & tooling). **When its spec is captured, `/architect` fills in the built ready shape:** `Design it` (ticked) → `Build it: /istm-develop <feature>` with **2 to 5 milestone sub items rolled up from the spec** → `Verify it: /istm-check verify <feature>` → `Test it: /istm-test <feature>`. **The atomic build tasks stay in the spec's `## Build plan`, never here**. The scope carries only the milestone rollup. The next step is always the first unticked box.
 
 ## Single file scope
 
@@ -36,16 +36,16 @@ Scope structure `/scope` writes to: the reference shapes read while writing the 
 Decide the stack and scaffold a runnable project so every later slice builds on real structure.
 **Done when:** the stack is recorded in a spec and the empty scaffold boots locally and passes build.
 - [x] Decide the stack (spec): `/architect stack & architecture`
-- [x] Scaffold from the decision: `/develop stack & architecture`
-- [ ] Smoke-check it runs: `/test`
+- [x] Scaffold from the decision: `/istm-develop stack & architecture`
+- [ ] Smoke-check it runs: `/istm-test`
 Spec 0001 · code in `./`
 
 ### 2. Coding standards & tooling
 Capture conventions, then install lint, format, and pre-commit enforcement from the real scaffolded project.
 **Done when:** root `.istm-context/agents.md` reflects the real stack, and lint/format/pre-commit run clean.
-- [ ] Capture conventions + tooling choices: `/audit`
-- [ ] Install the tooling: `/develop tooling`
-- [ ] Check it runs clean: `/test`
+- [ ] Capture conventions + tooling choices: `/istm-audit`
+- [ ] Install the tooling: `/istm-develop tooling`
+- [ ] Check it runs clean: `/istm-test`
 
 ### 3. Data model · in-progress
 <!-- DESIGNED: /architect captured spec 0002 and filled in the shape below. The 2 to 5 boxes under
@@ -54,13 +54,13 @@ Capture conventions, then install lint, format, and pre-commit enforcement from 
 Core entities every feature builds on: users, teams, memberships, standup entries, template.
 **Done when:** entities and relationships support later slices (reminders, templates, history) without a breaking migration.
 - [x] Design it (spec): `/architect data model`
-- [ ] Build it: `/develop data model`
-   - [ ] Schema + constraints: tables, keys, unique/check, cascades (AC-1..6)
+- [ ] Build it: `/istm-develop data model`
+   - [ ] Schema + constraints: tables, keys, unique/istm-check, cascades (AC-1..6)
    - [ ] Row-level security: per-table policies + helpers (AC-7..9)
    - [ ] Apply migration, confirm live, generate types (AC-1..9)
-- [ ] Verify it: `/check verify data model`
-- [ ] Test it: `/test data model`
-Spec 0002 · code (filled by /develop)
+- [ ] Verify it: `/istm-check verify data model`
+- [ ] Test it: `/istm-test data model`
+Spec 0002 · code (filled by /istm-develop)
 
 ### 4. Design system & UI foundation · needs a decision
 Visual language, layout primitives, and base components so the flows feel cohesive and accessible.
@@ -96,53 +96,53 @@ Out of scope for the current build pass, kept so the plan stays honest.
 
 | State | Set by | The feature shows |
 |---|---|---|
-| `planned` · needs a decision | `/scope` | one box: `Design it (spec): /architect <feature>` |
-| `in-progress` (designed) | **`/architect` at spec capture** | `Design it` ticked; spec linked; `Build it: /develop <feature>` + **2 to 5 milestones**; the tier's closing boxes (`Verify it` Lean+, `Test it` Medium+, `Review it` + `Document it` Full); any surfaced follow-up enrolled |
-| `in-progress` (building) | `/develop` | milestone sub-boxes tick one by one; code pointer filled |
-| `in-progress` (verified) | `/check verify` | `Build it` + milestones ticked; `Verify it` ticked |
-| `done` | the tier's last required stage (`Vibe` → `/develop`; `Lean` → `/check verify`; `Medium`/`Full` → `/test`), then `/sync` | required boxes ticked; `Review it`/`Document it` (Full) ticked by `/check review`/`/document`, tracked but not part of the `done` gate (Design/Build/Verify/Test); `/sync` captures conventions |
+| `planned` · needs a decision | `/istm-scope` | one box: `Design it (spec): /architect <feature>` |
+| `in-progress` (designed) | **`/architect` at spec capture** | `Design it` ticked; spec linked; `Build it: /istm-develop <feature>` + **2 to 5 milestones**; the tier's closing boxes (`Verify it` Lean+, `Test it` Medium+, `Review it` + `Document it` Full); any surfaced follow-up enrolled |
+| `in-progress` (building) | `/istm-develop` | milestone sub-boxes tick one by one; code pointer filled |
+| `in-progress` (verified) | `/istm-check verify` | `Build it` + milestones ticked; `Verify it` ticked |
+| `done` | the tier's last required stage (`Vibe` → `/istm-develop`; `Lean` → `/istm-check verify`; `Medium`/`Full` → `/istm-test`), then `/istm-sync` | required boxes ticked; `Review it`/`Document it` (Full) ticked by `/istm-check review`/`/istm-document`, tracked but not part of the `done` gate (Design/Build/Verify/Test); `/istm-sync` captures conventions |
 
 - **Next step** = the first unticked box (always a command or a tracked milestone).
-- **needs a decision** = run `/architect` first; otherwise straight to `/develop` (or `/audit` for standards & tooling). The tag drops once the spec is captured.
+- **needs a decision** = run `/architect` first; otherwise straight to `/istm-develop` (or `/istm-audit` for standards & tooling). The tag drops once the spec is captured.
 - **Atomic build tasks live in the spec's `## Build plan`, not here**: the scope carries only the milestone rollup.
 - **Status** `planned` → `in-progress` → `done`, plus `existing` (pre-workflow) and `dropped` (de-scoped, kept for history).
 - **Approach tag** beside a heading (e.g. `· Facade`) overrides the project default for that feature; no tag = inherits it.
 - **Workflow tier tag** beside a heading (e.g. `· Full`, `· Vibe`) overrides the project default `**Workflow:**` tier for that one feature; no tag = inherit. It is the single rigor dial (there is no separate "weight").
-- **Workflow** (header line) is the project default tier, the stages each feature runs **after** `/develop`: **Vibe** = nothing after `/develop` (rely on its build time self check); **Lean** = `/check verify`; **Medium** = `/check verify` then `/test`; **Full** = `/check verify`, `/test`, a fresh model `/check review`, then `/document` (and most features need a spec). The tier also sets what closes a feature to `done`, the last required stage marks it: **Vibe** → `/develop` (build + self check); **Lean** → `/check verify` on PASS; **Medium**/**Full** → `/test` (with verify passed). At every tier an `Assumed` spec still blocks `done` until `/architect` ratifies it, and `/architect` still gates any feature that needs a decision (tier does not turn the gate off). A feature's own tier tag overrides this default. `/develop` reads the effective tier to scale the next steps it recommends.
-- **Pointer line** (`spec <n> · code in <path>`): the spec link added by `/architect`, the code path by `/develop`.
+- **Workflow** (header line) is the project default tier, the stages each feature runs **after** `/istm-develop`: **Vibe** = nothing after `/istm-develop` (rely on its build time self check); **Lean** = `/istm-check verify`; **Medium** = `/istm-check verify` then `/istm-test`; **Full** = `/istm-check verify`, `/istm-test`, a fresh model `/istm-check review`, then `/istm-document` (and most features need a spec). The tier also sets what closes a feature to `done`, the last required stage marks it: **Vibe** → `/istm-develop` (build + self check); **Lean** → `/istm-check verify` on PASS; **Medium**/**Full** → `/istm-test` (with verify passed). At every tier an `Assumed` spec still blocks `done` until `/architect` ratifies it, and `/architect` still gates any feature that needs a decision (tier does not turn the gate off). A feature's own tier tag overrides this default. `/istm-develop` reads the effective tier to scale the next steps it recommends.
+- **Pointer line** (`spec <n> · code in <path>`): the spec link added by `/architect`, the code path by `/istm-develop`.
 ```
 
 ## Brownfield enrollment
 
-Already built features are enrolled **for context**, above the planned ones, with status `existing` (complete, no task list) or `in-progress` (partial, finish via `/develop`), each with a code pointer. They also appear in the At a glance table.
+Already built features are enrolled **for context**, above the planned ones, with status `existing` (complete, no task list) or `in-progress` (partial, finish via `/istm-develop`), each with a code pointer. They also appear in the At a glance table.
 
 ```markdown
 ### A. Auth · existing
 Pre-workflow auth: sign in, sessions, reset. code in `src/auth/`
 
 ### B. Product catalog · in-progress
-Partial catalog; finish the remaining pieces via /develop. code in `src/catalog/`
+Partial catalog; finish the remaining pieces via /istm-develop. code in `src/catalog/`
 ```
 
-`existing` is not `done`: it predates the workflow, so `/develop` and `/sync` leave it alone.
+`existing` is not `done`: it predates the workflow, so `/istm-develop` and `/istm-sync` leave it alone.
 
 ## Large product: epic split
 
-When `scope.md` outgrows a comfortable scan (roughly a dozen plus features across clearly distinct areas), split by epic: **rename `scope.md` to `.istm-context/scope/index.md`** (keep the At a glance table across all epics + a one line status rollup per epic, each linking its file), and **move each area's feature sections out into its own `.istm-context/scope/<epic>.md`**. Promote **on demand**; don't split a small product early. File names are always **semantic** (`scope.md` / `index.md` / `<epic>.md`), never numbered. In a monorepo, each workspace gets its own `.istm-context/scope/<workspace>/` the same way, with a top level `.istm-context/scope/index.md` mapping the workspaces (one line + rollup each).
+When `scope.md` outgrows a comfortable scan (roughly a dozen plus features across clearly distinct areas), split by epic: **rename `scope.md` to `.istm-context/istm-scope/index.md`** (keep the At a glance table across all epics + a one line status rollup per epic, each linking its file), and **move each area's feature sections out into its own `.istm-context/istm-scope/<epic>.md`**. Promote **on demand**; don't split a small product early. File names are always **semantic** (`scope.md` / `index.md` / `<epic>.md`), never numbered. In a monorepo, each workspace gets its own `.istm-context/istm-scope/<workspace>/` the same way, with a top level `.istm-context/istm-scope/index.md` mapping the workspaces (one line + rollup each).
 
 ## Completion report block
 
 ```
-## /scope complete
+## /istm-scope complete
 
 **Product**: <one line>
 **Behavior**: <plan | replan | add (inferred from the situation, not a typed subcommand)>
 **Build approach**: <name (one-line principle)> · **Per-feature overrides**: <feature → approach, … (or "none, all inherit")>
 **Workflow**: <Vibe | Lean | Medium | Full> (<the stages it runs; why recommended for this product>) · **Per-feature tier overrides**: <feature → tier, … (or "none, all inherit")>
-**Scope file**: <.istm-context/scope/scope.md> (<created new | updated in place | new epic file for <area>>)
+**Scope file**: <.istm-context/istm-scope/istm-scope.md> (<created new | updated in place | new epic file for <area>>)
 **Scope (this pass)**: <N> new features to build, <M> already on the scope, <K> deferred
 **Build order**: <feature 1> → <feature 2> → …
-**First step**: <run `/clear` first, then the first unticked box, usually `/architect <first feature>` (or `/audit` if a brownfield repo has no root .istm-context/agents.md), each skill reads its inputs from the files just written, so a fresh session keeps every step cheap>
+**First step**: <run `/clear` first, then the first unticked box, usually `/architect <first feature>` (or `/istm-audit` if a brownfield repo has no root .istm-context/agents.md), each skill reads its inputs from the files just written, so a fresh session keeps every step cheap>
 ```
 
-_Context hygiene: the scope, the specs, and `.istm-context/agents.md` are the durable state, so the workflow hands off through files, not the chat. Advise `/clear` between units (after `/scope`, after each `/architect`, between features) and `/compact` mid unit if one run gets long. On Claude Code use `/clear` / `/compact`; use your agent's fresh session equivalent elsewhere._
+_Context hygiene: the scope, the specs, and `.istm-context/agents.md` are the durable state, so the workflow hands off through files, not the chat. Advise `/clear` between units (after `/istm-scope`, after each `/architect`, between features) and `/compact` mid unit if one run gets long. On Claude Code use `/clear` / `/compact`; use your agent's fresh session equivalent elsewhere._

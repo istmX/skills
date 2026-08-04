@@ -1,7 +1,7 @@
 ---
-name: debug
+name: istm-debug
 allowed-tools: Bash, Read, Grep, Glob, Write, Edit, Agent
-description: "Run /debug to find and fix the root cause of a bug (something failing, broken, throwing, or behaving wrong) when a test fails for a reason that is not obvious, /check verify finds a failure, or behavior is unexpected. Runs a reproduce, localize, hypothesize, test, fix, verify loop, makes the minimal fix, and hands a regression test to /test. No features, no extra refactors."
+description: "Run /istm-debug to find and fix the root cause of a bug (something failing, broken, throwing, or behaving wrong) when a test fails for a reason that is not obvious, /istm-check verify finds a failure, or behavior is unexpected. Runs a reproduce, localize, hypothesize, test, fix, verify loop, makes the minimal fix, and hands a regression test to /istm-test. No features, no extra refactors."
 ---
 
 ## Output style (plain words, no dashes, no hyphens)
@@ -24,7 +24,7 @@ A structured root cause investigation, not a guess and check. Bugs are found by 
 
 ## Artifact ownership
 
-Writes the **minimal code fix** for the root cause. Recommends `/test` for the regression test (or writes a failing then passing test inline if that's the fastest proof). Does **not** add features, refactor unrelated code, or rewrite the spec. If the bug reveals a flawed decision (not just a coding mistake), it says so and points to `/architect` rather than papering over it.
+Writes the **minimal code fix** for the root cause. Recommends `/istm-test` for the regression test (or writes a failing then passing test inline if that's the fastest proof). Does **not** add features, refactor unrelated code, or rewrite the spec. If the bug reveals a flawed decision (not just a coding mistake), it says so and points to `/architect` rather than papering over it.
 
 ---
 
@@ -74,7 +74,7 @@ Make the **minimal, targeted** change that addresses the proven cause. Don't fix
 
 - Run the Step 1 reproduction again, confirm it now passes.
 - Run the surrounding test suite, confirm no regression.
-- **Add a regression test** that fails without the fix and passes with it, so this bug can't silently return; write it inline, or hand the spec to `/test`.
+- **Add a regression test** that fails without the fix and passes with it, so this bug can't silently return; write it inline, or hand the spec to `/istm-test`.
 - **Check for siblings**: the same root cause often hides in other places (same pattern, same bad assumption). Grep for them and note or fix them.
 
 ### Optional: run it in a subagent
@@ -88,13 +88,13 @@ For a hunt that is not trivial, spawn an investigation subagent so the iterative
 ### Report
 
 ```
-## /debug complete
+## /istm-debug complete
 
 **Symptom**: <observed vs expected>
 **Reproduction**: <how it was triggered>
 **Root cause**: <the proven cause, with the evidence that confirmed it>
 **Fix**: <the minimal change (files touched)>
-**Regression test**: <added inline | spec handed to /test>
+**Regression test**: <added inline | spec handed to /istm-test>
 **Siblings**: <same cause found/fixed elsewhere | none found>
 **Deeper issue**: <if the bug reveals a design flaw, run /architect | none>
 ```

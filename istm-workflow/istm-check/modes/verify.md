@@ -1,29 +1,29 @@
-# /check verify (runtime proof)
+# /istm-check verify (runtime proof)
 
-The `verify` mode of `/check`: run the real app and prove the change works. Follow it fully.
+The `verify` mode of `/istm-check`: run the real app and prove the change works. Follow it fully.
 
 ## What this skill does
 
 Your role: the acceptance engineer. Trust observed behavior over green checkmarks; a passing suite proves the code the author thought to test, not that the feature exists. Ask: "If I had to sign off that this is real, what would I need to watch happen with my own eyes?" Then drive the actual thing and judge what you see against what the slice was supposed to deliver.
 
-`/check verify` closes the gap between "the tests are green" and "the feature actually works":
+`/istm-check verify` closes the gap between "the tests are green" and "the feature actually works":
 
 1. Scopes what changed (from git) into observable behaviors to check, anchored to the spec's acceptance criteria when a governing spec exists.
 2. Runs the app the project's own way, reusing its launch method when one exists.
 3. Exercises the changed flow and observes: screenshots for UI, response bodies for APIs, output for CLIs, logs for jobs.
-4. Reports pass/fail per behavior and per acceptance criterion, anything anomalous, and what `/test` should turn into permanent assertions.
+4. Reports pass/fail per behavior and per acceptance criterion, anything anomalous, and what `/istm-test` should turn into permanent assertions.
 
-Runtime counterpart to `/test`: `/test` writes assertions that run forever; `/check verify` opens the app once and confirms it's real before review.
+Runtime counterpart to `/istm-test`: `/istm-test` writes assertions that run forever; `/istm-check verify` opens the app once and confirms it's real before review.
 
 Spec conformance gate: when a governing spec has IDed acceptance criteria (`## Requirements`, `AC-1…`), also prove the implementation conforms to the contract: every criterion met, every specced surface (page, route, table) actually built. Green tests and a working happy path never reveal a surface that was specced but never built, or a migration never applied. See Step 0b and Step 4b.
 
 ## Asks vs acts
 
-Acts: scopes from git, works out the launch, runs, observes, reports. Asks only when it cannot determine how to start the app or which flow to exercise (e.g. a route needing seeded data or credentials). Never modifies application code; report breakage and point to `/debug` or `/develop`.
+Acts: scopes from git, works out the launch, runs, observes, reports. Asks only when it cannot determine how to start the app or which flow to exercise (e.g. a route needing seeded data or credentials). Never modifies application code; report breakage and point to `/istm-debug` or `/istm-develop`.
 
 ## Artifact ownership
 
-Owns no durable files. Chat output only (plus screenshots/logs saved to the scratch area). Does not write code (`/develop`), tests (`/test`), or context files.
+Owns no durable files. Chat output only (plus screenshots/logs saved to the scratch area). Does not write code (`/istm-develop`), tests (`/istm-test`), or context files.
 
 ---
 
@@ -47,15 +47,15 @@ Only in refactor mode. It drives the app twice and holds two output sets, so run
   2. Capture BEFORE (the state before the change). Prefer a throwaway git worktree at the ref before the change (the base branch, or the commit before the refactor): `git worktree add <tmp> <ref>`, start the app in that worktree, hit each surface, save the raw outputs, `git worktree remove <tmp>`. This keeps the working tree and untracked files intact. Only if worktrees aren't available, fall back to `git stash --include-untracked` (plain `git stash` leaves new files behind and contaminates the "before"), restore with `git stash pop` after.
   3. Capture AFTER: with the change applied, start the app, hit the same surfaces the same way, save the outputs.
   4. Diff before vs after per surface. For a behavior preserving change they must be byte identical (modulo intentional, documented differences). Report any diff as a regression.
-- Relay: surfaces diffed, identical vs differing, the exact diff for any that changed → run `/debug`. Then stop (skip the feature mode steps).
+- Relay: surfaces diffed, identical vs differing, the exact diff for any that changed → run `/istm-debug`. Then stop (skip the feature mode steps).
 
 ### Step 0b: Load the spec contract (if a governing spec exists)
 
-Before scoping, find the governing spec: the feature dir `.istm-context/specs/NNNN-<feature>/` (or single file `.istm-context/specs/NNNN-<feature>.md`) this change implements. Match by branch/feature name or touched surfaces; a scope under `.istm-context/scope/` points to the spec. No governing spec (a trivial change with no record)? Skip this step and verify against observed behavior only.
+Before scoping, find the governing spec: the feature dir `.istm-context/specs/NNNN-<feature>/` (or single file `.istm-context/specs/NNNN-<feature>.md`) this change implements. Match by branch/feature name or touched surfaces; a scope under `.istm-context/istm-scope/` points to the spec. No governing spec (a trivial change with no record)? Skip this step and verify against observed behavior only.
 
 The spec carries the contract: `## Requirements` with IDed acceptance criteria (`AC-1`, `AC-2`, …) plus the surfaces it specs (pages, routes, tables, migrations). Load the checklist:
 
-1. Prefer the per feature `verify.md` beside the spec (`.istm-context/specs/NNNN-<feature>/verify.md`) if present; `/develop` emits it as concrete, already resolved verify steps tagged with the `AC-N` each exercises:
+1. Prefer the per feature `verify.md` beside the spec (`.istm-context/specs/NNNN-<feature>/verify.md`) if present; `/istm-develop` emits it as concrete, already resolved verify steps tagged with the `AC-N` each exercises:
    ```markdown
    # Verify: <feature> · spec NNNN
    ## UI / manual
@@ -81,7 +81,7 @@ Base branch `BASE`: `git rev-parse --verify main`; on success use `main`, otherw
 
 Spec contract loaded (Step 0b)? The checklist is your scope: each `verify.md` step / `AC-N` is an observable behavior to exercise, each specced surface (page, route, table, migration) a thing to confirm was built. Don't narrow to only the changed files: an AC or surface with no implementation is exactly the miss this gate catches; keep it listed and let Step 4b flag it. Use the git diff to locate where each is (or isn't) implemented.
 
-No spec? From the changed files write the 2 to 5 concrete things a human could watch to know the change works, e.g. "the /pricing page renders all three tiers and the CTA opens checkout". If a feature scope exists (in `.istm-context/scope/`), anchor these to that feature's acceptance criteria / sub tasks. Keep them observable, not internal.
+No spec? From the changed files write the 2 to 5 concrete things a human could watch to know the change works, e.g. "the /pricing page renders all three tiers and the CTA opens checkout". If a feature scope exists (in `.istm-context/istm-scope/`), anchor these to that feature's acceptance criteria / sub tasks. Keep them observable, not internal.
 
 ### Step 2: Determine how to run the app
 
@@ -146,17 +146,17 @@ Overall verdict PASS requires every behavior verified with cited evidence, and (
 
 ### Step 5: Report
 
-Update the scope: if this feature is on the scope (`.istm-context/scope/`) and the verdict is PASS, tick its `Verify it` box. **Also tick, in this feature's `verify.md`, each step you actually ran and that passed** (`- [ ]` → `- [x]`); leave a step unticked if it failed or you could not run it. This is per feature: only the feature you verified gets ticked, other features' `verify.md` files stay unchecked until you verify them (expected, not a miss). What happens next depends on the workflow tier (the effective tier: the feature's own tier tag if set, else the scope header `**Workflow:**` default):
+Update the scope: if this feature is on the scope (`.istm-context/istm-scope/`) and the verdict is PASS, tick its `Verify it` box. **Also tick, in this feature's `verify.md`, each step you actually ran and that passed** (`- [ ]` → `- [x]`); leave a step unticked if it failed or you could not run it. This is per feature: only the feature you verified gets ticked, other features' `verify.md` files stay unchecked until you verify them (expected, not a miss). What happens next depends on the workflow tier (the effective tier: the feature's own tier tag if set, else the scope header `**Workflow:**` default):
 
-- **Lean** → `/check verify` is the last required stage, so on PASS also set the feature `done` (At a glance table and heading) and mirror the governing spec's `**Status**:` line `In Progress` → `Accepted` (surgically; not `In Progress` → flag, don't clobber). Exception: an `Assumed` spec blocks `done`, leave it `in-progress` and point to `/architect <feature>` to ratify first. Then point to `/sync`.
-- **Medium / Full** → leave `Test it` and the `done` status to `/test` and `/sync`; point to `/test <feature>` next.
+- **Lean** → `/istm-check verify` is the last required stage, so on PASS also set the feature `done` (At a glance table and heading) and mirror the governing spec's `**Status**:` line `In Progress` → `Accepted` (surgically; not `In Progress` → flag, don't clobber). Exception: an `Assumed` spec blocks `done`, leave it `in-progress` and point to `/architect <feature>` to ratify first. Then point to `/istm-sync`.
+- **Medium / Full** → leave `Test it` and the `done` status to `/istm-test` and `/istm-sync`; point to `/istm-test <feature>` next.
 
 On FAIL or BLOCKED, tick nothing and report the gaps. Advise `/clear` before moving to a new feature (the spec and `verify.md` hold the state, so a fresh session loses nothing and stays cheap).
 
 **Confirm the update as a closing gate** (don't skip it): state in the report exactly what you ticked in each file, e.g. "Scope: ticked `Verify it`. Spec: status → `Accepted`." No matching scope row → say so ("no scope row matched `<feature>`"), don't finish silently.
 
 ```
-## /check verify complete
+## /istm-check verify complete
 
 **Ran**: <how the app was started: the exact command or url. "Not started" if you never ran it, in which case no ✅ or PASS is allowed>
 **Scope**: <N> behaviors checked, <M> not exercised
@@ -166,7 +166,7 @@ On FAIL or BLOCKED, tick nothing and report the gaps. Advise `/clear` before mov
 - <behavior>: <what you observed>, evidence: <command + exit code | url + screenshot path | request + status + fields | query + result>
 
 **Failed** ❌:
-- <behavior>: <what went wrong + exact error/screenshot path> → run /debug
+- <behavior>: <what went wrong + exact error/screenshot path> → run /istm-debug
 
 **Blocked** ⚠️:
 - <behavior>: <what's needed to verify it (seed data, credentials, env)>
@@ -183,15 +183,15 @@ On FAIL or BLOCKED, tick nothing and report the gaps. Advise `/clear` before mov
 **Not applied** ⚠️ (built but not live/correct at runtime):
 - <surface / criterion>: <the runtime failure, e.g. "migration committed, column absent from live schema"> → <apply/fix>
 
-**What /test should lock in**:
+**What /istm-test should lock in**:
 - <the behaviors above, as permanent assertions>
 
-**For /check review**:
+**For /istm-check review**:
 - <anything that worked but looked fragile: slow response, console warning, missing empty state>
 ```
 
 Drop the Spec conformance / Missed surfaces / Not applied sections when there was no governing spec. Keep them but write "none" when a contract was loaded and every item is met.
 
-Clean up any process you started. `/check verify` confirms reality, never fixes or asserts: `/debug` for failures, `/develop` to build a surface that is missing or not applied, `/test` to make passing behaviors permanent. A FAIL conformance verdict means the feature is not done, even if every test is green.
+Clean up any process you started. `/istm-check verify` confirms reality, never fixes or asserts: `/istm-debug` for failures, `/istm-develop` to build a surface that is missing or not applied, `/istm-test` to make passing behaviors permanent. A FAIL conformance verdict means the feature is not done, even if every test is green.
 
 A BLOCKED verdict is an honest, useful result: it says the change could not be exercised and names what would make it exercisable. A fabricated PASS is the one output this skill must never produce, because every later step trusts it.

@@ -2,7 +2,7 @@
 
 ## Add (enroll one ad hoc feature, lightweight)
 
-Inferred when a scope exists and the argument names a single feature: `/scope <a feature>` enrolls one coarse row without planning again, for a feature invented partway through. No `add` subcommand to type.
+Inferred when a scope exists and the argument names a single feature: `/istm-scope <a feature>` enrolls one coarse row without planning again, for a feature invented partway through. No `add` subcommand to type.
 
 1. Read the scope again and dedup: present at any status → extend that row, don't duplicate.
 2. Ask only what's needed (a short panel if intent/tier is ambiguous, else infer): intent, workflow tier (only if it differs from the project default, else inherit), placement (`Order` / `Phasing`).

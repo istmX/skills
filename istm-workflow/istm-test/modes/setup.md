@@ -7,12 +7,12 @@ Read this only when `test-preferences.json` is absent. It holds the two first ru
 With file tools (not shell utilities), determine:
 - Package manager by lockfile: `pnpm-lock.yaml` → pnpm, `yarn.lock` → yarn, `bun.lockb` → bun, `package-lock.json` → npm.
 - Language and framework: `package.json` for `next`/`vite`/`nuxt`/`svelte`/`react`; `pyproject.toml` (pytest/unittest) → Python; `go.mod` → Go; `Cargo.toml` → Rust.
-- Installed test tools: `vitest`/`jest`/`@playwright/test`/`cypress`/`@testing-library/*` in `package.json`. A different runner already in use (`bun test`, `node:test`, `ava`, `deno test`, etc.): detect and use it instead of installing a new one.
+- Installed test tools: `vitest`/`jest`/`@playwright/istm-test`/`cypress`/`@testing-library/*` in `package.json`. A different runner already in use (`bun test`, `node:test`, `ava`, `deno test`, etc.): detect and use it instead of installing a new one.
 
 **Q0: No test setup at all? Don't assume they want one.** No test tool installed (whole repo, or this package in a monorepo): first check for a deliberate no test runner convention.
-- Stated in the nearest `.istm-context/agents.md` or governing spec (e.g. "no test runner, typecheck + `/check verify` is the gate"): respect it, don't push a framework. Save the **gate shape** of `test-preferences.json` (Step 6), run the project's typecheck/lint as the gate, point to `/check verify` for behavior. Report: "This project gates on typecheck + `/check verify`, not a test suite. Ran the typecheck gate; use `/check verify` to confirm behavior."
-- Not stated: ask (don't default to installing): "This has no test setup. How do you want to gate changes here?" → `Set up a test framework` (→ Q1, install with confirmation) · `No test runner, typecheck + /check verify` (→ save the gate shape, run typecheck, defer behavior to `/check verify`; never install) · `Just typecheck for now` (→ also the gate shape).
-- Per package in a monorepo: a package with no tests by design gates on typecheck/`/check verify` even if a sibling has a full suite; apply per resolved package root.
+- Stated in the nearest `.istm-context/agents.md` or governing spec (e.g. "no test runner, typecheck + `/istm-check verify` is the gate"): respect it, don't push a framework. Save the **gate shape** of `test-preferences.json` (Step 6), run the project's typecheck/lint as the gate, point to `/istm-check verify` for behavior. Report: "This project gates on typecheck + `/istm-check verify`, not a test suite. Ran the typecheck gate; use `/istm-check verify` to confirm behavior."
+- Not stated: ask (don't default to installing): "This has no test setup. How do you want to gate changes here?" → `Set up a test framework` (→ Q1, install with confirmation) · `No test runner, typecheck + /istm-check verify` (→ save the gate shape, run typecheck, defer behavior to `/istm-check verify`; never install) · `Just typecheck for now` (→ also the gate shape).
+- Per package in a monorepo: a package with no tests by design gates on typecheck/`/istm-check verify` even if a sibling has a full suite; apply per resolved package root.
 
 Skip Q1 unless the engineer chose "set up a framework".
 
@@ -71,7 +71,7 @@ Write `test-preferences.json` at the project root. It has two shapes, and which 
 }
 ```
 
-**Gate shape** (the project gates without a runner, by convention or by the engineer's Q0 answer). `tool` is `null` and `gate` names the gate. Write both keys, never just one: `/test` reads `tool` to decide whether to write a suite, and `/check review` reads `gate` to tell a deliberate no runner project apart from one that simply never set tests up. A file with neither key is malformed.
+**Gate shape** (the project gates without a runner, by convention or by the engineer's Q0 answer). `tool` is `null` and `gate` names the gate. Write both keys, never just one: `/istm-test` reads `tool` to decide whether to write a suite, and `/istm-check review` reads `gate` to tell a deliberate no runner project apart from one that simply never set tests up. A file with neither key is malformed.
 
 ```json
 {
@@ -94,4 +94,4 @@ Conventional directories and patterns:
 | Rust | `#[cfg(test)]` in file / `tests/` | n/a |
 
 Then tell the engineer:
-> "Preferences saved to `test-preferences.json`. Future `/test` runs load these and skip straight to writing."
+> "Preferences saved to `test-preferences.json`. Future `/istm-test` runs load these and skip straight to writing."

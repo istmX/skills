@@ -2,7 +2,7 @@
 
 ### Step 1: Locate the scope; greenfield / brownfield / monorepo
 
-Detect (skip `node_modules/` and `.git/`): source files (any `.ts`, `.tsx`, `.js`, `.py`, `.go`, `.rs`; presence ⇒ brownfield, none ⇒ greenfield); root `.istm-context/agents.md`; existing scope under `.istm-context/scope/` (`scope.md`, or `index.md` + epic files; monorepo: `.istm-context/scope/<workspace>/`), noting the shape.
+Detect (skip `node_modules/` and `.git/`): source files (any `.ts`, `.tsx`, `.js`, `.py`, `.go`, `.rs`; presence ⇒ brownfield, none ⇒ greenfield); root `.istm-context/agents.md`; existing scope under `.istm-context/istm-scope/` (`scope.md`, or `index.md` + epic files; monorepo: `.istm-context/istm-scope/<workspace>/`), noting the shape.
 
 Read exactly one route file before continuing to Step 2:
 
@@ -37,7 +37,7 @@ Reason out the pick, never hardcode it or its mechanics: default for a proper pr
 
 **Once the approach is chosen, read its persona file and adopt that engineer's role for decomposition** (`approaches/tracer-bullet.md`, `approaches/skateboard.md`, `approaches/facade.md`, or `approaches/journey.md`). Read only the chosen one. Each persona defines how that engineer slices, what the first slice or deliverable is, what is real vs deferred, and the sequencing, with a worked example. All slicing and sequencing in Step 4 and Step 5 follows that persona, so the four approaches produce genuinely different scopes for the same product, not the same list relabeled. A per feature override (Step 5) reads that feature's chosen persona and applies it to that feature only.
 
-Record it (the propagation source) in the scope header: `Build approach: <name> (<one-line principle>)`. A project wide convention: `/audit` and `/sync` persist it into root `.istm-context/agents.md`; `/architect`, `/develop`, `/check verify` read and honor it. It also sets each feature's Phase (its slice / journey), shown in the At a glance table and as section grouping.
+Record it (the propagation source) in the scope header: `Build approach: <name> (<one-line principle>)`. A project wide convention: `/istm-audit` and `/istm-sync` persist it into root `.istm-context/agents.md`; `/architect`, `/istm-develop`, `/istm-check verify` read and honor it. It also sets each feature's Phase (its slice / journey), shown in the At a glance table and as section grouping.
 
 Header value = project default; a single feature may override via the optional per feature Approach (Step 5), a tag beside its heading (e.g. `· Facade`). Precedence: own tag if set, else project default; tag only when it differs (no tag = inherit).
 
@@ -60,36 +60,36 @@ From the answers, produce the feature list: foundations first (Step 4), then sli
 - **Needs spec?**: the invent test: would building it require a decision the engineer hasn't made? Yes for a provider/library choice, a data model, a cross cutting pattern, the design system, a whole page/screen with no spec yet, or behavior that is not trivial (search, filtering, recommendations). No only for genuinely pure implementation an existing `.istm-context/design.md`/spec/convention covers. Unsure → yes; an unflagged decision is the expensive miss. `Full`/`Medium` tier → almost always yes.
 - One decision per spec: multiple distinct decisions in one feature → one `Needs spec: yes` item each, never one lumped "strategy" spec. Several sharing one broad decision that then splits → an umbrella that dependents reference; never mark a dependent `no` when it carries its own decision.
 
-No build task breakdown here. A not yet designed feature gets exactly one checkbox, its entry command: `/architect <feature>` when it `needs a decision`, else `/develop <feature>` (the coding standards and tooling foundation's first box is `/audit`, never `/develop`). Never enumerate UI / data model / API / test sub tasks; `/architect` fills the built ready shape on spec capture (see What this skill does; atomic tasks stay in the spec). The next step is then always the first unticked box, always a command or tracked milestone (no separate `Next:` line). See the lifecycle table in `scope-template.md`.
+No build task breakdown here. A not yet designed feature gets exactly one checkbox, its entry command: `/architect <feature>` when it `needs a decision`, else `/istm-develop <feature>` (the coding standards and tooling foundation's first box is `/istm-audit`, never `/istm-develop`). Never enumerate UI / data model / API / test sub tasks; `/architect` fills the built ready shape on spec capture (see What this skill does; atomic tasks stay in the spec). The next step is then always the first unticked box, always a command or tracked milestone (no separate `Next:` line). See the lifecycle table in `scope-template.md`.
 
-Analysis/inventory is not a scope row: cataloguing duplication, listing call sites, auditing current state is decision support research living with the spec (`/architect` puts it in the spec's `rationale.md`). Never plan a row or step that writes a `.md` into `.istm-context/scope/`.
+Analysis/inventory is not a scope row: cataloguing duplication, listing call sites, auditing current state is decision support research living with the spec (`/architect` puts it in the spec's `rationale.md`). Never plan a row or step that writes a `.md` into `.istm-context/istm-scope/`.
 
 ### Step 5b: Recommend the workflow depth (decision panel)
 
-Now that the features exist, propose the project's default **workflow depth**: how many stages a feature normally runs after `/develop`. This is a recommendation, not a question you ask cold: reason from the product (throwaway prototype vs internal tool vs real product vs payments/auth/compliance/regulated/team work) and the mix of feature weights you just assigned, then present a panel with exactly one recommended. Each level names the stages it runs, so the tradeoff is visible. Frame it: "Based on what you're building, here's the workflow I recommend. You can override, and any single feature can still run heavier."
+Now that the features exist, propose the project's default **workflow depth**: how many stages a feature normally runs after `/istm-develop`. This is a recommendation, not a question you ask cold: reason from the product (throwaway prototype vs internal tool vs real product vs payments/auth/compliance/regulated/team work) and the mix of feature weights you just assigned, then present a panel with exactly one recommended. Each level names the stages it runs, so the tradeoff is visible. Frame it: "Based on what you're building, here's the workflow I recommend. You can override, and any single feature can still run heavier."
 
-Depth governs only the stages **after** `/develop` (verify, test, review, document). It does **not** turn off the `/architect` gate: at every depth, a feature that needs a load bearing decision still runs `/architect` first (or records an `Assumed` spec). Lean does not mean "skip architect"; it means lean features are usually `Needs spec: no`, so you rarely reach it.
+Depth governs only the stages **after** `/istm-develop` (verify, test, review, document). It does **not** turn off the `/architect` gate: at every depth, a feature that needs a load bearing decision still runs `/architect` first (or records an `Assumed` spec). Lean does not mean "skip architect"; it means lean features are usually `Needs spec: no`, so you rarely reach it.
 
-- **question**: "How much workflow do you want by default for this project? Each level sets the stages a feature normally runs after `/develop`; a risky feature can still be bumped up, and `/architect` still applies whenever a decision is owed."
+- **question**: "How much workflow do you want by default for this project? Each level sets the stages a feature normally runs after `/istm-develop`; a risky feature can still be bumped up, and `/architect` still applies whenever a decision is owed."
 - **header**: "Workflow"
 - **options** (mark exactly one `(recommended)` by the product signals, one line why):
-  - `Vibe`: "Just `/develop`. Nothing after it, you rely on `/develop`'s own build time self check (typecheck, and rendering the screen when it can) and your own eye. No `/check verify`, no test suite, no review. `/develop` can mark the feature `done` itself. Best for throwaway prototypes, experiments, and personal projects."
-  - `Lean`: "After `/develop`, `/check verify` on the real app. No separate test suite or second model review unless a feature needs it. Best for low risk features and internal tools you still want proven."
-  - `Medium`: "After `/develop`, `/check verify` then `/test`. No fresh model review by default. Best for most real products."
-  - `Full`: "After `/develop`, `/check verify`, `/test`, a fresh model `/check review`, then `/document`; and most features are treated as needing a spec. Best for high risk, payments, auth, compliance, regulated, or team projects."
+  - `Vibe`: "Just `/istm-develop`. Nothing after it, you rely on `/istm-develop`'s own build time self check (typecheck, and rendering the screen when it can) and your own eye. No `/istm-check verify`, no test suite, no review. `/istm-develop` can mark the feature `done` itself. Best for throwaway prototypes, experiments, and personal projects."
+  - `Lean`: "After `/istm-develop`, `/istm-check verify` on the real app. No separate test suite or second model review unless a feature needs it. Best for low risk features and internal tools you still want proven."
+  - `Medium`: "After `/istm-develop`, `/istm-check verify` then `/istm-test`. No fresh model review by default. Best for most real products."
+  - `Full`: "After `/istm-develop`, `/istm-check verify`, `/istm-test`, a fresh model `/istm-check review`, then `/istm-document`; and most features are treated as needing a spec. Best for high risk, payments, auth, compliance, regulated, or team projects."
 
 The picker appends a free text Other automatically; in a plain text fallback offer the same four. Recommend by signal: throwaway prototype, experiment, or a personal one off → `Vibe`; a low risk product or internal tool you still want proven → `Lean`; a normal production product → `Medium`; payments, auth, PII, compliance, regulated, or a team codebase → `Full`.
 
-Each tier also sets what `done` means (see `scope-template.md`): `Vibe` closes on build plus self check (`/develop` marks it), `Lean` on `/check verify` passing, `Medium`/`Full` on the tests being in (and the review for `Full`). The `Assumed` spec done gate still holds at every tier: a feature built on an unratified assumption cannot be `done` until `/architect` ratifies it.
+Each tier also sets what `done` means (see `scope-template.md`): `Vibe` closes on build plus self check (`/istm-develop` marks it), `Lean` on `/istm-check verify` passing, `Medium`/`Full` on the tests being in (and the review for `Full`). The `Assumed` spec done gate still holds at every tier: a feature built on an unratified assumption cannot be `done` until `/architect` ratifies it.
 
-Record the pick as the project default in the scope header `**Workflow:**` line (see `scope-template.md`). It sets the baseline each feature inherits; a feature tagged with a higher tier than the project default (Step 5) runs its heavier path, and one tagged lower runs lighter. This default is what `/develop` reads (via the effective tier) to scale the next steps it recommends after a build.
+Record the pick as the project default in the scope header `**Workflow:**` line (see `scope-template.md`). It sets the baseline each feature inherits; a feature tagged with a higher tier than the project default (Step 5) runs its heavier path, and one tagged lower runs lighter. This default is what `/istm-develop` reads (via the effective tier) to scale the next steps it recommends after a build.
 
 ### Step 6: Write the scope (single file or epic split)
 
 List the scope location again immediately before writing (a teammate may have changed it), then write per `scope-template.md`:
 
-- Small product → single file `.istm-context/scope/scope.md` (monorepo: `.istm-context/scope/<workspace>/scope.md`): At a glance table (including brownfield enrolled features) + phase grouped feature sections + legend.
-- Large product → epic split per Artifact ownership (`.istm-context/scope/index.md` + `.istm-context/scope/<epic>.md`); promote only when `scope.md` has outgrown a comfortable scan, else stay single file.
+- Small product → single file `.istm-context/istm-scope/istm-scope.md` (monorepo: `.istm-context/istm-scope/<workspace>/istm-scope.md`): At a glance table (including brownfield enrolled features) + phase grouped feature sections + legend.
+- Large product → epic split per Artifact ownership (`.istm-context/istm-scope/index.md` + `.istm-context/istm-scope/<epic>.md`); promote only when `scope.md` has outgrown a comfortable scan, else stay single file.
 - Run again (living update): edit in place, never a dated file: append new rows with the next free `#`, sharpen existing rows' intent/seeds, leave existing statuses untouched; set a now out of scope row to `dropped` (never delete). Brownfield: append enrolled `existing`/`in-progress` rows above the `planned` ones.
 
 Citations are gated by Step 6b: ask that panel first (or confirm the chosen level) before adding any `(basis: …)` or `## References` content, and honor its level.
@@ -117,4 +117,4 @@ Sources plus web verified links: as Sources only, then verify the links with a r
 
 ### Step 7: Report and hand off
 
-Print the completion report using the `## /scope complete` block in `scope-template.md`, filled with this run's specifics. `/scope` does not run `/architect` or `/develop` for you; it hands you the ordered, coarse, weighted list to walk feature by feature (architect the `Needs spec: yes` ones, then build).
+Print the completion report using the `## /istm-scope complete` block in `scope-template.md`, filled with this run's specifics. `/istm-scope` does not run `/architect` or `/istm-develop` for you; it hands you the ordered, coarse, weighted list to walk feature by feature (architect the `Needs spec: yes` ones, then build).
