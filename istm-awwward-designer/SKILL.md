@@ -1,7 +1,7 @@
 ---
 name: istm-awwward-designer
 allowed-tools: Bash, Read, Grep, Glob, Write, Edit, Agent, AskUserQuestion
-description: "The premium frontend execution engine. This skill WRITES CODE. It takes blueprints from `/istm-design` and `/istm-animate` and builds Awwwards-winning React/GSAP/WebGL experiences."
+description: "The premium frontend spec orchestrator. It translates human design ideas into highly technical Awwwards-level GSAP/WebGL blueprints (.istm-context/specs/NNNN-motion-<feature>.md) for /istm-develop to physically build."
 ---
 
 ## Output style (plain words, no dashes, no hyphens)
@@ -12,32 +12,28 @@ Write everything this skill produces in plain simple language. Keep technical te
 
 ## What this skill does
 
-This is the ultimate execution engine. **THIS SKILL WRITES APPLICATION CODE.** 
+This is the ultimate Motion Translator and Spec Writer. **THIS SKILL DOES NOT WRITE APPLICATION CODE.** 
 
-Unlike `/istm-design` and `/istm-animate` (which only write markdown blueprints), `/istm-awwward-designer` is an expert UI developer. It reads the blueprints from `.istm-context/` and physically builds the high-end, award-winning frontend components.
+Unlike `/istm-develop` (which writes code), `/istm-awwward-designer` acts exactly like `/istm-craft`, but specialized entirely for high-end frontend execution. It takes a vague human request ("make the hero section pop and slide in smoothly") and translates it into a highly technical, rigorous GSAP motion specification that a developer agent can execute flawlessly without hallucinating.
 
-- **Teaches & Implements GSAP**: It writes complex GSAP timelines, `ScrollTrigger` logic, and staggered reveals.
-- **Physics Integration**: It mounts and configures `Lenis` for buttery smooth scroll-jacking.
-- **Asset Fallbacks**: It creates stunning typography-driven designs even without images, using extreme scaling and brutalist logic.
-- **WebGL**: Implements Three.js canvas backgrounds if requested.
+- **Teaches & Implements GSAP via Specs**: It writes complex GSAP timelines, `ScrollTrigger` logic, stagger values, and precise easing curves into `.istm-context/specs/`.
+- **Physics Integration**: It mandates how `Lenis` mounts for buttery smooth scroll-jacking in the spec.
+- **Asset Fallbacks**: It defines stunning typography-driven design specs even without images, using extreme scaling and brutalist logic.
+- **WebGL Constraint**: It avoids heavily relying on WebGL unless explicitly required, focusing on elite DOM/GSAP animations that dominate 95% of premium sites.
 
 ## Blueprint file convention
 
-You do NOT write blueprints. You READ them. 
-Before writing code, you must read:
+You READ the foundational blueprints:
 - `.istm-context/design.md`: For UI tokens, colors, and typography.
-- `.istm-context/animate.md`: For the required motion physics and easing.
+- `.istm-context/agents.md`: For the project architecture.
 
-## Awwwards References Library
-
-You have a vast library of technical standards and anti-patterns available. **Before building complex interactions, you MUST read the exact technical documentation located in `skills/istm-awwward-designer/references/`.**
-
-Specifically, use your read tools to check files like `animation-standards.md`, `anti-patterns.md`, `scroll-patterns.md`, and `tech-stack.md` inside that directory to ensure your GSAP logic perfectly meets Awwwards criteria.
+You WRITE the motion feature specs:
+- `.istm-context/specs/NNNN-motion-<feature>.md`: This is your output. You break down the human prompt into a rigid, step-by-step technical plan.
 
 ## Absolute Awwwards Execution Rules
 
-1. **Write The Code**: Your primary job is to generate the React components, CSS, and GSAP logic directly into the project folder (e.g., `src/components/`).
-2. **Teach by Doing**: Do not just tell the user how to animate. Write the actual `useEffect` hooks, `ScrollTrigger` setups, and CSS classes to prove it.
-3. **Anti-Template Directive**: Never use standard UI component libraries. The output must be bespoke and custom-coded.
-4. **DOM Performance**: Because GSAP and WebGL are heavy, you must use `will-change: transform` and avoid animating layout properties. Animate `transform` and `opacity` only.
-5. **No Slop**: Generic components will be rejected. You are building premium, high-contrast, motion-heavy interfaces.
+1. **Write The Spec, Not The Code**: Your primary job is to generate the Markdown blueprint describing exactly how the React components, CSS, and GSAP logic should be written by `/istm-develop`.
+2. **Translate Human to Tech**: When the user says "smooth", you write `ease: power4.out`. When they say "scroll reveal", you write `ScrollTrigger: { start: "top 80%", toggleActions: "play none none reverse" }`.
+3. **DOM Performance Strictness**: Mandate `will-change: transform` in the spec. Absolutely forbid animating layout properties (`width`, `height`, `top`, `left`). Animate `transform` and `opacity` only.
+4. **Cleanup Mandate**: Every spec involving a GSAP timeline or physics listener MUST explicitly instruct the developer to kill the timeline/listener on unmount to prevent memory leaks.
+5. **Handoff**: Once you finish writing the spec, instruct the user to run `/istm-develop` to physically build it.
