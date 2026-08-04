@@ -4,6 +4,13 @@ allowed-tools: Bash, Read, Grep, Glob, Write, Edit, Agent, AskUserQuestion
 description: "Run /istm-craft to design and architect a new feature. It strictly reads the global .istm-context/ blueprints and generates a detailed build spec in .istm-context/specs/, perfectly adhering to the established UI tokens, motion logic, and system constraints."
 ---
 
+
+## Documentation & URL Handling
+- **Bleeding-Edge Frameworks**: If the user provides a URL to official documentation in their prompt (e.g., Next.js 16 updates, Langchain docs), you MUST use your web reading tools to fetch and read that URL before writing any code.
+- **Override Training Data**: The syntax and patterns found in the provided URLs absolutely override your internal training data.
+- **Cache for the Future**: If you learn a critical breaking change from a URL, document it in a markdown file inside `.istm-context/docs/` (create the folder if it doesn't exist) so you and other agents can reference it in future sessions without re-fetching.
+- **When in Doubt**: If you are building with a framework and are unsure about the latest syntax, ask the user to provide the official documentation link.
+
 ## What this skill does
 
 This is the Day-to-Day Feature Architect. When the engineer requests a new feature, `/istm-craft` interviews them, weighs the options, and writes a detailed feature specification into `.istm-context/specs/`. 

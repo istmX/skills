@@ -18,6 +18,13 @@ Write everything this skill produces, files and messages alike, in plain simple 
 3. **Types & Constants**: Strictly enforce `No any`. Place all types in `types/` folders and hardcoded values in `constants/` folders.
 4. **Private vs Public Components**: Feature-specific components stay in `features/<name>/components/`. Only truly reusable components go to `shared/components/`.
 
+
+## Documentation & URL Handling
+- **Bleeding-Edge Frameworks**: If the user provides a URL to official documentation in their prompt (e.g., Next.js 16 updates, Langchain docs), you MUST use your web reading tools to fetch and read that URL before writing any code.
+- **Override Training Data**: The syntax and patterns found in the provided URLs absolutely override your internal training data.
+- **Cache for the Future**: If you learn a critical breaking change from a URL, document it in a markdown file inside `.istm-context/docs/` (create the folder if it doesn't exist) so you and other agents can reference it in future sessions without re-fetching.
+- **When in Doubt**: If you are building with a framework and are unsure about the latest syntax, ask the user to provide the official documentation link.
+
 ## What this skill does
 
 The builder: turns a spec plus project conventions into working code. Tracks: **UI** (components, pages, layouts; `ui-guide.md`), **Logical** (APIs, services, data layers, business logic, integrations; `logical-guide.md`), or both (e.g. "auth" = sign in pages plus session logic → run both). Step 0 gates on the spec so load bearing choices (an auth approach, a payment provider) are decided in `/architect`, not silently invented partway through the build.
