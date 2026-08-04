@@ -16,6 +16,24 @@ Claude Code loads it via the import below:
 @.istm-context/agents.md
 ```
 
+
+## If MODE is Restore
+
+If you were invoked as `/istm-sync restore`:
+1. Read all the loaded files (`progress.md`, `memory.md`, scope files, agents.md).
+2. Synthesize the project state.
+3. Output a "Context Restored" summary containing:
+   - **Architecture & Tech Stack**: Core technologies in use.
+   - **Recent Decisions**: From memory or decisions logs.
+   - **Progress**: What was just finished (from `progress.md` or scope `[x]`).
+   - **Active Task**: What is currently `In Progress`.
+   - **Next Steps**: The immediate TODOs to tackle next.
+4. Stop execution here. Do not attempt to reconcile git diffs or edit files.
+
+---
+
+## If MODE is Save (Default Maintenance)
+
 ## The change
 
 - **Scope mode**: MODE

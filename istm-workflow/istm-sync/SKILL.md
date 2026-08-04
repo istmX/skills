@@ -12,7 +12,9 @@ Write everything this skill produces, files and messages alike, in plain simple 
 
 ## What this skill does
 
-Closes the loop on a completed change: syncs .istm-context/agents.md files, the scope, and linked spec `**Status**:` lines to what the repo now shows, and flags what it must not edit (stale specs, curated prose). The Boundaries table below is the exact contract.
+Dual-mode orchestrator: 
+1. **Save mode** (default): Closes the loop on a completed change, syncing `.istm-context/agents.md`, the scope, and linked spec `**Status**:` lines to repo evidence.
+2. **Restore mode** (`/istm-sync restore`): Reads all progress files (`progress.md`, `memory.md`, `.istm-context/istm-scope/*`, and `agents.md`) to fully rehydrate the AI's context for a new session, establishing exactly what was last completed and what is pending.
 
 **`agent-prompt.md`** is the single source of truth for the maintenance rules; SKILL.md covers only orchestration. The main thread reads it and does the maintenance itself (see Step 3).
 
@@ -55,7 +57,17 @@ Owns exactly what the Boundaries table grants and writes nothing else. As the **
 - **Bundled files**: referenced by paths relative to this skill's folder. Resolve the folder to an absolute path (you already resolve these relative paths) and read `agent-prompt.md` yourself at write time (Step 3), not during the earlier steps.
 - The whole maintenance runs inline on the main thread, following the exact rules in **`agent-prompt.md`** (authoritative).
 
-## Execution
+
+## Execution Modes
+
+### Mode: Restore (`/istm-sync restore`)
+Run this on a fresh session to instantly restore context.
+1. **Find all context files**: Using glob tools, locate `progress.md`, `memory.md`, `.istm-context/decisions.md`, `.istm-context/istm-scope/**/*.md`, and all `.istm-context/agents.md` files.
+2. **Read them all**: Ingest these files completely so you have maximum context on architectural decisions, the last completed task, pending specs, and active TODOs.
+3. **Output Rehydration Summary**: Output a structured "You Are Here" block summarizing the current architecture, completed tasks, active spec, and immediate next steps. Do not run any Git commands or try to write files in this mode.
+
+### Mode: Save (Default)
+Run after completing a change.
 
 ### 1. Scope the change set (cheap, with per file status)
 
