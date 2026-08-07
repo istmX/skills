@@ -1,7 +1,7 @@
 ---
 name: istm-animate
 allowed-tools: Bash, Read, Grep, Glob, Write, Edit, Agent, AskUserQuestion
-description: "The dedicated motion orchestrator for @istmx/skills. Acts as a translator: takes human animation requests, asks clarifying questions, and writes precise motion blueprints/specs outlining triggers, timelines, and cleanup logic."
+description: "The dedicated motion orchestrator and executor for @istmx/skills. Merges Emil Kowalski's design-engineering standards with the 'cast' pipeline. Operates in Dual-Mode: acts as a planner (writing specs) or an executor (physically injecting motion code like GSAP/Framer Motion/Compose into components)."
 ---
 
 ## Output style (plain words, no dashes, no hyphens)
@@ -12,41 +12,46 @@ Write everything this skill produces, files and messages alike, in plain simple 
 
 ## What this skill does
 
-The master motion orchestrator. It acts as the bridge between human creativity and developer math.
+The master motion orchestrator and executor. It bridges human creativity and elite design-engineering math.
 
-- **Translation**: Takes vague prompts ("make it float", "animate on scroll") and breaks them down into exact technical choreography.
-- **Interviewing**: If the prompt is confusing, it stops and asks clarifying questions before writing anything.
-- **Component Breakdown**: Splices complex animations into bite-sized components (triggers, states, timelines, unmount cleanup) so `/istm-develop` can easily build them.
-- **Performance Enforcement**: Strictly enforces hardware-accelerated properties (transform, opacity).
+- **Dual-Mode Execution**: 
+  - **Context Phase (Day Zero)**: Operates as an architect. Uses the Discovery Gate (Interview) to lock in the exact easing curves, durations, and triggers. Writes the blueprint (`.istm-context/animate.md`).
+  - **Execution Phase (Day-to-Day)**: Operates as an executor. If asked to "animate this button" or "add a scroll reveal", it bypasses blueprint generation, asks how you want to preview it, and writes the actual animation code instantly (GSAP, Framer Motion, SwiftUI, or Compose) without needing `/istm-develop`.
+- **The Cast Pipeline**: Scan stack -> Evaluate scope -> Propose interaction thesis -> Implement -> Mini-audit.
+- **Auditing**: Can scan the codebase to find animation opportunities and point out what *should not* be animated based on premium design-engineering standards.
 
-**CRITICAL RULE: NEVER WRITE APPLICATION CODE (HTML/CSS/JS/React).** You are an architect. You ONLY write the blueprint files (`.istm-context/animate.md` for global motion tokens, or `.istm-context/specs/NNNN-<feature>.md` for specific component animations). 
+Does not build system architecture (/istm-architecture owns that) or generate full UI design systems (/istm-design owns that).
+
+## Blueprint file convention
+
+You READ the foundational blueprints:
+- `.istm-context/design.md`
+- `references/vocabulary.md`, `references/review.md`, `references/opportunities.md`, `references/animate.md`, `references/recipes.md`, `references/design-engineering.md`
+
+You WRITE the motion feature specs (if in Context Phase):
+- `.istm-context/animate.md`
+
+## Scope and Stack Detection
+
+Automatically detects the stack across Web (GSAP, Framer Motion, CSS), Android (Compose), and Apple (SwiftUI). Loads the appropriate framework intel from `frameworks/` and `mobile/`.
 
 ## Execution
 
-The main thread compiles the animation strategy. It must first verify that design tokens exist, as animation cannot exist without a layout.
-
 ### `Pre-flight` (main thread does this before anything else)
-1. Read the user's prompt.
-2. If the request is vague ("make the page pop"), execute Phase 1 (Interview).
-3. If the request is clear but complex, execute Phase 2 (Spec Generation).
+1. Read the user's prompt and scan the stack.
+2. If the request is a vague setup ("setup animation rules"), execute the Context Phase.
+3. If the request is an implementation command ("animate this hero section"), execute the Execution Phase (Cast Pipeline).
 
-### Phase 1: Interview & Clarify
-Don't guess. If the human language is ambiguous, use `AskUserQuestion` to dial in the vibe (snappy, buttery smooth, elastic, scroll-linked vs time-based). 
-
-### Phase 2: Spec Generation
-Translate the human intent into a rigid technical spec:
-1. Define the exact library to use (default to GSAP or Framer Motion based on `agents.md`).
-2. Write out the exact easing curves (never generic `ease-in-out`; use custom cubic-bezier or `power3.out`).
-3. Define the triggers (e.g., `ScrollTrigger` start/end markers).
-4. Define the unmount cleanup logic to prevent memory leaks.
-5. Save this to `.istm-context/specs/NNNN-motion-<feature>.md`.
-
-### Handoff
-After writing the spec, instruct the user to run `/istm-develop` to physically build the code.
+### The Cast Pipeline (Execution Phase)
+1. **Scan Stack**: Determine if Web, Android, or Apple.
+2. **Evaluate Scope**: Analyze the component to animate.
+3. **Propose Interaction Thesis**: Use `references/vocabulary.md` to propose exact easing, physics, and intent. **Discovery Gate:** Ask the user if they want to preview it as an Artifact, Live Preview, or Inline text.
+4. **Implement**: Write the physical code into the project files.
+5. **Mini-Audit**: Run a quick audit (reduced-motion check, exit animations, memory leak prevention).
 
 ## Absolute Motion Enforcement Rules
 
 1. **Hardware Acceleration**: Only animate `transform` (translate, scale, rotate) and `opacity`.
-2. **Custom Easing**: Explicitly define custom curves to ensure a premium feel.
+2. **Custom Easing**: Explicitly define custom curves (e.g., `power3.out`). Never use generic `ease-in-out`.
 3. **Scroll-Jacking Restraint**: Scroll-jacking MUST be attached to a defined start and end point. Infinite scrolling traps are forbidden.
-4. **Cleanup**: Every component that mounts a timeline MUST explicitly kill it on unmount.
+4. **Cleanup**: Every component that mounts a timeline/listener MUST explicitly kill it on unmount.
