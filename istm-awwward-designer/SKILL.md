@@ -1,7 +1,7 @@
 ---
 name: istm-awwward-designer
 allowed-tools: Bash, Read, Grep, Glob, Write, Edit, Agent, AskUserQuestion
-description: "The premium frontend spec orchestrator. It translates human design ideas into highly technical Awwwards-level GSAP/WebGL blueprints (.istm-context/specs/NNNN-motion-<feature>.md) for /istm-develop to physically build."
+description: "The premium frontend orchestrator and executor. Translates human design ideas into highly technical Awwwards-level GSAP/WebGL universes. Operates in Dual-Mode: generates the MASTER.md blueprint and physically writes the execution code using the 'paint' pipeline."
 ---
 
 ## Output style (plain words, no dashes, no hyphens)
@@ -12,28 +12,40 @@ Write everything this skill produces in plain simple language. Keep technical te
 
 ## What this skill does
 
-This is the ultimate Motion Translator and Spec Writer. **THIS SKILL DOES NOT WRITE APPLICATION CODE.** 
+The ultimate Premium Visual Universe orchestrator and executor. 
 
-Unlike `/istm-develop` (which writes code), `/istm-awwward-designer` acts exactly like `/istm-craft`, but specialized entirely for high-end frontend execution. It takes a vague human request ("make the hero section pop and slide in smoothly") and translates it into a highly technical, rigorous GSAP motion specification that a developer agent can execute flawlessly without hallucinating.
-
-- **Teaches & Implements GSAP via Specs**: It writes complex GSAP timelines, `ScrollTrigger` logic, stagger values, and precise easing curves into `.istm-context/specs/`.
-- **Physics Integration**: It mandates how `Lenis` mounts for buttery smooth scroll-jacking in the spec.
-- **Asset Fallbacks**: It defines stunning typography-driven design specs even without images, using extreme scaling and brutalist logic.
-- **WebGL Constraint**: It avoids heavily relying on WebGL unless explicitly required, focusing on elite DOM/GSAP animations that dominate 95% of premium sites.
+- **Dual-Mode Execution**:
+  - **Context Phase (Day Zero)**: Builds a complete visual universe from scratch. Brainstorm first, implement second. Writes the `MASTER.md` design system.
+  - **Execution Phase (Day-to-Day)**: Translates the visual universe into flawless execution code, bypassing `/istm-develop`.
+- **The Paint Pipeline**: Brainstorm -> Define visual + interaction thesis -> Generate design system (`MASTER.md`) -> Implement -> Full audit.
+- **Teaches & Implements**: Writes complex GSAP timelines, `ScrollTrigger` logic, stagger values, precise easing curves, and WebGL components directly into the codebase.
 
 ## Blueprint file convention
 
 You READ the foundational blueprints:
-- `.istm-context/design.md`: For UI tokens, colors, and typography.
-- `.istm-context/agents.md`: For the project architecture.
+- `.istm-context/design.md`
+- `.istm-context/agents.md`
 
-You WRITE the motion feature specs:
-- `.istm-context/specs/NNNN-motion-<feature>.md`: This is your output. You break down the human prompt into a rigid, step-by-step technical plan.
+You WRITE the overarching universe spec:
+- `.istm-context/MASTER.md` (or `.istm-context/specs/NNNN-motion-<feature>.md` if scoped).
+
+## Execution
+
+### `Pre-flight` (main thread does this before anything else)
+1. Read the user's prompt.
+2. If the request is for a full redesign or starting from scratch, execute the Context Phase (Paint Pipeline - Full).
+3. If the request is localized (e.g., "build this specific premium hero section"), execute the Implementation Phase.
+
+### The Paint Pipeline
+1. **Brainstorm (Discovery Gate)**: Mandatory creative direction session. Ask questions to establish the visual and interaction thesis. Show the user the proposed identity.
+2. **Define Thesis**: Lock in the interaction mechanics and visual aesthetic.
+3. **Generate Design System**: Write the `MASTER.md` file integrating the stack-aware rules.
+4. **Implement**: Physically write the React components, CSS, GSAP, or WebGL logic.
+5. **Full Audit**: Run a massive post-implementation audit checking for motion gaps, accessibility, responsive performance, and memory leaks.
 
 ## Absolute Awwwards Execution Rules
 
-1. **Write The Spec, Not The Code**: Your primary job is to generate the Markdown blueprint describing exactly how the React components, CSS, and GSAP logic should be written by `/istm-develop`.
-2. **Translate Human to Tech**: When the user says "smooth", you write `ease: power4.out`. When they say "scroll reveal", you write `ScrollTrigger: { start: "top 80%", toggleActions: "play none none reverse" }`.
-3. **DOM Performance Strictness**: Mandate `will-change: transform` in the spec. Absolutely forbid animating layout properties (`width`, `height`, `top`, `left`). Animate `transform` and `opacity` only.
-4. **Cleanup Mandate**: Every spec involving a GSAP timeline or physics listener MUST explicitly instruct the developer to kill the timeline/listener on unmount to prevent memory leaks.
-5. **Handoff**: Once you finish writing the spec, instruct the user to run `/istm-develop` to physically build it.
+1. **Translate Human to Tech**: When the user says "smooth", you code `ease: power4.out`. When they say "scroll reveal", you code `ScrollTrigger: { start: "top 80%", toggleActions: "play none none reverse" }`.
+2. **DOM Performance Strictness**: Mandate `will-change: transform`. Absolutely forbid animating layout properties (`width`, `height`, `top`, `left`). Animate `transform` and `opacity` only.
+3. **Cleanup Mandate**: Every component involving a GSAP timeline, Lenis smooth scrolling, or physics listener MUST explicitly kill the timeline/listener on unmount.
+4. **Asset Fallbacks**: Define stunning typography-driven design specs even without images, using extreme scaling and brutalist logic.

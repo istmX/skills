@@ -1,7 +1,7 @@
 ---
 name: istm-design
-allowed-tools: Bash, Read, Grep, Glob, Write, Edit, Agent, AskUserQuestion
-description: "The core visual orchestrator for the @istmx/skills framework. Establishes the foundational design tokens (colors, typography, spacing, standard motion) and strictly enforces premium UI aesthetics. Excludes heavy GSAP animation unless explicitly mandated."
+allowed-tools: Bash, Read, Grep, Glob, Write, Edit, Agent, AskUserQuestion, GenerateImage
+description: "The core visual context engine and executor for the @istmx/skills framework. Extends design tokens (colors, typography, spacing, standard motion) and strictly enforces premium UI aesthetics via a 3-Phase dual-mode execution (Structure, Analyze, Generate). Excludes heavy GSAP animation unless explicitly mandated."
 ---
 
 ## Output style (plain words, no dashes, no hyphens)
@@ -12,16 +12,18 @@ Write everything this skill produces, files and messages alike, in plain simple 
 
 ## What this skill does
 
-The master visual token engine: compiles the design system, enforces typography scaling, and establishes the baseline aesthetic rules for the project. 
+The master visual token engine and dual-mode executor. It compiles the design system, enforces typography scaling, reverse-engineers screenshots/URLs into JSON profiles, and physically writes implementation code.
 
-- Token Compilation: Reads the internal legacy design rules (`colors`, `styles`, `typography`, `ux`) and synthesizes them into a cohesive `design.md` blueprint.
-- Standard Motion: Defines standard micro-interactions (hover states, simple transitions, loading skeletons). Strictly forbids heavy GSAP scroll-jacking and complex choreographies to keep the baseline application fast and accessible.
-- Anti-Slop Enforcement: Explicitly forbids generic AI UI slop (e.g., plain blue buttons, unstyled default fonts, emoji placeholders). Forces the use of curated semantic tokens and professional iconography.
+- **Dual-Mode Execution**:
+  - **Context Phase (Day Zero)**: Operates as an architect. Uses the extraction engine to generate blueprints (`design.md`, `ui-tokens.md`) in `.istm-context/`. Pauses for the **Discovery Gate** (asks the user to confirm/adjust tokens before saving).
+  - **Execution Phase (Day-to-Day)**: Operates as an executor. If asked to "create a landing page", it bypasses blueprint generation, reads `.istm-context/`, asks for preview preferences, and writes the final React/Next.js code directly without needing `/istm-develop`.
+- **The 3-Phase Design Engine**:
+  - 1. **Structure**: Surfacing the full schema (System, Style, Effects).
+  - 2. **Analyze**: Pulling tokens from reference images or URLs to generate a JSON profile.
+  - 3. **Generate**: Applying the profile to write faithful UI implementation code.
+- **Anti-Slop Enforcement**: Explicitly forbids generic AI UI slop (e.g., plain blue buttons, unstyled default fonts, emoji placeholders). Forces the use of curated semantic tokens and professional iconography.
 
-Does not build system architecture (/istm-architecture owns that), wire complex databases (/istm-system-design owns that), or build heavy marketing animations (/istm-animate and /istm-awwward-designer own that).
-
-**CRITICAL RULE: NEVER WRITE APPLICATION CODE (HTML/CSS/JS/React).** You are an architect. You ONLY write the blueprint file (`.istm-context/design.md`). If the user asks you to build a page, you must refuse, write the blueprint instead, and instruct the user to run `/develop` to build the code.
-
+Does not build system architecture (/istm-architecture owns that) or wire complex databases (/istm-system-design owns that).
 
 ## Blueprint file convention
 
@@ -29,71 +31,41 @@ Durable design context lives in the `.istm-context/` directory. This skill speci
 
 - `design.md`: The UX strategy, standard motion logic, and strict UI token dictionary.
 
-**GOLD STANDARD REFERENCE:** When creating a new `design.md`, you MUST read and use the workspace root `/workspaces/laughing-giggle/DESIGN.md` as your structural template. Your output must match its level of detail: including comprehensive YAML frontmatter (colors, typography scaling, rounded corners, spacing, components) followed by deep, philosophical markdown explaining the rules. Do not output a shallow file. Read the root `DESIGN.md` first to understand the required depth.
-
-
-Never overwrite an existing `design.md` without permission; gap-fill conservatively and respect established brand guidelines.
+**GOLD STANDARD REFERENCE:** When creating a new `design.md`, you MUST read and use the workspace root `/workspaces/laughing-giggle/DESIGN.md` as your structural template. Your output must match its level of detail: including comprehensive YAML frontmatter followed by deep philosophical markdown explaining the rules.
 
 ## Scope
 
-The `--force-gsap` flag overrides the standard motion rule and allows basic GSAP imports. With no argument, the `Pre-flight` signals below route to Phase 0 (ambiguous), or Phase 1 (greenfield token generation).
+The `--force-gsap` flag overrides the standard motion rule and allows basic GSAP imports. With no argument, the `Pre-flight` signals below route to Phase 0 (ambiguous), Phase 1 (greenfield token generation), or Phase 3 (code execution).
 
 ## Acts vs asks
 
-Phase 1 asks aesthetic questions (brand vibe, dark/light mode preference, typography style) via MCQ before generating the design tokens. Phase 2 acts immediately; it scans the repo for existing Tailwind configs, CSS variables, or styled-components and reverse-engineers the design system. 
-
-## Artifact ownership
-
-The `design.md` file holds the content. Create it if missing. When writing the design tokens, inject the precise CSS variables, tailwind utility classes, and font stacks. You own the enforcement of these tokens; all UI components generated by implementation agents must strictly use the tokens defined here.
-
-## Portability (any OS, any agent)
-
-- Commands: Use your agent's cross-platform file tools to read `tailwind.config.js` or `index.css` and populate templates.
-- If interactive question support (`AskUserQuestion`) is missing, ask any multiple choice question as plain text with the same options.
+In the **Context Phase**, ask aesthetic questions (brand vibe, dark/light mode preference) or ask for a URL/screenshot to reverse-engineer. Always pass the **Discovery Gate** by asking the user to confirm the extracted tokens before saving `design.md`. 
+In the **Execution Phase**, act immediately to write the code based on `.istm-context/`.
 
 ## Execution
 
-The main thread compiles the design system. It reads the legacy rules in `istm-design/` (`colors/`, `typography/`, etc.) and the user inputs, synthesizing them into the final `design.md`.
+The main thread compiles the design system or writes code. 
 
 ### `Pre-flight` (main thread does this before anything else)
 
 Gather signals to determine the execution path:
 
-1. Flag check: Was `--force-gsap` provided? → `GSAP_FLAG`.
-2. Context files: Is `design.md` already hydrated in `.istm-context/`? → `DESIGN_EXISTS`.
-3. Source count: Are there existing CSS/Tailwind configs indicating an established design system? → `HAS_STYLES`.
+1. Flag check: Was `--force-gsap` provided?
+2. Intent check: Did the user ask to "extract", "analyze", "setup design", or did they ask to "build", "create", "design this page"?
+3. Context files: Is `design.md` already hydrated in `.istm-context/`? 
 
-Pick the phase based on these signals:
+### The 3-Phase Engine
 
-| Condition | Phase |
-|---|---|
-| `HAS_STYLES` is present | Phase 2 (Reverse-engineer the existing design system). |
-| `DESIGN_EXISTS` | Phase 3 (Gap-fill: analyze the prompt against existing design tokens and update only what changed). |
-| No flag, no design, no styles (or raw prompt) | Phase 1 (Greenfield: execute Design Interview and generate tokens). |
-| No flag, no design, but `HAS_STYLES` | Phase 0 (Ambiguous: ask if they want to override existing styles or document them). |
+- **Step 0 (Mandatory Reading)**: Before suggesting any design or generating files, you MUST recursively read all rule files inside `istm-design/colors/`, `istm-design/styles/`, `istm-design/typography/`, `istm-design/ux/`, and `istm-design/references/`. 
 
-### Route to the selected phase
+- **Phase 1: Structure (Schema Definition)**: Read `references/schema.md`. Present the 3-dimension structure (Design System, Design Style, Visual Effects) if the user asks for the design structure.
+- **Phase 2: Analyze (Reverse Engineering)**: If the user provides a URL or image, analyze it visually. Map color palettes, typography classes, spacing density, layout grids, and visual effects into a JSON profile. **Discovery Gate:** Ask "Want to adjust any values before I lock this into `design.md`?"
+- **Phase 3: Generate (Implementation)**: If the user asks to build UI components, read `.istm-context/design.md` and `references/generation-guide.md`. Convert tokens to CSS variables/Tailwind classes, fetch assets, and implement the design faithfully.
 
-- **Step 0 (Mandatory Reading)**: Before suggesting any design or generating files, you MUST recursively read all rule files inside `istm-design/colors/`, `istm-design/styles/`, `istm-design/typography/`, and `istm-design/ux/`. You must understand these massive, rich design rules first.
-- Phase 1 (Greenfield Setup): Analyze the user's prompt to extract their exact aesthetic vision. **Do NOT force them to pick from generic styles (e.g., minimal, brutalist, corporate).** If their prompt says "massive fonts and vibrant colors", use the rules from Step 0 to generate a bespoke `design.md` that perfectly captures that unique vibe with strict H1-H6 scaling and custom semantic color variables. Interview the user ONLY if the prompt is completely blank on design direction.
-- Phase 2 (Reverse Engineering): Do not interview. Read `tailwind.config.js`, `globals.css`, or equivalent. Reverse-engineer the color palette and typography scale. Hydrate `design.md`.
-- Phase 3 (Gap Fill): Read existing `design.md`. Identify missing tokens (e.g., missing success/error states). Update existing blueprints carefully.
+### Absolute Aesthetic Enforcement Rules
 
-### Phase 0: Classify (only when `pre-flight` is ambiguous)
-
-Don't guess. Ask once via your agent's interactive option picker (`AskUserQuestion`), or plain text. 
-- question: "I see existing CSS styles, but no `design.md` blueprint. How should I proceed?"
-- header: "Design state"
-- options: 1. `Reverse-Engineer from CSS`, "I will read your styles and generate the design tokens." → Phase 2. 2. `Start Fresh from Prompt`, "I will interview you and overwrite the design system." → Phase 1.
-
-### After all phases
-
-If no tokens were written when they should have been, report the failure. Relay the report: what aesthetic was chosen, what typography scale was locked in, and the primary color values.
-
-## Absolute Aesthetic Enforcement Rules
-
-1. **Typography Supremacy**: Never use browser default fonts. Explicitly define a sans-serif (e.g., Inter, Roboto, Geist) and optionally a display font. Enforce a strict typographic scale.
-2. **Semantic Colors Over Hex Codes**: Forbid the direct use of raw hex codes in UI components. Force the use of semantic tokens (e.g., `bg-surface-elevated`, `text-ink-muted`, `border-hairline`).
-3. **Micro-Interactions**: Enforce standard hover states (opacity shifts, slight scaling, background color transitions) on all interactive elements. 
-4. **No Emojis**: Strictly forbid emojis in empty states or UI components. Mandate the use of professional SVG icon libraries (Lucide, Heroicons, Phosphor).
-5. **No GSAP Default**: Standard motion relies on CSS transitions and lightweight Framer Motion/Spring logic. Heavy scroll-jacking or GSAP is forbidden unless `/istm-animate` or `/istm-awwward-designer` is explicitly invoked, or the `--force-gsap` flag is present.
+1. **Typography Supremacy**: Never use browser default fonts. Explicitly define a sans-serif and optionally a display font. Enforce a strict typographic scale.
+2. **Semantic Colors Over Hex Codes**: Forbid direct use of raw hex codes in UI. Force the use of semantic tokens.
+3. **Micro-Interactions**: Enforce standard hover states on all interactive elements.
+4. **No Emojis**: Strictly forbid emojis in UI. Mandate professional SVG icons (Lucide, Phosphor).
+5. **No GSAP Default**: Standard motion relies on CSS/Framer Motion. Heavy scroll-jacking is forbidden unless `/istm-animate` or `/istm-awwward-designer` is explicitly invoked.
