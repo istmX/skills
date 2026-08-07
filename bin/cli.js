@@ -11,6 +11,7 @@ const __dirname = path.dirname(__filename);
 const SKILLS_ROOT = path.join(__dirname, '..');
 
 const DEPENDENCY_MAP = {
+  'istm': ['istm-architecture', 'istm-awwward-designer', 'istm-design', 'istm-system-design', 'istm-animate'],
   'istm-architecture': ['istm-design', 'istm-system-design'],
   'istm-awwward-designer': ['istm-design', 'istm-animate'],
   'istm-system-design': [],
@@ -91,7 +92,7 @@ async function main() {
     process.exit(1);
   }
 
-  /* Deduplicate selected harnesses in case they selected Auto-Detect and the explicit one */
+  /** Deduplicate selected harnesses in case they selected Auto-Detect and the explicit one */
   const harnessesToInstall = [...new Set(response.targetHarnesses)];
 
   console.log(chalk.cyan('\n⚙ Installing blueprints...'));
@@ -109,25 +110,39 @@ async function main() {
   
   try { await fs.mkdir(contextDir, { recursive: true }); } catch (err) {}
   
-  /* Always create the agents.md root file if it doesn't exist */
+  /** Always create the agents.md root file if it doesn't exist */
   const agentsMdPath = path.join(contextDir, 'agents.md');
   try { 
     await fs.access(agentsMdPath);
   } catch (err) {
-    try { await fs.writeFile(agentsMdPath, `# @istmx/skills Runtime Memory\n\nThis file will be hydrated by the master orchestrator.`); } catch (err) {}
+    try { await fs.writeFile(agentsMdPath, `# @istmx/skills Runtime Memory\n\nThis file will be hydrated by the master orchestrator.`); } catch (err) {
+      console.log(chalk.red(`  - Failed to write agents.md: ${err.message}`));
+    }
   }
   
-  /* Copy the selected domain skills context templates */
+  /** Copy the selected domain skills context templates */
   const allDeps = new Set();
   for (const skill of response.domainSkills) {
-    try { await fs.cp(path.join(SKILLS_ROOT, skill), path.join(contextDir, skill), { recursive: true }); } catch(e) {}
+    /** istm has no context template */
+    if (skill === 'istm') continue;
+    try { 
+      await fs.cp(path.join(SKILLS_ROOT, skill), path.join(contextDir, skill), { recursive: true }); 
+      console.log(chalk.dim(`  - Scaffolded ${skill} in .istm-context`));
+    } catch(e) {
+      console.log(chalk.red(`  - Failed to scaffold ${skill} in .istm-context: ${e.message}`));
+    }
     const deps = DEPENDENCY_MAP[skill] || [];
     for (const d of deps) allDeps.add(d);
   }
   
-  /* Inject physical dependencies (like UI tokens or DB schemas) into the global context */
+  /** Inject physical dependencies (like UI tokens or DB schemas) into the global context */
   for (const dep of allDeps) {
-    try { await fs.cp(path.join(SKILLS_ROOT, dep), path.join(contextDir, dep), { recursive: true }); } catch(e) {}
+    try { 
+      await fs.cp(path.join(SKILLS_ROOT, dep), path.join(contextDir, dep), { recursive: true });
+      console.log(chalk.dim(`  - Scaffolded dependency ${dep} in .istm-context`));
+    } catch(e) {
+      console.log(chalk.red(`  - Failed to scaffold dependency ${dep}: ${e.message}`));
+    }
   }
   
   /**
@@ -143,11 +158,13 @@ async function main() {
     if (harness === 'GEMINI.md') workflowTarget = path.join(targetDir, '.gemini', 'skills');
     if (harness === '.windsurfrules') workflowTarget = path.join(targetDir, '.windsurf', 'rules');
 
-    /* 1. Append the pointer to the root harness file without overwriting */
+    try { await fs.mkdir(workflowTarget, { recursive: true }); } catch (err) {}
+
+    /** 1. Append the pointer to the root harness file without overwriting */
     const harnessPath = path.join(targetDir, harness);
     const pointerLine = `\n\n# @istmx/skills Context\n@.istm-context/agents.md\n`;
     try {
-      /* Create directory for github copilot if needed */
+      /** Create directory for github copilot if needed */
       if (harness.includes('/')) {
         await fs.mkdir(path.dirname(harnessPath), { recursive: true });
       }
@@ -162,51 +179,60 @@ async function main() {
       }
     } catch (err) {}
 
-    /* 2. Inject the Universal NLP Router (/istm) IF selected */
+    /** 2. Inject the Universal NLP Router (/istm) IF selected */
     if (response.domainSkills.includes('istm')) {
       const routerPath = path.join(SKILLS_ROOT, 'istm', 'SKILL.md');
       try {
-        await fs.mkdir(workflowTarget, { recursive: true });
         if (harness === '.cursorrules') {
           await fs.copyFile(routerPath, path.join(workflowTarget, 'istm.mdc'));
         } else {
           await fs.cp(path.join(SKILLS_ROOT, 'istm'), path.join(workflowTarget, 'istm'), { recursive: true });
         }
         console.log(chalk.dim(`  - Injected Master Orchestrator (/istm)`));
-      } catch (err) {}
+      } catch (err) {
+        console.log(chalk.red(`  - Failed to inject Master Orchestrator: ${err.message}`));
+      }
     }
     
-    /* 3. Inject selected domain skills into autocomplete */
-    let injectedDeps = false;
+    /** 3. Inject selected domain skills into autocomplete */
     const skillsToInject = new Set([...response.domainSkills, ...allDeps]);
     for (const skill of skillsToInject) {
+      /** already injected */
+      if (skill === 'istm') continue;
       try {
         if (harness === '.cursorrules') {
           await fs.copyFile(path.join(SKILLS_ROOT, skill, 'SKILL.md'), path.join(workflowTarget, `${skill}.mdc`));
         } else {
           await fs.cp(path.join(SKILLS_ROOT, skill), path.join(workflowTarget, skill), { recursive: true });
         }
-        injectedDeps = true;
-      } catch (err) {}
+        console.log(chalk.dim(`  - Injected ${skill}`));
+      } catch (err) {
+        console.log(chalk.red(`  - Failed to inject ${skill}: ${err.message}`));
+      }
     }
-    if (injectedDeps) console.log(chalk.dim(`  - Injected domain skills into autocomplete`));
 
-    /* 4. ALWAYS Inject Workflow Tools (/istm-craft, /istm-develop, etc.) */
+    /** 4. ALWAYS Inject Workflow Tools (/istm-craft, /istm-develop, etc.) */
     const workflowSource = path.join(SKILLS_ROOT, 'istm-workflow');
     try {
       const dirs = await fs.readdir(workflowSource, { withFileTypes: true });
       for (const dirent of dirs) {
         if (dirent.isDirectory()) {
           const sourceDir = path.join(workflowSource, dirent.name);
-          if (harness === '.cursorrules') {
-            try { await fs.copyFile(path.join(sourceDir, 'SKILL.md'), path.join(workflowTarget, `${dirent.name}.mdc`)); } catch (e) {}
-          } else {
-            try { await fs.cp(sourceDir, path.join(workflowTarget, dirent.name), { recursive: true }); } catch (e) {}
+          try {
+            if (harness === '.cursorrules') {
+              await fs.copyFile(path.join(sourceDir, 'SKILL.md'), path.join(workflowTarget, `${dirent.name}.mdc`));
+            } else {
+              await fs.cp(sourceDir, path.join(workflowTarget, dirent.name), { recursive: true });
+            }
+            console.log(chalk.dim(`  - Injected ${dirent.name}`));
+          } catch (e) {
+            console.log(chalk.red(`  - Failed to inject ${dirent.name}: ${e.message}`));
           }
         }
       }
-      console.log(chalk.dim(`  - Bundled mandatory workflow tools into autocomplete`));
-    } catch (err) {}
+    } catch (err) {
+      console.log(chalk.red(`  - Failed to inject workflow tools: ${err.message}`));
+    }
   }
 
   console.log(chalk.bold.magenta('\n✨ Initialization Complete!'));
