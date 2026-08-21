@@ -41,17 +41,20 @@ Gather signals to determine the archetype:
 
 ### Route to the selected phase (Semantic Mapping)
 
-Analyze the prompt and guide the user on the absolute best skill to use. You act as the NLP brain that routes their intent to the right tool.
+Analyze the prompt and immediately route execution to the absolute best skill in the installed suite:
 
-1. **If they want to build or design a brand new project**:
-   - Standard SaaS / Web App: Advise them to run the CLI installer again and select the `A Full Stack App` core skill (`istm-architecture`).
-   - Premium Marketing Site (GSAP/WebGL): Advise them to select the `Premium Awwwards Site` core skill (`istm-awwward-designer`).
-   - Backend APIs only: Advise them to select the `Backend / APIs Only` skill (`istm-system-design`).
-2. **If they want Day-to-Day Execution (These are already installed!)**:
-   - Building a specific feature: Tell them to run `/istm-craft` (or just run it for them).
-   - Debugging a massive error: Tell them to run `/istm-debug`.
-   - Reviewing code quality: Tell them to run `/istm-audit` or `/istm-check`.
-   - Writing tests: Tell them to run `/istm-test`.
+1. **If they want to build or design a brand new project (Day Zero)**:
+   - Standard SaaS / Full-Stack Web App: Delegate immediately to `/istm-architecture` to execute the Discovery Gate and create the 4 Pillars of Truth.
+   - Premium Marketing Site (GSAP/WebGL/Animations): Delegate immediately to `/istm-awwward-designer` to build the interaction thesis and physical universe.
+   - Backend APIs / Database Schema only: Delegate immediately to `/istm-system-design`.
+   - Dedicated UI Design System / Design Tokens: Delegate immediately to `/istm-design`.
+   - Specialized Motion Curves / Hardware Physics: Delegate immediately to `/istm-animate`.
+
+2. **If they want Day-to-Day Execution (Workflow Tools)**:
+   - Building a specific feature: Execute `/istm-craft` to spec it out, followed by `/istm-develop` to write the code.
+   - Debugging a complex error: Execute `/istm-debug` to trace and isolate root cause.
+   - Reviewing code quality & tech debt: Execute `/istm-audit` or `/istm-check`.
+   - Writing tests: Execute `/istm-test`.
 
 ### Phase 0: Classify (only when `pre-flight` is ambiguous)
 
