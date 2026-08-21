@@ -1,7 +1,7 @@
 <div align="center">
   <h1>@istmx/skills</h1>
   <p><b>The Elite AI Orchestration Engine optimized for Claude Code</b></p>
-  <a href="https://istmskills.vercel.app">Website</a> • <a href="https://istmskills.vercel.app/docs">Documentation</a> • <a href="https://github.com/istmX/skills">GitHub</a>
+  <a href="https://istmx.dpdns.org">Website</a> • <a href="https://istmx.dpdns.org/docs">Documentation</a> • <a href="https://github.com/istmX/skills">GitHub</a>
 </div>
 
 <br/>
