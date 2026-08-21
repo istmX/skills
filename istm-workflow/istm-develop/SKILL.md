@@ -11,12 +11,17 @@ Write everything this skill produces, files and messages alike, in plain simple 
 <!-- OUTPUT-STYLE:END -->
 
 
-## Strict Development Rules
+## Strict Development & Code Enforcement Rules
 
 1. **Global CSS & Layouts First**: If the spec dictates setting up global CSS/fonts or layouts, do this first before building components.
-2. **shadcn/ui is Allowed**: Do not reinvent the wheel if shadcn is available, but ensure it perfectly matches the `.istm-context/design.md` tokens.
-3. **Types & Constants**: Strictly enforce `No any`. Place all types in `types/` folders and hardcoded values in `constants/` folders.
-4. **Private vs Public Components**: Feature-specific components stay in `features/<name>/components/`. Only truly reusable components go to `shared/components/`.
+2. **Modern Tailwind v4 Semantic Standard**:
+   - Strictly FORBID ugly inline arbitrary variables like `bg-[var(--background)]` or `text-[var(--primary)]`.
+   - Mandate clean semantic utility classes (`bg-background`, `text-foreground`, `bg-muted`, `text-muted-foreground`, `border-border`, `bg-card`, `text-card-foreground`).
+3. **Shadcn UI & Primitive Reuse Priority**: Reusable atoms (Buttons, Inputs, Dialogs, Tooltips, Sheets, Dropdowns) MUST be imported/reused from `@/components/ui/` (or shared primitives). Never reinvent custom unaccessible `<div>` and `<button>` hacks.
+4. **Stack-Idiomatic Structure**: Respect native framework conventions (e.g., Next.js App Router `app/` routes and colocated feature components). Never force artificial folder nesting.
+5. **Compiler-Grade TypeScript (Zero `any` Tolerance)**: Strictly enforce `No any`. Use typed domain models, discriminated unions, and Zod inference.
+6. **Clean Code & Noise Comment Ban**: Strictly ban redundant, chatty comments (`// button click`, `// component render`). Code must be self-documenting.
+
 
 
 ## Documentation & URL Handling

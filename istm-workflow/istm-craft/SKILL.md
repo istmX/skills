@@ -21,8 +21,8 @@ Unlike standard AI generation, `/istm-craft` is strictly bound to the project's 
 
 ### Step 1: The Context Lock
 Before asking any questions, you MUST silently read the global blueprints to understand the constraints you are working under:
-- Read `.istm-context/.istm-context/architecture.md` (for the database, backend, and API constraints).
-- Read `.istm-context/.istm-context/design.md` (for typography, color tokens, and the Dual Motion standard).
+- Read `.istm-context/architecture.md` (for the database, backend, and API constraints).
+- Read `.istm-context/design.md` (for typography, color tokens, and the Dual Motion standard).
 - Read `.istm-context/project-overview.md` (for business logic context).
 
 ### Step 2: The Hyper-Focused Interview
@@ -35,12 +35,17 @@ Ask the engineer targeted questions to design ONE specific feature.
 Write the feature design into a new file: `.istm-context/specs/NNNN-feature-name.md`.
 The spec must include:
 - **Summary & Requirements**: What the feature does and acceptance criteria.
-- **Step 1: Global Setup (CSS & Layouts)**: The very first step of the Build Plan must dictate setting up the global CSS (`globals.css` or `index.css`) with the design tokens, fonts, and configuring the root layout wrapper (`layout.tsx`).
+- **Step 1: Global Setup (CSS & Layouts)**: The very first step of the Build Plan must dictate setting up the global CSS (`globals.css` or `index.css`) with clean semantic Tailwind v4 tokens and configuring the root layout wrapper (`layout.tsx`).
 - **UI & Architecture**: 
-  - How it implements `.istm-context/design.md`. 
-  - **Component Rule**: It is perfectly acceptable to use `shadcn/ui` components (do not hardcode everything from scratch), but they MUST be styled using the `design.md` tokens.
-- **Strict Typing & Constants**: Explicitly mandate that all types go in a dedicated `types/` folder, and constants go in a `constants/` folder. Absolutely forbid the use of `any` types.
+  - How it implements `.istm-context/design.md` (typography hierarchy, semantic colors, motion curves).
+  - **Primitive Reuse Priority**: Reusable atoms (Buttons, Inputs, Dialogs, Tooltips, Sheets) MUST be imported from `@/components/ui/` (Shadcn UI). Never invent bespoke unaccessible `<div>` and `<button>` hacks.
+  - **Tailwind v4 Semantic Standard**: Strictly FORBID ugly inline arbitrary variables like `bg-[var(--background)]`. Mandate clean semantic tokens (`bg-background`, `text-foreground`, `bg-muted`, `border-border`, `bg-card`).
+  - **Stack-Idiomatic Structure**: Respect native framework conventions (App Router `app/`, etc.) without artificial nesting layers.
+- **Strict Typing & Clean Code**:
+  - Compiler-grade TypeScript: Absolute ban on `any` and `unknown as any`. All domain interfaces in `types/` or inferred from Zod.
+  - Ban noisy comments (`// button`, `// handle click`). Self-documenting code only.
 - **Build Plan**: The step-by-step implementation guide.
 
 ### Step 4: Completion
 Do not write application code. Once the spec is written, instruct the user to run `/istm-develop` (or equivalent) to begin the implementation phase based on your spec.
+
