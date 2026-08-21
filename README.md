@@ -8,9 +8,7 @@
 
 <br/>
 
-Most AI coding assistants fail at scale. They generate lazy 2-section "AI slop", lose context in large codebases, leave broken `// TODO` placeholders, hallucinate invalid architectures, and destroy existing design systems.
-
-`@istmx/skills` is a deterministic, stack-agnostic **Agentic Operating System** designed to supercharge CLI-based agents like **Claude Code** and modern IDEs (Cursor, Windsurf, Gemini). It enforces strict architectural boundaries, provides 70+ production-grade design presets, runs automated headless browser QA testing, and applies senior-developer efficiency ladders before touching a line of code.
+`@istmx/skills` is a deterministic, stack-agnostic **Agentic Operating System** designed to supercharge CLI-based agents like **Claude Code** and modern IDEs (Cursor, Windsurf, Gemini). It equips your AI with architectural blueprints, 70+ production-grade design presets, automated headless browser QA testing, and senior-developer efficiency ladders before writing a single line of code.
 
 ---
 
@@ -145,17 +143,16 @@ Never start a design system from scratch or let AI guess your styles. `@istmx/sk
 
 ---
 
-## 🛡️ The 7 Root Anti-Slop Architectural Laws
+## 💎 Engineering Excellence & Architectural Standards
 
-Every skill in `@istmx/skills` mathematically enforces these 7 core standards:
+`@istmx/skills` guarantees production-grade quality across every generated feature through core engineering standards:
 
-1. **Landing Page Narrative Arc Law**: Lazy 2-section outputs (Hero + Footer only) are strictly banned. Every full-page experience must construct a complete 5–8 section journey (*Hero → Social Proof → Bento Feature Showcase → Live Interactive Universe → Deep Dive → Testimonials → Pricing → FAQ → God-Tier Footer*).
-2. **Mandatory Pre-Flight Token Ingestion Gate**: Motion and UI engines MUST read `.istm-context/design.md` tokens before generating code.
-3. **Modern Tailwind v4 Semantic Standard**: Strictly forbids ugly inline arbitrary variables like `bg-[var(--background)]`. Mandates clean first-class semantic tokens (`bg-background`, `text-foreground`, `border-border`, `bg-muted`, `bg-card`).
-4. **Primitive Reuse Priority (Shadcn UI)**: Reusable atoms (Buttons, Inputs, Dialogs, Tooltips, Sheets) MUST be reused from `@/components/ui/` instead of raw unaccessible `<div>` and `<button>` hacks.
-5. **Stack-Idiomatic Structure & Live Research Gate**: Respects native framework conventions without artificial nesting. Live web/doc lookups are executed for bleeding-edge frameworks.
-6. **Compiler-Grade TypeScript**: Zero `any` tolerance. Strict domain interfaces, discriminated unions, and Zod inference required on all inputs.
-7. **Clean Code & Anti-Laziness Law**: Code must be self-documenting (no noise comments) and full-fidelity (zero placeholder `// TODO` comments or truncated outputs).
+* **Complete Multi-Layered Storytelling**: Constructs rich, full-depth landing pages and application flows—complete with asymmetrical bento feature showcases, interactive sandboxes, verified metrics, pricing comparison matrices, and high-craft footers.
+* **Deterministic Token & Motion Harmonization**: Synchronizes bespoke color tokens, strict typography scales, and spring physics (`stiffness: 100, damping: 20`) seamlessly across all UI components.
+* **Modern Semantic Styling & Accessible Atoms**: Enforces clean Tailwind v4 semantic utility tokens (`bg-background`, `text-foreground`, `border-border`) paired with accessible Shadcn UI / Radix primitives.
+* **Stack-Idiomatic Architecture**: Deeply respects your project's chosen framework conventions (Next.js App Router `app/`, Nuxt, Vite, SvelteKit, Flutter), automatically adapting to existing project structures.
+* **Compiler-Grade Type Safety**: Generates strictly typed domain models, discriminated unions, and end-to-end Zod inference with zero type shortcuts.
+* **Full-Fidelity Production Code**: Clean, self-documenting, and complete code with zero placeholders or truncated functions—ready to ship directly to production.
 
 ---
 
