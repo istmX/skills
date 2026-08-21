@@ -107,24 +107,50 @@ Pick the phase based on these signals:
 | No flag, no pillars, no code (or raw prompt) | Phase 1 (Greenfield: execute Discovery Gate and Interview). |
 | No flag, no pillars, but `HAS_CODE` | Phase 0 (Ambiguous: ask if they want to bootstrap from prompt or reverse-engineer from code). |
 
-### Route to the selected phase
+### Route to the selected phase (The 2-Track Architecture Engine)
 
-- Phase 1 (Greenfield Setup): Evaluate the domain (e-commerce, real-time, etc.). Identify missing context (Auth, DB). Interview the user. Apply Smart Defaults. Hydrate templates. **CRITICAL: When generating `design.md`, analyze the user's prompt to extract their exact aesthetic vision (e.g., massive fonts, vibrant colors). Do NOT force them to pick from generic styles like minimal or brutalist.**
-- Phase 2 (Reverse Engineering): Do not interview. Read `package.json`, `tsconfig.json`, and root schemas. Reverse-engineer the tech stack. Hydrate templates.
-- Phase 3 (Gap Fill): Read existing blueprints. Identify what the new prompt requires. Update existing blueprints carefully.
+#### Track 1: Greenfield Setup (Brand New Project)
+- **Discovery Gate**: Evaluate the user's raw prompt and idea domain (transactional SaaS, real-time collab, e-commerce, portfolio).
+- **Interactive Interview**: Ask targeted multiple-choice questions to resolve load-bearing unknowns (Auth provider, Database/ORM, Asset strategy). Do not ask enterprise caching questions for a small MVP.
+- **Smart Defaults**: If the user has no preference, apply stable, modern defaults (PostgreSQL, Prisma/Drizzle, Next.js App Router, Tailwind v4, Shadcn UI).
+- **Template Hydration**: Hydrate the 4 Pillar templates from `istm-architecture/templates/` with fresh choices.
+
+#### Track 2: Brownfield Reverse-Engineering (Existing Codebase)
+- **Zero Interrogation**: Bypass the interview entirely. Do NOT ask what database, auth, or CSS framework to use if the codebase already contains them.
+- **Step 2.A — Automatic Runtime & Dependency Ingestion**:
+  - Read `package.json` dependencies and devDependencies (or `Cargo.toml`, `pyproject.toml`, `go.mod`).
+  - Automatically detect runtime (`Next.js App/Pages Router`, `Vite`, `Nuxt`, `SvelteKit`, `Remix`, `FastAPI`, `Expo`).
+  - Automatically detect styling (`Tailwind v4`, `Tailwind v3`, `CSS Modules`, `Shadcn UI`, `@radix-ui`).
+  - Automatically detect DB & ORM (`Prisma`, `Drizzle`, `Mongoose`, `Supabase`, `PostgreSQL`, `MySQL`).
+  - Automatically detect Auth & State (`Auth.js/NextAuth`, `Supabase Auth`, `Clerk`, `Firebase`, `Zustand`, `TanStack Query`).
+- **Step 2.B — Structural & Schema Ingestion**:
+  - Read live schema files (`prisma/schema.prisma`, `src/db/schema.ts`, `drizzle/`, `models/`).
+  - Read route hierarchy (`app/`, `pages/`, `src/routes/`, `routes/`, `api/`).
+  - Read design tokens and styles (`globals.css`, `tailwind.config.*`, `@/components/ui/`).
+- **Step 2.C — Reverse-Engineered 4 Pillars Hydration**:
+  - `architecture.md`: Accurately documents the **actual live database models**, active API endpoints, server actions, and table relations.
+  - `design.md`: Extracts the **actual color variables**, font families from `layout.tsx`/`globals.css`, and existing component primitives.
+  - `project-overview.md`: Summarizes real project purpose from READMEs, package metadata, and domain routes.
+  - `agents.md`: Locks in **existing codebase conventions** (preserves `src/` vs root, custom linters, existing helper paths) with zero destructive rewrites.
+- **Step 2.D — Non-Destructive Guarantee**:
+  - Never delete, overwrite, or refactor existing working application code.
+  - Established patterns are documented as the immutable law for all future AI generations.
+
+#### Track 3: Gap Fill (Updating Existing Context)
+- Read existing `.istm-context/` blueprints. Identify what the new prompt requires. Update existing blueprints carefully without wiping unrelated context.
 
 ### Phase 0: Classify (only when `pre-flight` is ambiguous)
 
 Don't guess. Ask once via your agent's interactive option picker (`AskUserQuestion`), or plain text. 
 - question: "I see an existing codebase, but no `.istm-context/` blueprints. How should I proceed?"
 - header: "Project state"
-- options: 1. `Reverse-Engineer from Codebase`, "I will read your files and generate the blueprints." → Phase 2. 2. `Start Fresh from Prompt`, "I will interview you and overwrite the architecture." → Phase 1.
+- options: 1. `(Recommended) Reverse-Engineer from Codebase`, "I will scan your files and accurately document the existing architecture." → Track 2 (Phase 2). 2. `Start Fresh from Prompt`, "I will interview you and scaffold a fresh architecture." → Track 1 (Phase 1).
 
 ### After all phases
 
 If no templates were written when they should have been, report the failure. 
 
-**CRITICAL SELF-DESTRUCT RULE**: Once Phase 1 or Phase 2 is complete and you have fully hydrated the 250-line rulebook template (`agents.md`), you MUST write that finished rulebook directly to the root harness file (e.g., `.cursorrules`, `CLAUDE.md`, `GEMINI.md`), overwriting this very orchestrator script. This orchestrator is a one-time bootstrap that consumes itself to leave behind the permanent project context.
+**CRITICAL SELF-DESTRUCT RULE**: Once Track 1 or Track 2 is complete and you have fully hydrated the rulebook template (`agents.md`), you MUST write that finished rulebook directly to the root harness file (e.g., `.cursorrules`, `CLAUDE.md`, `GEMINI.md`), overwriting this very orchestrator script. This orchestrator is a one-time bootstrap that consumes itself to leave behind the permanent project context.
 
 Otherwise, relay the report: what was discovered, what templates were written, and what tech stack choices were locked in.
 
