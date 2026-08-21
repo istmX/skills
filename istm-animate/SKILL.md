@@ -38,20 +38,28 @@ Automatically detects the stack across Web (GSAP, Framer Motion, CSS), Android (
 ## Execution
 
 ### `Pre-flight` (main thread does this before anything else)
-1. Read the user's prompt and scan the stack.
-2. If the request is a vague setup ("setup animation rules"), execute the Context Phase.
-3. If the request is an implementation command ("animate this hero section"), execute the Execution Phase (Cast Pipeline).
+1. **Mandatory Token Ingestion Gate**: Read `.istm-context/design.md` and `istm-design/` token rules (colors, typography, spacing) to ensure motion aligns with the global visual tokens.
+2. Read the user's prompt and scan the stack.
+3. If the request is a vague setup ("setup animation rules"), execute the Context Phase.
+4. If the request is an implementation command ("animate this hero section"), execute the Execution Phase (Cast Pipeline).
 
 ### The Cast Pipeline (Execution Phase)
-1. **Scan Stack**: Determine if Web, Android, or Apple.
-2. **Evaluate Scope**: Analyze the component to animate.
+1. **Scan Stack & Ingest**: Determine Web, Android, or Apple. Cross-reference `design.md`.
+2. **Evaluate Scope**: Analyze the component to animate without breaking primitive accessibility.
 3. **Propose Interaction Thesis**: Use `references/vocabulary.md` to propose exact easing, physics, and intent. **Discovery Gate:** Ask the user if they want to preview it as an Artifact, Live Preview, or Inline text.
-4. **Implement**: Write the physical code into the project files.
+4. **Implement**: Write the physical code into the project files using clean semantic Tailwind v4 tokens and strict types.
 5. **Mini-Audit**: Run a quick audit (reduced-motion check, exit animations, memory leak prevention).
 
-## Absolute Motion Enforcement Rules
+## Absolute Motion & Code Enforcement Rules
 
-1. **Hardware Acceleration**: Only animate `transform` (translate, scale, rotate) and `opacity`.
-2. **Custom Easing**: Explicitly define custom curves (e.g., `power3.out`). Never use generic `ease-in-out`.
-3. **Scroll-Jacking Restraint**: Scroll-jacking MUST be attached to a defined start and end point. Infinite scrolling traps are forbidden.
-4. **Cleanup**: Every component that mounts a timeline/listener MUST explicitly kill it on unmount.
+1. **Mandatory Design Cross-Referencing**: Motion MUST harmonize with the semantic colors and layout spacing defined in `istm-design`. Never inject raw arbitrary color styles.
+2. **Modern Tailwind v4 Semantic Standard**:
+   - Strictly FORBID ugly inline arbitrary variables like `bg-[var(--background)]`.
+   - Use clean semantic utility classes (`bg-background`, `text-foreground`, `border-border`, `bg-muted`).
+3. **Hardware Acceleration**: Only animate `transform` (translate, scale, rotate) and `opacity`. Layout animating properties (`width`, `height`, `top`, `left`) are strictly forbidden.
+4. **Custom Easing**: Explicitly define custom curves (e.g., `power3.out`, spring configurations). Never use generic `ease-in-out`.
+5. **Scroll-Jacking Restraint**: Scroll-jacking MUST be attached to a defined start and end point. Infinite scrolling traps are forbidden.
+6. **Cleanup**: Every component that mounts a GSAP timeline, Lenis instance, or physics listener MUST explicitly kill it on unmount.
+7. **Compiler-Grade TypeScript (Zero `any` Tolerance)**: Absolute ban on `any` and `unknown as any`. Strict typing on all animation hooks, refs, and spring variants.
+8. **Clean Code & Noise Comment Ban**: Strictly ban redundant comments (`// animate on hover`, `// spring transition`). Self-documenting code only.
+
