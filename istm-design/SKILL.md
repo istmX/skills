@@ -56,10 +56,13 @@ Gather signals to determine the execution path:
 
 ### The 3-Phase Engine
 
-- **Step 0 (Mandatory Reading)**: Before suggesting any design or generating files, you MUST recursively read all rule files inside `istm-design/colors/`, `istm-design/styles/`, `istm-design/typography/`, `istm-design/ux/`, `istm-design/archetypes/` (brutalist, minimalist, soft, brandkit), `istm-design/image-to-code/`, `istm-design/semantic-design/`, `istm-design/anti-laziness/`, and `istm-design/references/`. 
+- **Step 0 (Mandatory Reading)**: Before suggesting any design or generating files, you MUST recursively read all rule files inside `istm-design/colors/`, `istm-design/styles/`, `istm-design/typography/`, `istm-design/ux/`, `istm-design/archetypes/` (brutalist, minimalist, soft, brandkit), `istm-design/image-to-code/`, `istm-design/semantic-design/`, `istm-design/anti-laziness/`, `istm-design/presets/catalog.md`, and `istm-design/references/`. 
 
-- **Phase 1: Structure (Schema Definition)**: Read `references/schema.md`. Present the 3-dimension structure (Design System, Design Style, Visual Effects) if the user asks for the design structure.
-- **Phase 2: Analyze (Reverse Engineering & Trend Search)**: If the user provides a URL or image, analyze it visually. Map color palettes, typography classes, spacing density, layout grids, and visual effects into a JSON profile. If requested for modern 2026 aesthetics, use web search to inspect modern design system benchmarks. **Discovery Gate:** Ask "Want to adjust any values before I lock this into `design.md`?"
+- **Phase 1: Structure & Presets Discovery**: Read `references/schema.md` and `presets/catalog.md`. 
+  - **Direct Preset Match**: If the user requested a specific brand or archetype (e.g. `--preset=linear`, `stripe-style`, `like apple`, `supabase theme`), immediately load that preset from `istm-design/presets/<slug>/DESIGN.md`.
+  - **Domain Taxonomy Match**: If building for a known industry (e.g. AI/RAG platform, Fintech, Developer Tools, Luxury), scan `presets/catalog.md` and recommend the top 3 curated presets.
+  - **Discovery Gate**: Ask the user to confirm or choose from the top 3 recommended presets (or provide a custom URL/screenshot).
+- **Phase 2: Analyze & Vibe Switching**: If the user provides a URL or image, analyze it visually. Map color palettes, typography classes, spacing density, layout grids, and visual effects into a JSON profile. If the user dislikes an initial design, immediately offer 2-3 contrasting presets from `presets/catalog.md` to switch aesthetics instantly.
 - **Phase 3: Generate (Implementation)**: If the user asks to build UI components, read `.istm-context/design.md` and `references/generation-guide.md`. Convert tokens to clean Tailwind classes/CSS variables, fetch assets, and implement the design faithfully.
 
 ### Absolute Aesthetic & Code Enforcement Rules
