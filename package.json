@@ -1,6 +1,6 @@
 {
   "name": "@istmx/skills",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "The Elite Agentic Orchestration & Enterprise SDLC Engine for Claude Code, Cursor, Windsurf, and Gemini. 70+ design presets, automated browser QA, full-stack architecture, and senior-dev efficiency.",
   "type": "module",
   "bin": "bin/cli.js",
