@@ -1,104 +1,180 @@
 <div align="center">
   <h1>@istmx/skills</h1>
-  <p><b>The Elite AI Orchestration Engine optimized for Claude Code</b></p>
-  <a href="https://istmx.dpdns.org">Website</a> • <a href="https://istmx.dpdns.org/docs">Documentation</a> • <a href="https://github.com/istmX/skills">GitHub</a>
+  <p><b>The Elite Agentic Orchestration & Enterprise SDLC Engine</b></p>
+  <p><i>Transform Claude Code, Cursor, Windsurf, and Gemini into senior-level architects, design engineers, and autonomous QA testers.</i></p>
+  <br/>
+  <a href="https://istmx.dpdns.org">Website</a> • <a href="https://istmx.dpdns.org/docs">Documentation</a> • <a href="https://github.com/istmX/skills">GitHub</a> • <a href="https://www.npmjs.com/package/@istmx/skills">npm</a>
 </div>
 
 <br/>
 
-Most AI coding assistants fail at scale. They lose context, hallucinate architectures, generate generic "AI slop," and completely ignore your design system.
+Most AI coding assistants fail at scale. They generate lazy 2-section "AI slop", lose context in large codebases, leave broken `// TODO` placeholders, hallucinate invalid architectures, and destroy existing design systems.
 
-`@istmx/skills` is a revolutionary **Agentic Orchestration Framework** built specifically to maximize the reasoning power of CLI-based agents like **Claude Code**. By enforcing strict system design boundaries, Git guardrails, and premium UI/UX rules, it forces your LLM to write modular, production-ready blueprints before it ever touches a line of code.
+`@istmx/skills` is a deterministic, stack-agnostic **Agentic Operating System** designed to supercharge CLI-based agents like **Claude Code** and modern IDEs (Cursor, Windsurf, Gemini). It enforces strict architectural boundaries, provides 70+ production-grade design presets, runs automated headless browser QA testing, and applies senior-developer efficiency ladders before touching a line of code.
 
 ---
 
 ## ⚡ Quick Start
 
-Initialize the framework in your project root:
+Initialize or upgrade `@istmx/skills` in your project root:
 
 ```bash
 npx @istmx/skills init
 ```
 
-The CLI automatically detects your environment—optimizing primarily for Claude Code (while fully supporting Cursor, Windsurf, and Gemini)—and instantly upgrades your AI's reasoning capabilities by injecting the master orchestrators.
+The CLI automatically detects your environment—optimizing for **Claude Code**, **Cursor**, **Windsurf**, **Gemini**, **Cline**, and **Roo Code**—and injects the universal router, core orchestrators, and enterprise workflow suite directly into your harness rulebook.
 
 ---
 
-## 🚀 The Dual-Mode Paradigm (v2.0)
+## 🧠 Master Router & Core Orchestrators (Day-Zero)
 
-With the latest updates, our core orchestrators now feature **Dual-Mode Execution** and an interactive **Discovery Gate**.
+These master brains structure your entire application. They are **100% Stack Agnostic**—adapting seamlessly across Web (React, Next.js, Vue, Nuxt, SvelteKit), Mobile (iOS SwiftUI, Android Jetpack Compose, React Native, Expo, Flutter), and Backend (Node, Bun, FastAPI, Go, Rust).
 
-- **Context Phase (Day Zero)**: The AI acts as an Architect. It pauses to ask you clarifying questions (Discovery Gate), reverse-engineers screenshots or URLs, and generates exact design and motion blueprints (`design.md`, `animate.md`).
-- **Execution Phase (Day-to-Day)**: The AI acts as an Executor. It bypasses blueprints, asks how you want to preview the work, and physically writes the execution code instantly.
+### 👑 The Apex Router
+* **`/istm <prompt>`** — *Universal NLP Router & Master Orchestrator*
+  * Evaluates your prompt, classifies domain intent, and automatically delegates execution to the optimal skill.
+  * **Example**:
+    ```bash
+    > /istm build me a real-time crypto exchange with live charts and dark mode
+    ```
+
+### 🏛️ The 4 Pillars of Architecture
+* **`/istm-architecture`** — *2-Track Full-Stack Architecture Engine*
+  * **Track 1 (Greenfield)**: Executes the Discovery Gate, interviews you to resolve unknown requirements, applies Smart Defaults, and scaffolds the 4 Pillars of Truth (`agents.md`, `architecture.md`, `design.md`, `project-overview.md`).
+  * **Track 2 (Brownfield / Existing Codebase)**: Zero-interrogation mode. Automatically scans `package.json`, runtime frameworks, live ORM schemas, and router trees to faithfully reverse-engineer the architecture with zero destructive overwrites.
+  * **Examples**:
+    ```bash
+    # Greenfield project from prompt
+    > /istm-architecture design an enterprise B2B SaaS platform with team permissions
+
+    # Reverse-engineer an existing codebase
+    > /istm-architecture --codebase
+    ```
+
+* **`/istm-design`** — *70+ Production Brand Presets, Archetypes & Image-to-Code*
+  * Reverse-engineers design systems from URLs or screenshots into precise tokens, and loads battle-tested brand blueprints (`linear`, `stripe`, `apple`, `vercel`, `supabase`, `porsche`, `claude`, etc.).
+  * **Examples**:
+    ```bash
+    # Apply Linear's exact near-black palette & typography
+    > /istm-design --preset=linear
+
+    # Build a landing page with Stripe's banking-grade tokens
+    > /istm-design build a billing settings page using preset stripe
+    ```
+
+* **`/istm-awwward-designer`** — *Awwwards-Winning Visual Universes*
+  * Constructs cinematic frontend experiences powered by the Paint Pipeline. Integrates WebGL, Canvas, custom shaders, and Awwwards-level interactive layouts.
+  * **Example**:
+    ```bash
+    > /istm-awwward-designer build a 3D interactive hardware showcase with smooth scrolling
+    ```
+
+* **`/istm-animate`** — *Design Engineering & Spring Physics Engine*
+  * Identifies motion opportunities and injects physics-based micro-interactions, spring curves (`stiffness: 100, damping: 20`), and hardware-accelerated transforms.
+  * **Example**:
+    ```bash
+    > /istm-animate add tactile magnetic hover physics and entry staggers to hero components
+    ```
+
+* **`/istm-system-design`** — *Backend Architect, Database Schemas & APIs*
+  * Generates production-ready database schemas (Prisma, Drizzle, SQL), strict Zod validation pipelines, and type-safe server actions.
+  * **Example**:
+    ```bash
+    > /istm-system-design create a multi-tenant PostgreSQL schema with role-based access control
+    ```
 
 ---
 
-## 🧠 The Orchestrators (God Mode)
+## 🛠️ Enterprise Workflow Suite (Day-to-Day)
 
-These master brains structure your entire application. They are **100% Stack Agnostic**—whether you are building for the web, mobile, or desktop, they adapt to your architecture.
+Stop chatting blindly with your AI. Use these deterministic commands to execute safe, heavily-guarded daily development:
 
-| Orchestrator | Domain | Description |
+| Command | Role | Description & Example Prompt |
 |---|---|---|
-| **`/istm`** | Universal | The apex NLP router. Analyzes your prompt and dynamically routes execution to the best skill in the ecosystem. |
-| **`/istm-architecture`** | Full-Stack | The master Day-Zero planner. Establishes the "4 Pillars of Truth". Enforces **Just-In-Time Scaffolding**, respects your project's chosen framework conventions, and strictly mandates Public vs Private component boundaries. |
-| **`/istm-design`** | Visual Engine | The ultimate UI token generator. Uses a **3-Phase Engine** (Structure, Analyze, Generate) to reverse-engineer design systems from URLs or screenshots into precise JSON profiles. Enforces elite typography and bans AI slop. |
-| **`/istm-animate`** | Motion Engine | Powered by the **Cast Pipeline**. Identifies opportunities and injects precise design-engineering physics into your components. Integrates world-class design-engineering principles. |
-| **`/istm-awwward-designer`** | Premium UI | Powered by the **Paint Pipeline**. Builds Awwwards-winning frontend universes from scratch. Generates a `MASTER.md` and implements complex motion with ruthless post-implementation audits. |
-| **`/istm-system-design`** | Backend | The infrastructure architect. Owns database schemas, API routing, and backend stack configuration, entirely independent of any specific language or ORM. |
+| **`/istm-craft`** | Feature Architect | Enforces **One-Spec-At-A-Time** planning.<br/>`> /istm-craft spec out the Stripe subscription checkout modal` |
+| **`/istm-develop`** | Execution Engine | Builds production code with anti-laziness gates and Git guardrails.<br/>`> /istm-develop implement the checkout modal from spec 0001` |
+| **`/istm-debug`** | Root-Cause Investigator | Employs the **7-Rung Efficiency Ladder** & Grep-All-Callers tracing.<br/>`> /istm-debug session token drops during WebSocket reconnection` |
+| **`/istm-qa`** | Automated Browser QA | Automated headless browser testing (Playwright) across responsive viewports.<br/>`> /istm-qa test the pricing table on mobile 375px and desktop 1440px` |
+| **`/istm-cso`** | Security Officer | Deep scans API routes and dependencies for auth leaks and injection risks.<br/>`> /istm-cso scan authentication middleware and database queries` |
+| **`/istm-gain`** | Performance Optimizer | Profiles bundle sizes, renders, and Largest Contentful Paint (LCP).<br/>`> /istm-gain optimize client bundle and lazy-load heavy chart dependencies` |
+| **`/istm-debt`** | Debt Harvester | Harvests deliberate shortcuts into structured `ISTM-DEBT.md` ledgers.<br/>`> /istm-debt generate a debt ledger for all deferred optimizations` |
+| **`/istm-review`** | Code Reviewer | Rigorous pre-merge code review and diff inspection.<br/>`> /istm-review audit the auth pull request for edge cases and regressions` |
+| **`/istm-ship`** | Release Engine | Verifies tests, runs QA, and drafts production PRs and changelogs.<br/>`> /istm-ship run test suites, verify browser QA, and draft a release PR` |
+| **`/istm-autoplan`** | Sprint Planner | Multi-stage autonomous sprint planning and work queue breakdown.<br/>`> /istm-autoplan break down Q3 roadmap milestones into actionable tasks` |
+| **`/istm-test`** | Test Generator | Generates comprehensive unit, integration, and E2E test suites.<br/>`> /istm-test write Vitest integration tests for the checkout webhook` |
 
 ---
 
-## 🛠️ The Enterprise Workflows (Day-to-Day)
+## 🎨 70+ Production Design Presets Catalog
 
-Stop chatting blindly with your AI. Use these deterministic commands to execute precise, safe, and heavily-guarded actions:
+`@istmx/skills` includes **70+ reverse-engineered, production-ready Design System blueprints** ready to load into any project:
 
-- **`/istm-scope` (The Milestone Planner)**: Manages the lifecycle of your features (`planned` → `in-progress` → `done`). Crucially, it assigns a **Workflow Tier** (`Vibe`, `Lean`, `Medium`, or `Full`) to dictate exactly how much rigorous testing and review each feature requires before shipping.
-- **`/istm-craft` (The Feature Architect)**: Enforces a strict **"One Spec At A Time"** rule so Claude Code doesn't hallucinate 10 features at once. 
-- **`/istm-develop` (The Execution Engine)**: Builds the code, but with massive safety guardrails:
-  - **Git Guardrails**: Silently runs `git fetch` before coding to check for uncommitted work and prevents you from overwriting a teammate's branch.
-  - **The Spec Gate**: Mathematically forbidden from guessing. If a load-bearing architectural decision is missing, it refuses to code and routes you back to `/istm-craft`.
-- **Live URL Caching**: Both `/craft` and `/develop` natively fetch documentation URLs from your prompt to learn bleeding-edge syntax, automatically caching that knowledge in `.istm-context/docs/` for future sessions.
-- **`/istm-test` & `/istm-check`**: The verification tail. Mandated by higher Workflow Tiers to run pre-merge code reviews and comprehensive test suites.
-- **`/istm-audit`**: Scans the codebase for tech debt, architectural drift, and unused code.
-- **`/istm-debug`**: Hunts down root causes, fixes code, and writes regression tests.
-- **`/istm-sync`**: Reconciles scope and completely re-hydrates the durable knowledge base after shipping a feature to save AI token limits.
+```
+istm-design/presets/
+├── ai-rag/        (claude, cursor, cohere, mistral, ollama, replicate, elevenlabs, xai)
+├── devtools/      (linear, vercel, supabase, raycast, posthog, clickhouse, sentry, mongodb)
+├── fintech/       (stripe, wise, coinbase, binance, kraken, revolut, mastercard)
+├── creative/      (figma, notion, framer, miro, airtable, cal, intercom, slack, zapier)
+├── luxury-auto/   (porsche, ferrari, bugatti, lamborghini, bmw-m, tesla)
+└── commerce/      (apple, airbnb, spotify, shopify, nike, uber, starbucks)
+```
 
----
-
-## 📱 Omni-Channel Support
-
-`@istmx/skills` goes far beyond the standard Web stack. Our `istm-animate` and `istm-awwward-designer` orchestrators automatically detect your environment and execute flawless motion and design principles across:
-- **Web**: Advanced DOM motion, WebGL, Canvas, and CSS architectures.
-- **Apple**: Native SwiftUI (iOS + macOS) and Metal Shaders.
-- **Android**: Native Jetpack Compose, Compose Multiplatform, and AGSL Shaders.
+To use any preset:
+```bash
+> /istm-design --preset=linear
+> /istm-design --preset=stripe
+> /istm-design --preset=apple
+```
 
 ---
 
-## 📁 The `.istm-context` Architecture
+## 🛡️ The 7 Root Anti-Slop Architectural Laws
 
-We believe in **Blueprint Centralization** and Deterministic Execution. 
-When your AI runs an orchestrator, it generates a `.istm-context/` directory in your project. This is the ultimate source of truth. 
+Every skill in `@istmx/skills` mathematically enforces these 7 core standards:
 
-Before generating a single line of code, every agent is forced to read `.istm-context/design.md` (for exact UI tokens) and `.istm-context/architecture.md` (to verify the stack), ensuring perfect alignment and zero hallucinations.
+1. **Landing Page Narrative Arc Law**: Lazy 2-section outputs (Hero + Footer only) are strictly banned. Every full-page experience must construct a complete 5–8 section journey (*Hero → Social Proof → Bento Feature Showcase → Live Interactive Universe → Deep Dive → Testimonials → Pricing → FAQ → God-Tier Footer*).
+2. **Mandatory Pre-Flight Token Ingestion Gate**: Motion and UI engines MUST read `.istm-context/design.md` tokens before generating code.
+3. **Modern Tailwind v4 Semantic Standard**: Strictly forbids ugly inline arbitrary variables like `bg-[var(--background)]`. Mandates clean first-class semantic tokens (`bg-background`, `text-foreground`, `border-border`, `bg-muted`, `bg-card`).
+4. **Primitive Reuse Priority (Shadcn UI)**: Reusable atoms (Buttons, Inputs, Dialogs, Tooltips, Sheets) MUST be reused from `@/components/ui/` instead of raw unaccessible `<div>` and `<button>` hacks.
+5. **Stack-Idiomatic Structure & Live Research Gate**: Respects native framework conventions without artificial nesting. Live web/doc lookups are executed for bleeding-edge frameworks.
+6. **Compiler-Grade TypeScript**: Zero `any` tolerance. Strict domain interfaces, discriminated unions, and Zod inference required on all inputs.
+7. **Clean Code & Anti-Laziness Law**: Code must be self-documenting (no noise comments) and full-fidelity (zero placeholder `// TODO` comments or truncated outputs).
 
 ---
 
-## 🤝 Contributing & Open Source
+## 📁 The `.istm-context` 4 Pillars of Truth
 
-We are fully open-sourcing the ultimate AI orchestration framework to end the era of generic AI code scaffolding. If you're tired of AI building the same boring CRUD apps and want to help us push the boundaries of Agentic UI, we'd love your help!
+When an orchestrator runs, it centralizes all knowledge into `.istm-context/`:
 
-### How you can help:
-- ⭐️ **Star this repo** to help others find it and support the movement.
-- 🐛 **Report Bugs** by opening an issue.
-- 💻 **Submit PRs** to improve the skills, add new frameworks, or fix typos.
+```
+.istm-context/
+├── agents.md             # Operational brain, memory rules, and coding standards
+├── architecture.md       # Database schemas, API routes, and backend architecture
+├── design.md             # UI tokens, color palette, typography scale, motion specs
+├── project-overview.md   # Business logic, product requirements, and user journeys
+├── specs/                # Atomic, feature-specific implementation specifications
+└── docs/                 # Cached documentation from live web lookups
+```
 
-Please read our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before contributing.
+Before generating a line of code, every agent reads this directory, guaranteeing 100% architectural alignment and zero hallucinations.
+
+---
+
+## 🤝 Contributing & Community
+
+We are building the definitive open-source AI orchestration engine to end the era of generic AI code scaffolding.
+
+- ⭐️ **Star the repo** to support the project.
+- 🐛 **Report Issues** or suggest new framework adapters.
+- 💻 **Submit Pull Requests** to expand our design presets or workflow tools.
+
+Please review our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before contributing.
 
 **Author:** Aryan  
 **License:** [MIT License](LICENSE)
 
 ---
-<!-- SEO Metadata & Discovery Tags (DO NOT REMOVE) -->
+<!-- SEO Metadata (DO NOT REMOVE) -->
 <!-- 
-Keywords: Claude Code skills, Claude Code agent configuration, Claude Code vs Cursor, AI coding agents, Open source AI coding agents, AI agent framework for software development, LLM-based coding assistant tutorial, AI coding agent performance benchmarks, Cloud-based software development tools, DevOps automation tools, API documentation generator, SaaS development framework, UI/UX design systems, Design system architecture, Atomic design methodology 2026, Developer tools, DX, Deterministic Execution, Orchestration Engine, RAG, Knowledge base, Best AI agent for GitHub projects, istm ai templates, istmx ai templates, istm ui components, istm skills ai framework, istmx vs istm, istm agent templates, istm developer tools, istm coding assistant, .cursorrules alternative, cursor rules directory, AGENTS.md standard, claude code agents.md, aider coding agent, roo code context, cline mcp server, best ai agent configuration, model context protocol, awwwards level ui generator, motion physics ai rules, database schema ai architect, ai code review agent, agentic debugging workflow, ai pr generator, agentic skills frontend, istm-awwward-designer, design dna, emil kowalski animations, jetpack compose ai, swiftui ai agent, anthropic claude code plugins, claude code workflows
+Keywords: Claude Code skills, Claude Code agents, Claude Code vs Cursor, AI coding agent framework, open source agentic skills, enterprise SDLC AI, automated browser QA, playwright AI testing, linear design system, stripe design tokens, tailwind v4 semantic tokens, shadcn ui agent, cursor rules, .cursorrules alternative, AGENTS.md standard, full stack AI architecture, Next.js 15 AI agent, headless browser testing agent, security audit AI agent, agentic workflow tools
 -->
