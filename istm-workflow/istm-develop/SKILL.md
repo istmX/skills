@@ -21,6 +21,7 @@ Write everything this skill produces, files and messages alike, in plain simple 
 4. **Stack-Idiomatic Structure**: Respect native framework conventions (e.g., Next.js App Router `app/` routes and colocated feature components). Never force artificial folder nesting.
 5. **Compiler-Grade TypeScript (Zero `any` Tolerance)**: Strictly enforce `No any`. Use typed domain models, discriminated unions, and Zod inference.
 6. **Clean Code & Noise Comment Ban**: Strictly ban redundant, chatty comments (`// button click`, `// component render`). Code must be self-documenting.
+7. **Anti-Laziness & Output Integrity Law**: Never truncate code, drop functions, or output placeholder comments (`// TODO`, `// ...rest of code`). Always generate complete, production-ready full-fidelity implementations. When implementing complex features, self-verify complete coverage before finishing.
 
 
 

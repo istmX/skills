@@ -44,6 +44,7 @@ The spec must include:
 - **Strict Typing & Clean Code**:
   - Compiler-grade TypeScript: Absolute ban on `any` and `unknown as any`. All domain interfaces in `types/` or inferred from Zod.
   - Ban noisy comments (`// button`, `// handle click`). Self-documenting code only.
+  - Anti-Laziness Law: Specs must be exhaustive. Never write placeholder ellipses ('...') or omit required interfaces. Every state transition, error condition, and edge case must be fully specified.
 - **Build Plan**: The step-by-step implementation guide.
 
 ### Step 4: Completion
