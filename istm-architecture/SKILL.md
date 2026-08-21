@@ -21,13 +21,42 @@ The master context orchestrator: evaluates user prompts, resolves structural amb
 Does not create production application code (the implementation agent owns that), audit for accessibility (/audit owns that), or write the feature scope (/scope owns that).
 
 
-## Folder Structure & Component Architecture
+## Folder Structure & Stack-Idiomatic Architecture
 
-1. **Just-In-Time Scaffolding**: Never create massive folder trees upfront. Folders should only be created when a specific feature is being built.
-2. **Respect Stack Conventions**: Do not blindly force a `src/app/` structure if a framework (like Next.js) already uses a root `app/` structure. Analyze the existing structure first.
-3. **Private vs Public Components**: Strictly enforce Feature-Based Architecture:
-   - **Public Components**: Reusable, generic UI components (buttons, inputs) belong in `shared/components/` (or `components/ui/` for shadcn).
-   - **Private Components**: Components specific to a single feature (e.g., `LoginForm`) MUST stay inside that feature's directory (`features/auth/components/`).
+1. **Stack-Idiomatic Structure**: Respect native framework conventions without dogmatic over-engineering:
+   - **Next.js (App Router)**: Native `app/` routes, `components/ui/` for primitives, and colocated or domain components where appropriate.
+   - **Vite / React / Vue / Nuxt / SvelteKit / Flutter / Mobile**: Strictly adhere to the canonical structure of the target framework.
+   - **Existing Codebases**: Always inspect and adopt existing directory conventions before introducing new paths.
+2. **Live Stack Research Gate**: When scaffolding unfamiliar, new, or bleeding-edge framework versions (e.g. Next.js 15/16, React 19, Tailwind v4, Vite 6), execute a live web search or official documentation lookup to verify current directory conventions, router configurations, and config filenames before generating code.
+3. **Component Architecture & Primitive Reuse**:
+   - **UI Primitives (`@/components/ui/` or `shared/components/`)**: Atomic, reusable building blocks (Buttons, Dialogs, Inputs, Tooltips, Sheets, Dropdowns). ALWAYS reuse existing Shadcn UI / Radix primitives instead of reinventing bespoke, unaccessible `<div>` and `<button>` hacks.
+   - **Composite Sections (Page / Domain Specific)**: High-level stateful assemblies and narrative sections (HeroSection, PricingTable, CheckoutForm, InteractivePlayground) that consume atomic primitives.
+
+## Landing Page Narrative Arc Law (Anti-Slop Standard)
+
+Lazy 2-section outputs (Hero + Footer only) are strictly banned as generic AI slop. Any landing page, marketing site, or full-page experience must construct a complete, multi-layered narrative arc with rich visual craft:
+
+1. **High-Impact Hero**: Compelling value proposition, primary/secondary CTAs, live preview/visual anchor.
+2. **Social Proof & Trust**: Partner/client logos, live developer counts, security badges, or performance metrics.
+3. **Interactive Bento Grid / Feature Showcase**: Asymmetrical bento grid highlighting core capabilities with subtle hover states.
+4. **Live Interactive Universe / Demo**: A tangible, interactive playground, live canvas, or sandbox allowing users to experience the product directly.
+5. **Deep-Dive Architecture & Value Columns**: Technical deep-dive, side-by-side workflow comparisons, or architecture breakdowns.
+6. **Social Validation / Case Studies**: Verifiable developer quotes, case studies, or user reviews with authentic typography.
+7. **Pricing & Conversion Funnel**: Transparent tiers, feature comparison matrix, and clear upgrade triggers.
+8. **Interactive FAQ Accordion**: Smooth expand/collapse answers addressing user objections and technical questions.
+9. **God-Tier Footer**: Full navigation columns, live status indicators, newsletter/CTA, and brand manifesto.
+
+## Modern Styling & TypeScript Standards
+
+1. **Tailwind v4 Semantic Token Standard**:
+   - Strictly FORBID ugly inline arbitrary variables like `bg-[var(--background)]`, `text-[var(--primary)]`, or `border-[var(--border)]`.
+   - Enforce clean first-class semantic utility tokens (`bg-background`, `text-foreground`, `bg-muted`, `text-muted-foreground`, `border-border`, `bg-card`, `text-card-foreground`) mapped directly via `@theme` or root CSS variables.
+2. **Compiler-Grade TypeScript (Zero `any` Tolerance)**:
+   - Absolute ban on `any` and `unknown as any`.
+   - Mandate strict TypeScript interfaces, discriminated unions for UI/server state machines, Zod schema validation on all inputs, and inferred types from ORMs/schemas.
+3. **Clean Code & Noise Comment Ban**:
+   - Strictly forbid redundant, chatty comments (`// handle click`, `// button component`, `// state for user`).
+   - Code must be self-documenting. Comments are permitted ONLY for non-obvious business invariants, complex mathematical equations, or custom physics/shader algorithms.
 
 ## Blueprint file convention (The 4 Pillars)
 
@@ -116,3 +145,4 @@ When generating or referencing the blueprints, you must enforce the UI extractio
 - **Color Palettes**: Read `design/colors`. Extract the exact semantic background, surface, and ink tokens. Never hallucinate raw hex codes.
 - **Motion**: Read `animate/`. You must adhere strictly to the Dual Motion Standard.
 - Ensure these constraints are permanently written into the final `agents.md` memory file.
+
