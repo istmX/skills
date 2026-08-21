@@ -66,16 +66,25 @@ Design the smallest experiment that confirms or refutes it (a targeted log, an a
 
 Loop Steps 3 to 4 until a hypothesis is confirmed by evidence. **Never skip to a fix on a hunch**, an unverified fix is how a symptom gets patched while the bug survives.
 
-### Step 5: Fix at the root
+### Step 5: Fix at the root (The 7-Rung Efficiency Ladder)
 
-Make the **minimal, targeted** change that addresses the proven cause. Don't fix the symptom (clamping the null), fix the cause (why it's null). Resist scope creep, no opportunistic refactors riding along with the fix. Follow the project's conventions (`.istm-context/agents.md`, neighbouring code).
+Stop at the first rung that holds before writing code:
+1. **Does this need to be built at all?** (YAGNI / delete dead code).
+2. **Does it already exist in this codebase?** Reuse the helper or pattern already here.
+3. **Does the standard library already do this?** Use standard APIs.
+4. **Does a native platform feature cover it?** Use it.
+5. **Does an already-installed dependency solve it?** Use it.
+6. **Can this be one line?** Make it one line.
+7. **Only then: write the minimum clean code that works.**
+
+**Root Cause Caller Grep**: Grep every caller of the function you touch and fix the shared contract once. One clean guard there is a smaller diff than patching only the path the symptom named.
 
 ### Step 6: Verify and protect
 
 - Run the Step 1 reproduction again, confirm it now passes.
 - Run the surrounding test suite, confirm no regression.
 - **Add a regression test** that fails without the fix and passes with it, so this bug can't silently return; write it inline, or hand the spec to `/istm-test`.
-- **Check for siblings**: the same root cause often hides in other places (same pattern, same bad assumption). Grep for them and note or fix them.
+- **Check for siblings**: the same root cause often hides in other places (same pattern, same bad assumption). Grep for them and fix them at the root.
 
 ### Optional: run it in a subagent
 

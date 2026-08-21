@@ -56,7 +56,7 @@ Gather signals to determine the execution path:
 
 ### The 3-Phase Engine
 
-- **Step 0 (Mandatory Reading)**: Before suggesting any design or generating files, you MUST recursively read all rule files inside `istm-design/colors/`, `istm-design/styles/`, `istm-design/typography/`, `istm-design/ux/`, and `istm-design/references/`. 
+- **Step 0 (Mandatory Reading)**: Before suggesting any design or generating files, you MUST recursively read all rule files inside `istm-design/colors/`, `istm-design/styles/`, `istm-design/typography/`, `istm-design/ux/`, `istm-design/archetypes/` (brutalist, minimalist, soft, brandkit), `istm-design/image-to-code/`, `istm-design/semantic-design/`, `istm-design/anti-laziness/`, and `istm-design/references/`. 
 
 - **Phase 1: Structure (Schema Definition)**: Read `references/schema.md`. Present the 3-dimension structure (Design System, Design Style, Visual Effects) if the user asks for the design structure.
 - **Phase 2: Analyze (Reverse Engineering & Trend Search)**: If the user provides a URL or image, analyze it visually. Map color palettes, typography classes, spacing density, layout grids, and visual effects into a JSON profile. If requested for modern 2026 aesthetics, use web search to inspect modern design system benchmarks. **Discovery Gate:** Ask "Want to adjust any values before I lock this into `design.md`?"

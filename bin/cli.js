@@ -217,12 +217,19 @@ async function main() {
   console.log('    - ' + chalk.cyan('/istm-design') + '           (Bespoke UI Design Tokens & Styling)');
   console.log('    - ' + chalk.cyan('/istm-system-design') + '    (Database Schemas, APIs, ORM)');
   console.log('    - ' + chalk.cyan('/istm-animate') + '          (Hardware-Accelerated Motion & Curves)');
-  console.log('  ' + chalk.bold('Day-to-Day Workflow Utilities:'));
+  console.log('  ' + chalk.bold('Day-to-Day Workflow Suite:'));
   console.log('    - ' + chalk.cyan('/istm-craft') + '            (Plan a new feature spec)');
   console.log('    - ' + chalk.cyan('/istm-develop') + '          (Write feature implementation code)');
-  console.log('    - ' + chalk.cyan('/istm-debug') + '            (Fix and trace complex errors)');
-  console.log('    - ' + chalk.cyan('/istm-audit') + '            (Scan for tech debt and anti-patterns)');
-  console.log('    - ' + chalk.cyan('/istm-test') + '             (Generate comprehensive tests)');
+  console.log('    - ' + chalk.cyan('/istm-debug') + '            (7-Rung Efficiency Ladder & root cause fixes)');
+  console.log('    - ' + chalk.cyan('/istm-audit') + '            (Deep multi-layer tech debt scan)');
+  console.log('    - ' + chalk.cyan('/istm-qa') + '               (Automated headless browser & visual QA testing)');
+  console.log('    - ' + chalk.cyan('/istm-cso') + '              (Chief Security Officer vulnerability scan)');
+  console.log('    - ' + chalk.cyan('/istm-health') + '           (Codebase health & architecture drift score)');
+  console.log('    - ' + chalk.cyan('/istm-gain') + '             (Performance & bundle optimization)');
+  console.log('    - ' + chalk.cyan('/istm-debt') + '             (Harvest & track deliberate code debt)');
+  console.log('    - ' + chalk.cyan('/istm-review') + '           (Pre-merge code & diff audit)');
+  console.log('    - ' + chalk.cyan('/istm-ship') + '             (Autonomous release & changelog generator)');
+  console.log('    - ' + chalk.cyan('/istm-test') + '             (Generate comprehensive test suites)');
   
   console.log('\n📚 Documentation & Repo: ' + chalk.dim('https://github.com/istmX/skills\n'));
 }

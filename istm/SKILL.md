@@ -50,10 +50,16 @@ Analyze the prompt and immediately route execution to the absolute best skill in
    - Dedicated UI Design System / Design Tokens: Delegate immediately to `/istm-design`.
    - Specialized Motion Curves / Hardware Physics: Delegate immediately to `/istm-animate`.
 
-2. **If they want Day-to-Day Execution (Workflow Tools)**:
+2. **If they want Day-to-Day Execution (Workflow Suite)**:
    - Building a specific feature: Execute `/istm-craft` to spec it out, followed by `/istm-develop` to write the code.
-   - Debugging a complex error: Execute `/istm-debug` to trace and isolate root cause.
-   - Reviewing code quality & tech debt: Execute `/istm-audit` or `/istm-check`.
+   - Debugging a complex error: Execute `/istm-debug` (7-Rung Efficiency Ladder & root-cause caller tracing).
+   - Reviewing code quality & tech debt: Execute `/istm-audit`, `/istm-debt`, or `/istm-check`.
+   - Security & Vulnerability scans: Execute `/istm-cso`.
+   - Automated Browser QA & Visual Testing: Execute `/istm-qa` (headless browser interaction & layout validation).
+   - Performance & Bundle Optimization: Execute `/istm-gain`.
+   - Code Review & Pre-Merge Audits: Execute `/istm-review` or `/istm-eng-review`.
+   - Sprint & Milestone Planning: Execute `/istm-autoplan` or `/istm-sprint`.
+   - Shipping & Release Management: Execute `/istm-ship` or `/istm-release`.
    - Writing tests: Execute `/istm-test`.
 
 ### Phase 0: Classify (only when `pre-flight` is ambiguous)
