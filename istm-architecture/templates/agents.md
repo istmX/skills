@@ -71,10 +71,28 @@ Always prefer:
 - Scalability
 - Readability
 - Reusability
-- Type safety where applicable
+- Strict compiler-grade type safety (Zero `any` tolerance)
 - Predictable architecture
+- Self-documenting clean code (No chatty noise comments)
 
 Never write code only because it works. Write code that another engineer can immediately understand.
+
+---
+
+# Core Engineering & Code Standards
+
+1. **Compiler-Grade TypeScript**:
+   - Strictly forbid `any` and `unknown as any`.
+   - Mandate explicit interfaces, discriminated unions for state, and Zod inference on all inputs.
+2. **Modern Tailwind v4 Semantic Tokens**:
+   - Strictly forbid ugly inline arbitrary variables like `bg-[var(--background)]` or `text-[var(--foreground)]`.
+   - Use clean semantic utility classes (`bg-background`, `text-foreground`, `bg-muted`, `text-muted-foreground`, `border-border`, `bg-card`).
+3. **Primitive Reuse Priority (Shadcn UI)**:
+   - For all interactive atoms (buttons, inputs, dialogs, dropdowns, tooltips, sheets, accordions), ALWAYS reuse/import from `@/components/ui/` (or shared primitives). Never write unaccessible custom `<div>` click handlers.
+4. **Stack-Idiomatic Structure**:
+   - Respect native framework directory structures (e.g., Next.js App Router `app/`). Never force artificial folder nesting.
+5. **Noise Comment Ban**:
+   - Strictly forbid redundant comments (`// handle click`, `// button component`). Comments are permitted ONLY for non-obvious business invariants, mathematical algorithms, or custom physics.
 
 ---
 
@@ -85,9 +103,10 @@ Before adding or changing frontend UI, verify the rendered parent width and alig
 - Do not make a flex or grid text wrapper shrink-to-fit accidentally. A content row that owns a full-width child should explicitly use `w-full min-w-0` when appropriate.
 - Do not use `overflow-wrap: anywhere` for normal prose. It can reduce intrinsic width and cause a parent to collapse, producing one-word or one-character lines.
 - Do not use display/tall fonts or very small `max-w-*` values for body copy. Paragraphs should use the body font and a readable measure, generally around 45–75 characters per line.
-- Do not hardcode UI surface, text, border, or semantic-state colors in components. Use the semantic tokens (`bg-canvas`, `bg-surface-elevated`, `text-ink`) so light and dark themes stay coherent.
+- Do not hardcode UI surface, text, border, or semantic-state colors in components. Use the semantic tokens (`bg-background`, `bg-card`, `text-foreground`, `border-border`) so light and dark themes stay coherent.
 - Use the product sans token for body copy, headings, buttons, forms, and navigation. Use the tall/display face only for deliberate editorial hero typography.
 - Shared buttons must use the button component vocabulary and typography tokens. New button-like links should reuse existing buttons before introducing a one-off font, radius, or height.
+
 
 ---
 
