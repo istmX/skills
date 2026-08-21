@@ -80,9 +80,16 @@ Don't guess. Ask once via your agent's interactive option picker (`AskUserQuesti
 
 If no schemas were written when they should have been, report the failure. Relay the report: what DB was chosen, what ORM was locked in, and the core authentication strategy.
 
-## Absolute Architectural Enforcement Rules
+## Absolute Architectural & Code Enforcement Rules
 
-1. **Smart Defaults**: Unless explicitly overridden by the user, assume a relational database (PostgreSQL). Do not introduce Redis, Kafka, or microservices for an MVP.
-2. **Type Safety**: End-to-end type safety is mandatory. All APIs must validate incoming data using a schema validation library (e.g., Zod) before touching the database.
-3. **No Direct UI DB Calls**: Never call the database directly inside a UI component. Abstract data fetching into dedicated Server Actions, API routes, or custom hooks.
-4. **Relationship Enforcement**: Clearly define 1:1, 1:N, and N:M relationships in the blueprint. Enforce foreign key constraints and cascading deletes where appropriate.
+1. **Stack-Idiomatic Backend Structure**:
+   - Respect native framework folder structures (Next.js Server Actions in `actions/`, API routes in `app/api/`, Prisma in `prisma/schema.prisma`, Drizzle in `src/db/schema.ts`, Express in `src/routes/` and `src/controllers/`). Never force artificial nesting layers.
+   - **Live Stack Research Gate**: When configuring bleeding-edge backend frameworks or auth libraries (Auth.js v5, Supabase SSR, Drizzle Kit, TRPC v11), execute a live web search or doc check to verify current router patterns and middleware conventions.
+2. **Compiler-Grade TypeScript (Zero `any` Tolerance)**:
+   - Absolute ban on `any` and `unknown as any`.
+   - Mandate end-to-end type safety: validate all incoming payloads with Zod (`z.infer<typeof schema>`), strictly type API responses, and use ORM-inferred models (`Prisma.UserSelect`, `InferSelectModel<typeof users>`).
+3. **Smart Defaults**: Unless explicitly overridden by the user, assume a relational database (PostgreSQL). Do not introduce Redis, Kafka, or microservices for an MVP.
+4. **No Direct UI DB Calls**: Never call the database directly inside a UI component. Abstract data fetching and mutations into dedicated Server Actions, API routes, or custom hooks.
+5. **Relationship & Constraint Enforcement**: Clearly define 1:1, 1:N, and N:M relationships in the blueprint. Enforce foreign key constraints, unique indexes, and cascading deletes where appropriate.
+6. **Clean Code & Noise Comment Ban**: Strictly ban redundant, chatty comments (`// connect to database`, `// handle request`). Code must be self-documenting. Comments are permitted ONLY for non-obvious security invariants, complex database transactions, or multi-table locking mechanisms.
+
