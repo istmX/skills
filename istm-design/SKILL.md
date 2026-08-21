@@ -59,13 +59,24 @@ Gather signals to determine the execution path:
 - **Step 0 (Mandatory Reading)**: Before suggesting any design or generating files, you MUST recursively read all rule files inside `istm-design/colors/`, `istm-design/styles/`, `istm-design/typography/`, `istm-design/ux/`, and `istm-design/references/`. 
 
 - **Phase 1: Structure (Schema Definition)**: Read `references/schema.md`. Present the 3-dimension structure (Design System, Design Style, Visual Effects) if the user asks for the design structure.
-- **Phase 2: Analyze (Reverse Engineering)**: If the user provides a URL or image, analyze it visually. Map color palettes, typography classes, spacing density, layout grids, and visual effects into a JSON profile. **Discovery Gate:** Ask "Want to adjust any values before I lock this into `design.md`?"
-- **Phase 3: Generate (Implementation)**: If the user asks to build UI components, read `.istm-context/design.md` and `references/generation-guide.md`. Convert tokens to CSS variables/Tailwind classes, fetch assets, and implement the design faithfully.
+- **Phase 2: Analyze (Reverse Engineering & Trend Search)**: If the user provides a URL or image, analyze it visually. Map color palettes, typography classes, spacing density, layout grids, and visual effects into a JSON profile. If requested for modern 2026 aesthetics, use web search to inspect modern design system benchmarks. **Discovery Gate:** Ask "Want to adjust any values before I lock this into `design.md`?"
+- **Phase 3: Generate (Implementation)**: If the user asks to build UI components, read `.istm-context/design.md` and `references/generation-guide.md`. Convert tokens to clean Tailwind classes/CSS variables, fetch assets, and implement the design faithfully.
 
-### Absolute Aesthetic Enforcement Rules
+### Absolute Aesthetic & Code Enforcement Rules
 
-1. **Typography Supremacy**: Never use browser default fonts. Explicitly define a sans-serif and optionally a display font. Enforce a strict typographic scale.
-2. **Semantic Colors Over Hex Codes**: Forbid direct use of raw hex codes in UI. Force the use of semantic tokens.
-3. **Micro-Interactions**: Enforce standard hover states on all interactive elements.
-4. **No Emojis**: Strictly forbid emojis in UI. Mandate professional SVG icons (Lucide, Phosphor).
-5. **No GSAP Default**: Standard motion relies on CSS/Framer Motion. Heavy scroll-jacking is forbidden unless `/istm-animate` or `/istm-awwward-designer` is explicitly invoked.
+1. **Tailwind v4 Semantic Token Standard**:
+   - Strictly FORBID ugly inline arbitrary CSS variables (`bg-[var(--background)]`, `text-[var(--foreground)]`, `border-[var(--border)]`).
+   - Mandate modern Tailwind v4 semantic utility tokens: `bg-background`, `text-foreground`, `bg-muted`, `text-muted-foreground`, `border-border`, `bg-card`, `text-card-foreground`, `bg-primary`, `text-primary-foreground`, `bg-accent`, `text-accent-foreground`, `bg-popover`, `ring-ring`.
+2. **Shadcn UI & Primitive Reuse Priority**:
+   - For all interactive atoms (buttons, inputs, dialogs, dropdowns, tooltips, sheets, badges, accordions), ALWAYS reuse/import from `@/components/ui/` (or create accessible primitives). Never write unaccessible custom `<div>` click handlers or unstyled button hacks.
+3. **Landing Page Narrative Arc Law (No 2-Section Slop)**:
+   - Generating a lazy 2-section page (Hero + Footer only) is strictly banned.
+   - Any full landing page must construct a complete 5–8 section journey: *Hero → Social Proof/Trust → Bento Grid Feature Showcase → Live Interactive Demo/Universe → Deep Dive Columns → Social Validation → Pricing/CTA → FAQ Accordion → God-Tier Footer*.
+4. **Typography Supremacy**: Never use browser default fonts. Explicitly define a sans-serif and optionally a display font. Enforce a strict typographic scale.
+5. **Semantic Colors Over Hex Codes**: Forbid direct use of raw hex codes in UI. Force the use of semantic tokens.
+6. **Micro-Interactions**: Enforce standard hover states on all interactive elements.
+7. **No Emojis**: Strictly forbid emojis in UI. Mandate professional SVG icons (Lucide, Phosphor, Heroicons).
+8. **Compiler-Grade TypeScript (Zero `any` Tolerance)**: Absolute ban on `any` and `unknown as any`. Use strict interfaces, domain models, and Zod inference.
+9. **Clean Code & Noise Comment Ban**: Strictly ban redundant, chatty comments (`// button component`, `// handle click`). Self-documenting code only.
+10. **No GSAP Default**: Standard motion relies on CSS/Framer Motion. Heavy scroll-jacking is forbidden unless `/istm-animate` or `/istm-awwward-designer` is explicitly invoked.
+
