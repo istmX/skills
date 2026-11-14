@@ -922,7 +922,7 @@ rm -f /tmp/.istm-workflow-brain-context-$$.md 2>/dev/null || true
 **How to use this context:**
 - If `product` digest names the value prop, target user, or stage — don't re-ask.
 - If `goals` digest lists active goals — frame recommendations against them.
-- If `recent-decisions` digest names a prior scope/architecture choice — flag if this plan contradicts.
+- If `recent-decisions` digest names a prior scope/istm-architectureure choice — flag if this plan contradicts.
 - If `user-profile` digest carries calibration pattern statements ("tends to over-engineer security") — surface them when relevant.
 - If a digest is `(no X digest available yet)`, treat that section as cold; ask the user.
 

@@ -1,6 +1,6 @@
 # Spec Template
 
-File path: `.istm-context/specs/NNNN-kebab-case-title.md`
+File path: `specs/NNNN-kebab-case-title.md`
 
 ---
 
@@ -147,7 +147,7 @@ Do not repeat the pros/cons list, explain the reasoning. 1 to 3 paragraphs.>
      migration is sized to the feature (one migration normally; sliced across slices for a large feature
      or a thin thread Tracer Bullet, deferred under Facade; omitted for a slice touching no schema).
      When a scope feature row links this spec, these tasks are also written into that row's sub-tasks;
-     with no scope row, they live here as the source of truth (see /architect's derive-tasks step). -->
+     with no scope row, they live here as the source of truth (see /istm-architecture's derive-tasks step). -->
 
 1. <Build task, e.g. "Create the migration for the confirmed data model">, satisfies **AC-1**
 2. <Build task>, satisfies **AC-2**, **AC-3**
@@ -183,7 +183,7 @@ N. <Build task>, satisfies **AC-N**
      later; these links are here for a human to follow. -->
 
 **Project sources** (verifiable, in this repo):
-- <e.g. `.istm-context/agents.md`, the auth convention · spec 0003 · an installed community skill · already on the project's BaaS>
+- <e.g. `AGENTS.md`, the auth convention · spec 0003 · an installed community skill · already on the project's BaaS>
 
 **Practices & standards**:
 - <named practice/principle the decision rests on, e.g. idempotency keys for money ops · strangler pattern · OWASP session guidance>
@@ -238,21 +238,21 @@ The spec's status mirrors its feature's build lifecycle (scope: planned→`Propo
 
 | Status | Meaning |
 |---|---|
-| `Proposed` | spec written, decision agreed, feature NOT yet built. Set by /architect at creation. |
+| `Proposed` | spec written, decision agreed, feature NOT yet built. Set by /istm-architecture at creation. |
 | `In Progress` | The feature governed by this spec is being built. Set by /istm-develop when the feature goes in-progress. |
-| `Accepted` | The feature is built and verified (scope `done`), the "done and dusted" state. A spec is NOT `Accepted` until its feature ships. Set by /istm-develop on completion or reconciled by /istm-sync. |
+| `Accepted` | The feature is built and verified (scope `done`), the "done and dusted" state. A spec is NOT `Accepted` until its feature ships. Set by `/istm-develop` on completion. |
 | `Superseded by [NNNN](NNNN-title.md)` | Replaced by a newer spec |
 
 **Which status behavior applies depends on whether a buildable scope feature links this spec:**
-- **Feature linked spec** (a `.istm-context/istm-scope/` row's `spec` cell points to it) → **feature mirrored**: `Proposed` → `In Progress` → `Accepted`, tracking the feature's build lifecycle (table above). Confirmation ratifies content but does not set `Accepted`; /istm-develop advances it.
+- **Feature linked spec** (a `specs/` row's `spec` cell points to it) → **feature mirrored**: `Proposed` → `In Progress` → `Accepted`, tracking the feature's build lifecycle (table above). Confirmation ratifies content but does not set `Accepted`; /istm-develop advances it.
 - **Standalone decision spec** (a foundational/stack or cross cutting standard with **no linked buildable feature**) → **decision status**: `Proposed` when written, then **`Accepted` once the engineer ratifies it** (on confirmation). There's no build phase to gate on, so it is not feature mirrored.
 - **spec documenting already shipped work** (the "already built" path, or a feature already `existing`) → **born `Accepted`**, it describes reality that already exists.
 
-**Umbrella child specs carry no lifecycle status.** In an umbrella directory (`NNNN-<x>/`), only the `index.md` has a `**Status**:` line, it mirrors the feature. The **child specs are spec content**, so **omit the `**Status**:` line on children** (they're governed by the umbrella). `/istm-develop` and `/istm-sync` advance the umbrella `index.md`'s status only, never a child's.
+**Umbrella child specs carry no lifecycle status.** In an umbrella directory (`NNNN-<x>/`), only the `index.md` has a `**Status**:` line, it mirrors the feature. The **child specs are spec content**, so **omit the `**Status**:` line on children** (they're governed by the umbrella). `/istm-develop` advances the umbrella `index.md` status only, never a child's.
 
 **A directory spec splits build spec from reasoning.** A directory spec (`NNNN-<x>/`) always contains exactly two core files, plus optional extras:
 - **`index.md`**: the build spec `/istm-develop` reads: `## Summary`, `## Requirements`, `## Decision`, the design/spec section, `## Build plan`, `## Consequences`, `## Follow-up`, and a one line `## Rationale` pointer to `rationale.md`. For an umbrella, `index.md` also opens with a **`## Structure`** section listing and linking every child spec (one line each: what it is + which decision it supports) and holds any **cross child contract**.
-- **`rationale.md`**: everything in the decision record that `/istm-develop` does not need: `## Context`, `## Options considered`, `## Rationale`, the `## References` section, and any supporting evidence (inventories, audits, a landscape scan). There is no separate `research/` folder; bulky evidence goes here, under its own subheading. This is read by humans and by `/architect` on update or supersede, never during a build.
+- **`rationale.md`**: everything in the decision record that `/istm-develop` does not need: `## Context`, `## Options considered`, `## Rationale`, the `## References` section, and any supporting evidence (inventories, audits, a landscape scan). There is no separate `research/` folder; bulky evidence goes here, under its own subheading. This is read by humans and by `/istm-architecture` on update or supersede, never during a build.
 - Optional: **`verify.md`** (verify steps), and **child specs** `NNNN-<child>.md` for an umbrella (each sufficient on its own to build from, each with a short inline rationale rather than its own `rationale.md`; promote a child to its own directory only if it grows heavy).
 
 ## Audience split: build spec vs decision record

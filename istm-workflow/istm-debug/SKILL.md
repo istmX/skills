@@ -24,7 +24,7 @@ A structured root cause investigation, not a guess and check. Bugs are found by 
 
 ## Artifact ownership
 
-Writes the **minimal code fix** for the root cause. Recommends `/istm-test` for the regression test (or writes a failing then passing test inline if that's the fastest proof). Does **not** add features, refactor unrelated code, or rewrite the spec. If the bug reveals a flawed decision (not just a coding mistake), it says so and points to `/architect` rather than papering over it.
+Writes the **minimal code fix** for the root cause. Recommends `/istm-test` for the regression test (or writes a failing then passing test inline if that's the fastest proof). Does **not** add features, refactor unrelated code, or rewrite the spec. If the bug reveals a flawed decision (not just a coding mistake), it says so and points to `/istm-architecture` rather than papering over it.
 
 ---
 
@@ -92,7 +92,7 @@ For a hunt that is not trivial, spawn an investigation subagent so the iterative
 - `model`: set explicitly to a strong model, do not inherit the session model (Claude Code: `sonnet`)
 - `description: "Debug: <symptom>"`
 - Tools: `Read`, `Bash`, `Grep`, `Glob`, `Edit`, `Write`
-- `prompt`: this loop + the captured symptom + reproduction + the relevant `.istm-context/agents.md` (inlined). Require it to report the root cause with evidence, not just "fixed it."
+- `prompt`: this loop + the captured symptom + reproduction + the relevant `AGENTS.md` (inlined). Require it to report the root cause with evidence, not just "fixed it."
 
 ### Report
 
@@ -105,7 +105,7 @@ For a hunt that is not trivial, spawn an investigation subagent so the iterative
 **Fix**: <the minimal change (files touched)>
 **Regression test**: <added inline | spec handed to /istm-test>
 **Siblings**: <same cause found/fixed elsewhere | none found>
-**Deeper issue**: <if the bug reveals a design flaw, run /architect | none>
+**Deeper issue**: <if the bug reveals a design flaw, run /istm-architecture | none>
 ```
 
 If the cause turns out to be a flawed decision rather than a coding mistake, lead with that, the right fix may be a spec update, not a code patch.

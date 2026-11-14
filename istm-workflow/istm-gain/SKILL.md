@@ -33,7 +33,6 @@ carries the exact figure:
   Speed           istm  ▸ 3–6× faster
 
   This repo:  /istm-debt  (shortcuts you deferred)
-              /istm-audit (what's still cuttable)
 ```
 
 ## Honesty boundary

@@ -1,7 +1,7 @@
 ---
 name: istm-develop
 allowed-tools: Bash, Read, Grep, Glob, Write, Edit, Agent, AskUserQuestion
-description: "Run /istm-develop to build a feature, UI or backend, from an approved design, a page, component, API, service, or data slice. If something load bearing is undecided and no spec records it, it stops and routes you to /architect; otherwise it reads the spec plus .istm-context/agents.md, builds, and advances the scope."
+description: "Run /istm-develop to build a feature, UI or backend, from an approved design, a page, component, API, service, or data slice. If something load bearing is undecided and no spec records it, it stops and routes you to /istm-architecture; otherwise it reads the spec plus AGENTS.md, builds, and advances the scope."
 ---
 
 ## Output style (plain words, no dashes, no hyphens)
@@ -28,23 +28,23 @@ Write everything this skill produces, files and messages alike, in plain simple 
 ## Documentation & URL Handling
 - **Bleeding-Edge Frameworks**: If the user provides a URL to official documentation in their prompt (e.g., Next.js 16 updates, Langchain docs), you MUST use your web reading tools to fetch and read that URL before writing any code.
 - **Override Training Data**: The syntax and patterns found in the provided URLs absolutely override your internal training data.
-- **Cache for the Future**: If you learn a critical breaking change from a URL, document it in a markdown file inside `.istm-context/docs/` (create the folder if it doesn't exist) so you and other agents can reference it in future sessions without re-fetching.
+- **Cache for the Future**: If you learn a critical breaking change from a URL, document it in a markdown file inside `docs/` (create the folder if it doesn't exist) so you and other agents can reference it in future sessions without re-fetching.
 - **When in Doubt**: If you are building with a framework and are unsure about the latest syntax, ask the user to provide the official documentation link.
 
 ## What this skill does
 
-The builder: turns a spec plus project conventions into working code. Tracks: **UI** (components, pages, layouts; `ui-guide.md`), **Logical** (APIs, services, data layers, business logic, integrations; `logical-guide.md`), or both (e.g. "auth" = sign in pages plus session logic → run both). Step 0 gates on the spec so load bearing choices (an auth approach, a payment provider) are decided in `/architect`, not silently invented partway through the build.
+The builder: turns a spec plus project conventions into working code. Tracks: **UI** (components, pages, layouts; `ui-guide.md`), **Logical** (APIs, services, data layers, business logic, integrations; `logical-guide.md`), or both (e.g. "auth" = sign in pages plus session logic → run both). Step 0 gates on the spec so load bearing choices (an auth approach, a payment provider) are decided in `/istm-architecture`, not silently invented partway through the build.
 
 ## Asks vs acts
 
-Gates, then acts: no upfront question rounds like `/architect`. Read the decision, build, ask only what the design left open (the visual direction when no reference was given; a business rule the spec didn't settle). Infer from the spec, `.istm-context/agents.md`, and codebase; ask only what can't be inferred; recommend local implementation choices.
+Gates, then acts: no upfront question rounds like `/istm-architecture`. Read the decision, build, ask only what the design left open (the visual direction when no reference was given; a business rule the spec didn't settle). Infer from the spec, `AGENTS.md`, and codebase; ask only what can't be inferred; recommend local implementation choices.
 
 ## Artifact ownership
 
 - Writes app code (plus CSS/tokens for UI).
-- Scope (`.istm-context/istm-scope/`): only the Step 4 touches (feature status → `in-progress`, milestone sub boxes, `Build it` box, code pointer). Marks a feature `done` only at the `Vibe` workflow tier (build plus its own self check; the engineer opted out of separate verification), and even then never while an `Assumed` spec is unratified; at `Lean`/`Medium`/`Full` it leaves the feature `in-progress` for `/istm-check verify` and `/istm-test` to close, and never ticks `Verify it` or `Test it`. Never creates files in `.istm-context/istm-scope/` (scopes only; analysis/research is `/architect`'s, in the spec's `rationale.md`).
-- Never writes spec content or deliberates a decision (flags the need, defers to `/architect`); never restructures root `.istm-context/agents.md` (that's `/istm-audit`); new area conventions go via `/istm-sync` afterwards. **One narrow exception:** on `Build now, record it as an assumed spec` (Step 0), `/istm-develop` may *create* a spec, but only in `Status: Assumed`, and only the assumption record fields (owed decision, assumption built on, authorized by, code area, requirements seeds). It never writes rationale and never advances an `Assumed` spec past that state; `/architect` owns clearing it. This is the only spec `/istm-develop` creates.
-- One spec touch on an existing spec: the `**Status**:` line (umbrella decision → the `index.md`'s, never a child's), plus filling the feature's spec pointer line. Build start: `Proposed` → `In Progress`; build lands (feature → `done`): `In Progress` → `Accepted` (a spec is not `Accepted` until its feature ships). Never edit spec content, only that line, surgically: read it again right before writing; unexpected state (already `Accepted`, `Superseded`) → flag, don't clobber. **Never move a spec out of `Assumed`** (that is ratification, `/architect`'s job): an `Assumed` spec stays `Assumed` through the build even while the feature is `in-progress`, so it can never reach `Accepted` until `/architect` ratifies it. This is what blocks `done`.
+- Scope (`specs/`): only the Step 4 touches (feature status → `in-progress`, milestone sub boxes, `Build it` box, code pointer). Marks a feature `done` only at the `Vibe` workflow tier (build plus its own self check; the engineer opted out of separate verification), and even then never while an `Assumed` spec is unratified; at `Lean`/`Medium`/`Full` it leaves the feature `in-progress` for `/istm-check verify` and `/istm-test` to close, and never ticks `Verify it` or `Test it`. Never creates files in `specs/` (scopes only; analysis/research is `/istm-architecture`'s, in the spec's `rationale.md`).
+- Never writes spec content or deliberates a decision (flags the need, defers to `/istm-architecture`). **One narrow exception:** on `Build now, record it as an assumed spec` (Step 0), `/istm-develop` may *create* a spec, but only in `Status: Assumed`, and only the assumption record fields (owed decision, assumption built on, authorized by, code area, requirements seeds). It never writes rationale and never advances an `Assumed` spec past that state; `/istm-architecture` owns clearing it. This is the only spec `/istm-develop` creates.
+- One spec touch on an existing spec: the `**Status**:` line (umbrella decision → the `index.md`'s, never a child's), plus filling the feature's spec pointer line. Build start: `Proposed` → `In Progress`; build lands (feature → `done`): `In Progress` → `Accepted` (a spec is not `Accepted` until its feature ships). Never edit spec content, only that line, surgically: read it again right before writing; unexpected state (already `Accepted`, `Superseded`) → flag, don't clobber. **Never move a spec out of `Assumed`** (that is ratification, `/istm-architecture`'s job): an `Assumed` spec stays `Assumed` through the build even while the feature is `in-progress`, so it can never reach `Accepted` until `/istm-architecture` ratifies it. This is what blocks `done`.
 
 - Shared scope: read it again right before ticking, edit only the specific checkbox, status, or pointer line (never rewrite the file); feature not as expected (already `done`, reworked) → flag, don't overwrite. The freshness check guards against rebuilding what a teammate shipped.
 
@@ -58,7 +58,7 @@ Any Agent Skills client, macOS/Linux/Windows. Detection snippets are POSIX refer
 
 ### Before you build: the project must already exist (except the scaffold task)
 
-Exception: if this IS the scaffold sub task of the Stack and architecture foundation feature (prompt says `scaffold`, or the step initializes the project from the stack spec), creating the project IS the job. Read the ARCHITECTURE spec's `## Proposed stack`; run the framework's own init (`create-next-app`, `cargo new`, etc. per that stack); install base dependencies (framework, core runtime, only what the first slice needs); lay out directories; confirm a dev server or build runs. Scaffold steps derive from the stack decision (a decision spec has no build plan). Install just in time: NOT every library the spec names (email, monitoring, and so on); each later feature installs its own when built; only cross cutting tooling (lint, format, type strictness) comes early, via `/istm-audit` + the tooling task. Then proceed.
+Exception: if this IS the scaffold sub task of the Stack and architecture foundation feature (prompt says `scaffold`, or the step initializes the project from the stack spec), creating the project IS the job. Read the ARCHITECTURE spec's `## Proposed stack`; run the framework's own init (`create-next-app`, `cargo new`, etc. per that stack); install base dependencies (framework, core runtime, only what the first slice needs); lay out directories; confirm a dev server or build runs. Scaffold steps derive from the stack decision (a decision spec has no build plan). Install just in time: NOT every library the spec names (email, monitoring, and so on); each later feature installs its own when built; only cross cutting tooling (lint, format, type strictness) comes early as part of the relevant implementation task. Then proceed.
 
 Otherwise `/istm-develop` builds into an existing project. No skeleton (no `package.json`/`pyproject.toml`/`go.mod`/manifest, no source tree) and not the scaffold task → stop:
 
@@ -76,7 +76,7 @@ Before mutating anything (skip silently if solo, offline, or not using git): `gi
 
 Warnings, not hard blocks, but surface them.
 
-**Git integration:** if the nearest `.istm-context/agents.md` `## Git` says `integration: on`, read `flow/git.md` and follow it (branch before building, commit as milestones land); absent or `off` → do no active git.
+**Git integration:** if the nearest `AGENTS.md` `## Git` says `integration: on`, read `flow/git.md` and follow it (branch before building, commit as milestones land); absent or `off` → do no active git.
 
 ### Step 0: The spec gate (always first)
 
@@ -84,22 +84,22 @@ Is a decision owed and unrecorded? Do NOT judge this by introspection ("do I fee
 
 > **Enumerate every value this build must produce, compute, or display (from the acceptance criteria and the spec's design). For each, does the spec name where it comes from (an input, a DB column, a derivation from a named value, a prior decision)? Any required value with no named source is an owed decision.**
 
-If any source is unnamed, stop and route to the gate (`/architect`, or record an `Assumed` spec; `/istm-develop` implements decisions, it doesn't make them). A decision is also owed when you'd have to invent:
+If any source is unnamed, stop and route to the gate (`/istm-architecture`, or record an `Assumed` spec; `/istm-develop` implements decisions, it doesn't make them). A decision is also owed when you'd have to invent:
 
 - **A provider, library, integration, data model, or cross cutting pattern** (e.g. auth provider, DB/ORM, caching strategy).
-- **A whole UI page or screen**: its design system (`.istm-context/design.md` there? if not, which direction?), sections/composition, component inventory, asset strategy (no screenshot, no repo images → e.g. an online source). Owed unless a `.istm-context/design.md` AND a page level spec pin these down.
-- **A feature's behavior** (search, a wizard: "what exactly should it do?" is open; `/architect` asks those questions). Owed unless a spec defines it.
+- **A whole UI page or screen**: its required sections, behavior, component inventory, and asset source when relevant. Ask about unresolved product behavior or required assets; follow an existing specification or user-provided reference for implementation details.
+- **A feature's behavior** (search, a wizard: "what exactly should it do?" is open; `/istm-architecture` asks those questions). Owed unless a spec defines it.
 
-**What "local implementation detail" actually means (the narrow exception):** ONLY a choice among options the spec's named sources already permit, a loop style, a variable name, which helper to call. The moment a choice **determines a value's source, or a behavior an acceptance criterion constrains**, it is load bearing by definition, however small it looks. Deriving "the user's today from the timezone on their last read row" is not a local detail: it picks the source of a value an AC constrains, so it is owed. NOT owed for genuine pure implementation: a small bug fix, a component matching an existing `.istm-context/design.md`, wiring pieces whose sources the spec already names, a copy tweak, anything an existing spec/`.istm-context/design.md`/`.istm-context/agents.md` fully governs.
+**What "local implementation detail" actually means (the narrow exception):** ONLY a choice among options the spec's named sources already permit, a loop style, a variable name, which helper to call. The moment a choice **determines a value's source, or a behavior an acceptance criterion constrains**, it is load bearing by definition, however small it looks. Deriving "the user's today from the timezone on their last read row" is not a local detail: it picks the source of a value an AC constrains, so it is owed. NOT owed for genuine pure implementation: a small bug fix, wiring pieces whose sources the spec already names, a copy tweak, anything an existing spec or `AGENTS.md` fully governs.
 
 Don't hardcode to page names or to any one example (timezone is an illustration of the pattern, not a rule); apply the input coverage test to whatever was asked. False negatives are the failure mode, building a real decision without noticing: when a required value's source is unnamed, or you are unsure, treat as owed and ask (panel below).
 
-Read only what this feature needs, never the whole `.istm-context/` tree: its one scope file and its one governing spec (single file, or umbrella `index.md` plus the one child speccing this sub task). No other features' rows, scope files, workspaces, or unrelated specs.
+Read only what this feature needs: its one scope file and its one governing spec (single file, or umbrella `index.md` plus the one child speccing this sub task). No other features' rows, scope files, workspaces, or unrelated specs.
 
 **Check, in order:**
-1. **Locate this feature's scope file (only that one).** Monorepo → `.istm-context/istm-scope/<workspace>/` for the task's package. Pick the file (`scope.md`, or the matching `<epic>.md` in a split) from the At a glance table alone; read just this feature's section. `needs a decision` with no spec pointer yet → decision owed and missing. Malformed → flag and ask, don't guess.
-2. **Open the governing spec via the feature's `spec` pointer**, reading only its build spec sections as defined in the build flow (`flow/build.md`), Step 2 item 1. Found → it's the spec; proceed. No pointer and no linked spec → targeted look in `.istm-context/specs/<workspace>/` for one matching this feature's scope, never a blanket read.
-3. The **nearest** `.istm-context/agents.md` (workspace/area) may already capture the decision, synced from an earlier feature (e.g. "the auth provider is already chosen") → proceed without a new spec.
+1. **Locate this feature's scope file (only that one).** Monorepo → `specs/<workspace>/` for the task's package. Pick the file (`scope.md`, or the matching `<epic>.md` in a split) from the At a glance table alone; read just this feature's section. `needs a decision` with no spec pointer yet → decision owed and missing. Malformed → flag and ask, don't guess.
+2. **Open the governing spec via the feature's `spec` pointer**, reading only its build spec sections as defined in the build flow (`flow/build.md`), Step 2 item 1. Found → it's the spec; proceed. No pointer and no linked spec → targeted look in `specs/<workspace>/` for one matching this feature's scope, never a blanket read.
+3. The **nearest** `AGENTS.md` (workspace/area) may already capture the decision, synced from an earlier feature (e.g. "the auth provider is already chosen") → proceed without a new spec.
 
 Decision owed and unrecorded → don't guess, don't silently stop. Ask (single select; `AskUserQuestion` on Claude Code):
 
@@ -108,11 +108,11 @@ Decision owed and unrecorded → don't guess, don't silently stop. Ask (single s
 - **options**:
   1. `Architect it first`: "Recommended. Capture the decision in a spec before building, so the build has a spec." → **end here** with the handoff below. Do not build.
   2. `No, not needed`: "I've judged there's no real decision here; build directly." → proceed to the build flow (`flow/build.md`).
-  3. `Build now, record it as an assumed spec`: "Build it, but write the assumption down first so the decision lives in the repo, not just this chat. The feature can't be marked `done` until `/architect` ratifies it." → write an `Assumed` spec (below), then proceed to the build flow (`flow/build.md`), leaving the feature `in-progress` with an `assumed decision (spec NNNN)` note in the scope (`.istm-context/istm-scope/`).
+  3. `Build now, record it as an assumed spec`: "Build it, but write the assumption down first so the decision lives in the repo, not just this chat. The feature can't be marked `done` until `/istm-architecture` ratifies it." → write an `Assumed` spec (below), then proceed to the build flow (`flow/build.md`), leaving the feature `in-progress` with an `assumed decision (spec NNNN)` note in the scope (`specs/`).
 
 The tool appends "Other" as a free text option automatically.
 
-On `Build now, record it as an assumed spec`, write a minimal `Assumed` spec **before** building (this is the one narrow spec write `/istm-develop` owns; see Artifact ownership). Resolve `$SPEC_DIR` the way `/architect` does (single repo → `.istm-context/specs/`; monorepo workspace → `.istm-context/specs/<workspace>/`), take the next free `NNNN`, and write `$SPEC_DIR/NNNN-<slug>.md`:
+On `Build now, record it as an assumed spec`, write a minimal `Assumed` spec **before** building (this is the one narrow spec write `/istm-develop` owns; see Artifact ownership). Resolve `$SPEC_DIR` the way `/istm-architecture` does (single repo → `specs/`; monorepo workspace → `specs/<workspace>/`), take the next free `NNNN`, and write `$SPEC_DIR/NNNN-<slug>.md`:
 
 ```markdown
 # NNNN · <feature>
@@ -134,7 +134,7 @@ On `Build now, record it as an assumed spec`, write a minimal `Assumed` spec **b
 <acceptance criteria seeds carried from the scope Done when, if any>
 
 ## Ratify
-This decision was recorded by /istm-develop, not deliberated. Run `/architect <feature>`
+This decision was recorded by /istm-develop, not deliberated. Run `/istm-architecture <feature>`
 to deliberate and ratify it. The feature cannot be marked `done` until then.
 ```
 
@@ -144,7 +144,7 @@ On `Architect it first`, end with:
 
 > Run this next, then come back to `/istm-develop`:
 > ```
-> /architect <feature>: <the specific decision to settle>
+> /istm-architecture <feature>: <the specific decision to settle>
 > ```
 > Once the spec exists, run `/istm-develop <task>` again and I'll build to it.
 
@@ -162,4 +162,3 @@ Once the gate clears (no decision owed, or the engineer chose `No, not needed` /
 - UI build track: `ui-guide.md`
 - Logical build track: `logical-guide.md`
 - Accessibility checklist (UI track, Phase 5): `checklist.md`
-- Project design system (UI track): `./.istm-context/design.md`
