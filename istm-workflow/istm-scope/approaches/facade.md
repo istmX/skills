@@ -17,13 +17,13 @@ Adopt this role for decomposition. You are a product prototyper whose instinct i
 - **Faked in phase 1, wired later**: authentication, the database, persistence, every real read and write. Clearly labeled as stubs.
 
 ## Sequencing
-Foundations (enough to render UI: design system, component library, routing) → all screens on mock data (the clickable prototype) → wire the backend per screen (auth, then the primary write, then the reads, then the rest). Explicitly flag the prototype to production transition as its own work.
+Foundations (enough to render UI: component library and routing) → all screens on mock data (the clickable prototype) → wire the backend per screen (auth, then the primary write, then the reads, then the rest). Explicitly flag the prototype to production transition as its own work.
 
 ## Grade
 Prototype first, wired later. State openly that phase 1 is not production complete; it is a validated shell.
 
 ## Worked example: async standup app
-1. Foundations (UI only): design system, component library, routing, mock data fixtures.
+1. Foundations (UI only): component library, routing, mock data fixtures.
 2. **Phase 1 (clickable prototype):** every screen on mock data and navigable, sign in, team dashboard, submit standup form, team feed, history, settings. Looks real, persists nothing.
 3. Phase 2: wire real authentication (Clerk) behind the existing sign in screen.
 4. Phase 3: build the real data model and make the submit form persist.

@@ -1,52 +1,17 @@
 ---
 name: istm-craft
-allowed-tools: Bash, Read, Grep, Glob, Write, Edit, Agent, AskUserQuestion
-description: "Run /istm-craft to design and architect a new feature. It strictly reads the global .istm-context/ blueprints and generates a detailed build spec in .istm-context/specs/, perfectly adhering to the established UI tokens, motion logic, and system constraints."
+description: Clarify and write a focused implementation specification when a software feature needs decisions, acceptance criteria, or an explicit build plan.
 ---
 
+# Feature Specification
 
-## Documentation & URL Handling
-- **Bleeding-Edge Frameworks**: If the user provides a URL to official documentation in their prompt (e.g., Next.js 16 updates, Langchain docs), you MUST use your web reading tools to fetch and read that URL before writing any code.
-- **Override Training Data**: The syntax and patterns found in the provided URLs absolutely override your internal training data.
-- **Cache for the Future**: If you learn a critical breaking change from a URL, document it in a markdown file inside `.istm-context/docs/` (create the folder if it doesn't exist) so you and other agents can reference it in future sessions without re-fetching.
-- **When in Doubt**: If you are building with a framework and are unsure about the latest syntax, ask the user to provide the official documentation link.
+Use this skill when a feature has unresolved product or engineering decisions that should be settled before implementation. Work on one feature at a time.
 
-## What this skill does
+1. Read relevant project instructions, existing specifications, and nearby code before asking questions.
+2. Infer facts from the project. Ask concise questions only for choices that materially affect behavior, data, APIs, integrations, security, or deployment.
+3. Explain important alternatives and tradeoffs. Record decisions and unresolved assumptions clearly.
+4. Write the approved specification under the project's existing `specs/` convention, using its current format when one exists. If no convention exists, ask before introducing one.
+5. Include the feature goal, requirements, acceptance criteria, constraints, and an ordered implementation plan. Keep UI details only when needed to define the feature's behavior or match a user-provided reference.
+6. Do not implement the feature. Report the specification path and the next implementation step.
 
-This is the Day-to-Day Feature Architect. When the engineer requests a new feature, `/istm-craft` interviews them, weighs the options, and writes a detailed feature specification into `.istm-context/specs/`. 
-
-Unlike standard AI generation, `/istm-craft` is strictly bound to the project's global blueprints. It enforces the pre-existing design tokens, motion logic, and architecture.
-
-## Execution Flow
-
-### Step 1: The Context Lock
-Before asking any questions, you MUST silently read the global blueprints to understand the constraints you are working under:
-- Read `.istm-context/architecture.md` (for the database, backend, and API constraints).
-- Read `.istm-context/design.md` (for typography, color tokens, and the Dual Motion standard).
-- Read `.istm-context/project-overview.md` (for business logic context).
-
-### Step 2: The Hyper-Focused Interview
-Ask the engineer targeted questions to design ONE specific feature. 
-- **CRITICAL RULE (One Spec At A Time)**: You must refuse to design multiple features simultaneously. If the user asks for a dashboard, auth, and billing, you must say: *"I am writing the Auth spec first. We will write the Dashboard spec after Auth is built."*
-- INFER what you can from the global blueprints. 
-- ASK for business requirements and edge cases.
-
-### Step 3: Spec Generation
-Write the feature design into a new file: `.istm-context/specs/NNNN-feature-name.md`.
-The spec must include:
-- **Summary & Requirements**: What the feature does and acceptance criteria.
-- **Step 1: Global Setup (CSS & Layouts)**: The very first step of the Build Plan must dictate setting up the global CSS (`globals.css` or `index.css`) with clean semantic Tailwind v4 tokens and configuring the root layout wrapper (`layout.tsx`).
-- **UI & Architecture**: 
-  - How it implements `.istm-context/design.md` (typography hierarchy, semantic colors, motion curves).
-  - **Primitive Reuse Priority**: Reusable atoms (Buttons, Inputs, Dialogs, Tooltips, Sheets) MUST be imported from `@/components/ui/` (Shadcn UI). Never invent bespoke unaccessible `<div>` and `<button>` hacks.
-  - **Tailwind v4 Semantic Standard**: Strictly FORBID ugly inline arbitrary variables like `bg-[var(--background)]`. Mandate clean semantic tokens (`bg-background`, `text-foreground`, `bg-muted`, `border-border`, `bg-card`).
-  - **Stack-Idiomatic Structure**: Respect native framework conventions (App Router `app/`, etc.) without artificial nesting layers.
-- **Strict Typing & Clean Code**:
-  - Compiler-grade TypeScript: Absolute ban on `any` and `unknown as any`. All domain interfaces in `types/` or inferred from Zod.
-  - Ban noisy comments (`// button`, `// handle click`). Self-documenting code only.
-  - Anti-Laziness Law: Specs must be exhaustive. Never write placeholder ellipses ('...') or omit required interfaces. Every state transition, error condition, and edge case must be fully specified.
-- **Build Plan**: The step-by-step implementation guide.
-
-### Step 4: Completion
-Do not write application code. Once the spec is written, instruct the user to run `/istm-develop` (or equivalent) to begin the implementation phase based on your spec.
-
+Do not depend on a proprietary context directory or create project-wide memory files. Read `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, or architecture documentation when present and relevant.

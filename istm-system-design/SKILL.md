@@ -18,15 +18,13 @@ The master backend orchestrator: compiles database schemas, API routes, and syst
 - API Architecture: Defines the API layers (REST, GraphQL, tRPC, Server Actions) and strict data validation rules (Zod).
 - Security & Infrastructure: Enforces authentication flows, rate limiting, and caching layers (Redis) only when mathematically justified by the scale.
 
-Does not write UI code (/istm-design owns that), or build animation timelines (/istm-animate owns that).
+This skill focuses on backend architecture and does not own frontend implementation.
 
 ## Blueprint file convention
 
-Durable backend context lives in the `.istm-context/` directory. This skill specifically owns the hydration and enforcement of:
+When the user requests a written architecture artifact, use the project's existing convention. Otherwise, provide the architecture plan in the response.
 
-- `architecture.md`: The system design, database models, and API flows.
-
-Never overwrite an existing `architecture.md` without permission; gap-fill conservatively.
+Do not create or depend on a proprietary context directory. Never overwrite an existing architecture document without permission.
 
 ## Scope
 
@@ -51,7 +49,7 @@ The main thread compiles the backend system.
 Gather signals to determine the execution path:
 
 1. Flag check: Was a specific stack requested? → `STACK_FLAG`.
-2. Context files: Is `architecture.md` already hydrated in `.istm-context/`? → `ARCHITECTURE_EXISTS`.
+2. Existing documentation: Is an architecture document present in the project? → `ARCHITECTURE_EXISTS`.
 3. Source count: Are ORM schemas (`prisma/`, `drizzle/`) or backend frameworks present? → `HAS_BACKEND`.
 
 Pick the phase based on these signals:

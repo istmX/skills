@@ -1,9 +1,9 @@
-# Browser — Complete Reference
+# Browser � Complete Reference
 
 istm-workflow's browser surface in one document. Headless Chromium daemon, ~70+
 commands, ref-based element selection, codifiable browser-skills, real-browser
 mode with a Chrome side panel, an in-sidebar Claude PTY, an ngrok pair-agent
-flow, and a layered prompt-injection defense — all behind a compiled CLI that
+flow, and a layered prompt-injection defense � all behind a compiled CLI that
 prints plain text to stdout. ~100-200ms per call. Zero context-token overhead.
 
 If you've used istm-workflow in the last release or two, the productivity loop is the
@@ -43,22 +43,22 @@ $B connect                       # headed Chromium + Side Panel extension
 ## Table of contents
 
 1. [What it is](#what-it-is)
-2. [The productivity loop — `/scrape` + `/skillify`](#the-productivity-loop)
+2. [The productivity loop � `/scrape` + `/skillify`](#the-productivity-loop)
 3. [Architecture](#architecture)
 4. [Command reference](#command-reference)
 5. [Snapshot system + ref-based selection](#snapshot-system)
 6. [Browser-skills runtime](#browser-skills-runtime)
 7. [Domain-skills (per-site agent notes)](#domain-skills)
-8. [Real-browser mode (`$B connect`)](#real-browser-mode) — including [`--headed` + `--proxy` + `--navigate` (v1.28.0.0)](#headed-mode--proxy--browser-native-downloads-v12800)
+8. [Real-browser mode (`$B connect`)](#real-browser-mode) � including [`--headed` + `--proxy` + `--navigate` (v1.28.0.0)](#headed-mode--proxy--browser-native-downloads-v12800)
 9. [Side Panel + sidebar agent](#side-panel--sidebar-agent)
-10. [Pair-agent — remote agents over an ngrok tunnel](#pair-agent)
+10. [Pair-agent � remote agents over an ngrok tunnel](#pair-agent)
 11. [Authentication + tokens](#authentication)
-12. [Prompt-injection security stack (L1–L6)](#security-stack)
+12. [Prompt-injection security stack (L1�L6)](#security-stack)
 13. [Screenshots, PDFs, visual inspection](#screenshots-pdfs-visual)
-14. [Local HTML — `goto file://` vs `load-html`](#local-html)
+14. [Local HTML � `goto file://` vs `load-html`](#local-html)
 15. [Batch endpoint](#batch-endpoint)
 16. [Console, network, dialog capture](#capture)
-17. [JS execution — `js` + `eval`](#js-execution)
+17. [JS execution � `js` + `eval`](#js-execution)
 18. [Tabs, frames, state, watch, inbox](#tabs-frames-state)
 19. [CDP escape hatch + CSS inspector](#cdp)
 20. [Performance + scale](#performance)
@@ -74,13 +74,13 @@ $B connect                       # headed Chromium + Side Panel extension
 ## What it is
 
 A compiled CLI binary that talks to a persistent local Chromium daemon over
-HTTP. The CLI is a thin client — it reads a state file, sends a command,
+HTTP. The CLI is a thin client � it reads a state file, sends a command,
 prints the response to stdout. The daemon does the real work via
 [Playwright](https://playwright.dev/).
 
 Everything that was a Chrome MCP server in the early days now happens through
 plain stdout. No JSON-schema framing, no protocol negotiation, no persistent
-WebSocket — Claude's Bash tool already exists, so we use it.
+WebSocket � Claude's Bash tool already exists, so we use it.
 
 Three escalating modes:
 
@@ -106,13 +106,13 @@ runtime so the second time you ask Claude to scrape a page, it runs in ~200ms.
 
 One entry point for pulling page data. Three paths under the hood:
 
-1. **Match path (~200ms)** — agent runs `$B skill list`, semantically matches
+1. **Match path (~200ms)** � agent runs `$B skill list`, semantically matches
    the intent against each skill's `triggers:` array + `description` + `host`,
    and runs `$B skill run <name>` if a confident match exists.
-2. **Prototype path (~30s)** — no match, agent drives the page with `$B goto`,
+2. **Prototype path (~30s)** � no match, agent drives the page with `$B goto`,
    `$B text`, `$B html`, `$B links`, etc., returns the JSON, and appends a
    one-line "say `/skillify`" suggestion.
-3. **Mutating-intent refusal** — verbs like *submit*, *click*, *fill* route
+3. **Mutating-intent refusal** � verbs like *submit*, *click*, *fill* route
    to `/automate` (Phase 2b, P0 in `TODOS.md`). `/scrape` is read-only by
    contract.
 
@@ -121,19 +121,19 @@ One entry point for pulling page data. Three paths under the hood:
 Codifies the most recent successful `/scrape` prototype into a permanent
 browser-skill on disk. Eleven steps, three locked contracts:
 
-- **D1 — Provenance guard.** Walks back ≤10 agent turns for a clearly-bounded
+- **D1 � Provenance guard.** Walks back =10 agent turns for a clearly-bounded
   `/scrape` result. Refuses with one specific message if cold. No silent
   synthesis from chat fragments.
-- **D2 — Synthesis input slice.** Extracts ONLY the final-attempt `$B` calls
+- **D2 � Synthesis input slice.** Extracts ONLY the final-attempt `$B` calls
   that produced the JSON the user accepted, plus the user's intent string.
   Drops failed selectors, drops chat, drops earlier-session content.
-- **D3 — Atomic write.** Stages everything to `~/.istm-workflow/.tmp/skillify-<spawnId>/`,
+- **D3 � Atomic write.** Stages everything to `~/.istm-workflow/.tmp/skillify-<spawnId>/`,
   runs `$B skill test` against the temp dir, and only renames into the final
   tier path on test pass + user approval. Test fail or rejection: `rm -rf` the
   temp dir entirely. No half-written skill ever appears in `$B skill list`.
 
 Mutating-flow sibling `/automate` is split out as P0 in `TODOS.md` and ships
-on the next branch — same skillify machinery, per-mutating-step confirmation
+on the next branch � same skillify machinery, per-mutating-step confirmation
 gate when running non-codified.
 
 See [`docs/designs/BROWSER_SKILLS_V1.md`](docs/designs/BROWSER_SKILLS_V1.md)
@@ -144,38 +144,38 @@ for the full design + decision trail.
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  Claude Code                                                    │
-│                                                                 │
-│  $B goto https://staging.myapp.com                              │
-│       │                                                         │
-│       ▼                                                         │
-│  ┌──────────┐    HTTP POST     ┌──────────────┐                 │
-│  │ browse   │ ──────────────── │ Bun HTTP     │                 │
-│  │ CLI      │  127.0.0.1:rand  │ daemon       │                 │
-│  │          │  Bearer token    │              │                 │
-│  │ compiled │ ◄──────────────  │  Playwright  │──── Chromium    │
-│  │ binary   │  plain text      │  API calls   │    (headless    │
-│  └──────────┘                  └──────────────┘     or headed)  │
-│   ~1ms startup                  persistent daemon               │
-│                                 auto-starts on first call       │
-│                                 auto-stops after 30 min idle    │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+�  Claude Code                                                    �
+�                                                                 �
+�  $B goto https://staging.myapp.com                              �
+�       �                                                         �
+�       ?                                                         �
+�  +----------+    HTTP POST     +--------------+                 �
+�  � browse   � ---------------- � Bun HTTP     �                 �
+�  � CLI      �  127.0.0.1:rand  � daemon       �                 �
+�  �          �  Bearer token    �              �                 �
+�  � compiled � ?--------------  �  Playwright  �---- Chromium    �
+�  � binary   �  plain text      �  API calls   �    (headless    �
+�  +----------+                  +--------------+     or headed)  �
+�   ~1ms startup                  persistent daemon               �
+�                                 auto-starts on first call       �
+�                                 auto-stops after 30 min idle    �
++-----------------------------------------------------------------+
 ```
 
 ### Daemon lifecycle
 
 1. **First call.** CLI checks `<project>/.istm-workflow/browse.json` for a running
-   server. None found — it spawns `bun run browse/src/server.ts` in the
+   server. None found � it spawns `bun run browse/src/server.ts` in the
    background. Daemon launches headless Chromium via Playwright, picks a
-   random port (10000–49151, deliberately below the macOS ephemeral pool
+   random port (10000�49151, deliberately below the macOS ephemeral pool
    49152-65535 so the OS never hands a colliding port to another process),
    generates a bearer token, writes the state file (chmod 600), starts
    accepting requests. ~3 seconds. One launch-time exception to fail-fast:
    when a macOS XProtect definition update SIGKILLs the pinned Chromium at
    spawn, the daemon classifies the kill signature, clears the quarantine
    flag on the Playwright cache, reinstalls the pinned revision from the
-   istm-workflow install root (bounded ~120s), and retries once — at most once per
+   istm-workflow install root (bounded ~120s), and retries once � at most once per
    daemon process. If the heal can't complete, the original launch error
    plus manual `bunx playwright install chromium` guidance lands on daemon
    stderr (see `browse-daemon.log`). Wired at all three launch sites in
@@ -184,12 +184,12 @@ for the full design + decision trail.
    the bearer token, prints the response. ~100-200ms round trip.
 3. **Idle shutdown.** After 30 minutes of no commands, daemon shuts down and
    cleans up the state file. Next call restarts it.
-4. **Crash recovery.** If Chromium crashes, the daemon exits immediately —
+4. **Crash recovery.** If Chromium crashes, the daemon exits immediately �
    no self-healing, don't hide failure. CLI detects the dead daemon on the
    next call and starts a fresh one.
 5. **Busy vs dead.** A daemon that stops answering HTTP while its process is
    alive is busy, not dead. The CLI gives `/health` a bounded ~8s to recover,
-   then reports busy with a nonzero exit — it never kills an alive pid.
+   then reports busy with a nonzero exit � it never kills an alive pid.
    Only an explicit `--force-restart` replaces a live-but-unresponsive
    daemon (tabs, cookies, and logins are lost). `browse stop` against a
    daemon that already died is success: the desired end state holds, so it
@@ -203,8 +203,8 @@ collisions. State at `<project>/.istm-workflow/browse.json`.
 
 | Workspace | State file | Port |
 |-----------|-----------|------|
-| `/code/project-a` | `/code/project-a/.istm-workflow/browse.json` | random (10000–49151) |
-| `/code/project-b` | `/code/project-b/.istm-workflow/browse.json` | random (10000–49151) |
+| `/code/project-a` | `/code/project-a/.istm-workflow/browse.json` | random (10000�49151) |
+| `/code/project-b` | `/code/project-b/.istm-workflow/browse.json` | random (10000�49151) |
 
 ---
 
@@ -219,7 +219,7 @@ from `snapshot`, or `@c` refs from `snapshot -C`. Full table:
 |---------|-------------|
 | `text [sel]` | Clean page text (or scoped to a selector) |
 | `html [sel]` | innerHTML, or full page HTML if no selector |
-| `links` | All links as `text → href` |
+| `links` | All links as `text ? href` |
 | `forms` | Form fields as JSON |
 | `accessibility` | Full ARIA tree |
 | `media [--images\|--videos\|--audio] [sel]` | Media elements with URLs, dimensions, types |
@@ -240,7 +240,7 @@ from `snapshot`, or `@c` refs from `snapshot -C`. Full table:
 | `cookies` | All cookies as JSON |
 | `storage` / `storage set <key> <val>` | Read both localStorage + sessionStorage; set localStorage |
 | `perf` | Page load timings |
-| `inspect [sel] [--all] [--history]` | Deep CSS via CDP — full rule cascade, box model, computed styles |
+| `inspect [sel] [--all] [--history]` | Deep CSS via CDP � full rule cascade, box model, computed styles |
 | `ux-audit` | Page structure for behavioral analysis: site ID, nav, headings, text blocks, interactive elements |
 | `cdp <Domain.method> [json-params]` | Raw CDP method dispatch (deny-default; allowlist in `cdp-allowlist.ts`) |
 
@@ -328,7 +328,7 @@ from `snapshot`, or `@c` refs from `snapshot -C`. Full table:
 | Command | Description |
 |---------|-------------|
 | `status` | Daemon health + mode (headless / headed / cdp) |
-| `stop` | Shut down daemon (succeeds even if the daemon already died — never boots one just to stop it) |
+| `stop` | Shut down daemon (succeeds even if the daemon already died � never boots one just to stop it) |
 | `restart` | Restart daemon |
 | `connect` | Launch headed istm Browser with Side Panel extension |
 | `disconnect` | Close headed Chrome, return to headless |
@@ -338,7 +338,7 @@ from `snapshot`, or `@c` refs from `snapshot -C`. Full table:
 
 The daemon's own stdout/stderr persists to `<project>/.istm-workflow/browse-daemon.log`
 (append mode, rotated to `.log.1` at the size cap, single generation), with
-tokens and unsanitized page content kept out — check it when a daemon dies
+tokens and unsanitized page content kept out � check it when a daemon dies
 without an obvious cause. A live-but-unresponsive daemon is never auto-killed;
 pass `--force-restart` to replace it explicitly (see "Daemon lifecycle" above).
 
@@ -355,7 +355,7 @@ pass `--force-restart` to replace it explicitly (see "Daemon lifecycle" above).
 |---------|-------------|
 | `chain` (JSON via stdin) | Run a sequence of commands. Pipe `[["cmd","arg1",...],...]` to `$B chain`. Stops at first error. |
 | `inbox [--clear]` | List messages from sidebar scout inbox |
-| `watch [stop]` | Passive observation — periodic snapshots while user browses; `stop` returns summary |
+| `watch [stop]` | Passive observation � periodic snapshots while user browses; `stop` returns summary |
 
 ### Browser-skills runtime
 
@@ -371,9 +371,9 @@ pass `--force-restart` to replace it explicitly (see "Daemon lifecycle" above).
 
 | Command | Description |
 |---------|-------------|
-| `domain-skill save\|list\|show\|edit\|promote-to-global\|rollback\|rm <host?>` | Per-site agent notes (host derived from active tab). Lifecycle: quarantined → active (after N=3 successful uses without classifier flag) → global (explicit promote) |
+| `domain-skill save\|list\|show\|edit\|promote-to-global\|rollback\|rm <host?>` | Per-site agent notes (host derived from active tab). Lifecycle: quarantined ? active (after N=3 successful uses without classifier flag) ? global (explicit promote) |
 
-Aliases: `setcontent`, `set-content`, `setContent` → `load-html` (canonicalized
+Aliases: `setcontent`, `set-content`, `setContent` ? `load-html` (canonicalized
 before scope checks, so a read-scoped token can't use the alias to run a
 write command).
 
@@ -390,7 +390,7 @@ Just Playwright's native AX API.
 1. `page.locator(scope).ariaSnapshot()` returns a YAML-like accessibility tree.
 2. The snapshot parser assigns refs (`@e1`, `@e2`, ...) to each element.
 3. For each ref, it builds a Playwright `Locator` (using `getByRole` + nth-child).
-4. The ref→Locator map is stored on `BrowserManager`.
+4. The ref?Locator map is stored on `BrowserManager`.
 5. Later commands like `click @e3` look up the Locator and call `locator.click()`.
 
 ### Ref staleness detection
@@ -398,7 +398,7 @@ Just Playwright's native AX API.
 SPAs can mutate the DOM without navigation (React router, tab switches,
 modals). When this happens, refs collected from a previous `snapshot` may
 point to elements that no longer exist. `resolveRef()` runs an async
-`count()` check before using any ref — if the element count is 0, it throws
+`count()` check before using any ref � if the element count is 0, it throws
 immediately with a message telling the agent to re-run `snapshot`. Fails fast
 (~5ms) instead of waiting for Playwright's 30-second action timeout.
 
@@ -426,11 +426,11 @@ Playwright script. The compounding layer.
 
 ```
 browser-skills/<name>/
-├── SKILL.md                        # frontmatter + prose contract
-├── script.ts                       # deterministic Playwright-via-browse-client logic
-├── _lib/browse-client.ts           # vendored copy of the SDK (~3KB, byte-identical to canonical)
-├── fixtures/<host>-<date>.html     # captured page for fixture-replay tests
-└── script.test.ts                  # parser tests against the fixture (no daemon required)
++-- SKILL.md                        # frontmatter + prose contract
++-- script.ts                       # deterministic Playwright-via-browse-client logic
++-- _lib/browse-client.ts           # vendored copy of the SDK (~3KB, byte-identical to canonical)
++-- fixtures/<host>-<date>.html     # captured page for fixture-replay tests
++-- script.test.ts                  # parser tests against the fixture (no daemon required)
 ```
 
 The bundled reference is `browser-skills/hackernews-frontpage/`: scrapes the
@@ -456,12 +456,12 @@ tier is printed inline next to each skill name:
 
 ### Trust model
 
-Two orthogonal axes — daemon-side capability and process-side env — independently
+Two orthogonal axes � daemon-side capability and process-side env � independently
 configured.
 
 | Axis | Mechanism | Default |
 |------|-----------|---------|
-| **Daemon-side capability** | Per-spawn scoped token bound to read+write scope (browser-driving commands minus admin: `eval`, `js`, `cookies`, `storage`). Single-use clientId encodes skill name + spawn id. Revoked when spawn exits. | Always scoped — never the daemon root token |
+| **Daemon-side capability** | Per-spawn scoped token bound to read+write scope (browser-driving commands minus admin: `eval`, `js`, `cookies`, `storage`). Single-use clientId encodes skill name + spawn id. Revoked when spawn exits. | Always scoped � never the daemon root token |
 | **Process-side env** | `trusted: true` frontmatter passes `process.env` minus `istm_TOKEN`. `trusted: false` (default) drops everything except a minimal allowlist (LANG, LC_ALL, TERM, TZ) and pattern-strips secrets (TOKEN/KEY/SECRET/PASSWORD, AWS_*, ANTHROPIC_*, OPENAI_*, GITHUB_*, etc.) | Untrusted (must opt in) |
 
 `istm_PORT` and `istm_SKILL_TOKEN` are injected last, so a parent process
@@ -479,18 +479,18 @@ Each skill ships its own copy of `browse-client.ts` at `_lib/browse-client.ts`,
 byte-identical to the canonical `browse/src/browse-client.ts`. `/skillify`
 copies the canonical SDK alongside every generated script. Each skill is
 fully self-contained: copy the directory anywhere, it runs. Version drift
-impossible — the SDK is frozen at the version the skill was authored against.
+impossible � the SDK is frozen at the version the skill was authored against.
 
 ### Atomic write discipline (`/skillify` D3)
 
 `browse/src/browser-skill-write.ts` provides three primitives:
 
-- `stageSkill(opts)` — writes files to `~/.istm-workflow/.tmp/skillify-<spawnId>/<name>/`
+- `stageSkill(opts)` � writes files to `~/.istm-workflow/.tmp/skillify-<spawnId>/<name>/`
   with restrictive perms.
-- `commitSkill(opts)` — atomic `fs.renameSync` into the final tier path.
+- `commitSkill(opts)` � atomic `fs.renameSync` into the final tier path.
   Refuses to follow symlinked staging dirs (`lstat` check), refuses to
   clobber existing skills, runs `realpath` discipline on the tier root.
-- `discardStaged(stagedDir)` — `rm -rf` the staged dir + per-spawn wrapper.
+- `discardStaged(stagedDir)` � `rm -rf` the staged dir + per-spawn wrapper.
   Idempotent. Called on test failure or approval rejection.
 
 There is no "almost shipped" state. Tests pass + user approves = atomic
@@ -506,7 +506,7 @@ for the full design rationale.
 Different mental model from browser-skills: agent-authored *notes* about a
 site (not deterministic scripts). One per hostname. Lifecycle:
 
-1. `domain-skill save <host>` — agent writes a note about the site (e.g.,
+1. `domain-skill save <host>` � agent writes a note about the site (e.g.,
    "GitHub: PR creation needs `--draft` flag for non-staff", "X.com: timeline
    uses cursor pagination, not page numbers"). Default state: **quarantined**.
 2. After **N=3** successful uses without the L4 prompt-injection classifier
@@ -528,7 +528,7 @@ Source: `browse/src/domain-skills.ts`, `domain-skill-commands.ts`.
 
 ## Real-browser mode
 
-`$B connect` launches **istm Browser** — a rebranded Chromium controlled by
+`$B connect` launches **istm Browser** � a rebranded Chromium controlled by
 Playwright with the Side Panel extension auto-loaded and anti-bot stealth
 patches applied. You watch every command tick through a visible window in
 real time.
@@ -549,13 +549,13 @@ window is being controlled.
 
 ### What "istm Browser" means
 
-Not your daily Chrome — a Playwright-managed Chromium with custom branding
+Not your daily Chrome � a Playwright-managed Chromium with custom branding
 in the Dock and menu bar (the `.app` name, Dock icon, and tray, NOT the UA
 string), always-on Layer C anti-bot stealth (most JS-observable automation
 tells are masked, so many anti-bot-protected sites load cleanly), a
 stock-Chrome user agent that reports the underlying Chromium version, and the
 istm-workflow extension pre-loaded via `launchPersistentContext`. The UA no longer
-carries a `istmBrowser` suffix — that branding string was itself a
+carries a `istmBrowser` suffix � that branding string was itself a
 high-entropy tell, so the browser now reports a plain `Chrome/<version>` UA.
 Deepest-layer CDP-protocol detection still gets through (Google can still
 trigger captchas; see the CDP-patch item in `TODOS.md`). Your regular Chrome
@@ -572,7 +572,7 @@ with your tabs and bookmarks stays untouched.
 ### CDP-aware skills
 
 When in real-browser mode, `/qa` and `/design-review` automatically skip
-cookie import prompts and headless workarounds — the headed browser already
+cookie import prompts and headless workarounds � the headed browser already
 has whatever session you logged into.
 
 ### Headed mode + proxy + browser-native downloads (v1.28.0.0)
@@ -584,7 +584,7 @@ Playwright defaults, or sit behind authenticated upstream proxies:
 # Visible Chromium. Auto-spawns Xvfb on Linux containers without DISPLAY.
 $B --headed goto https://example.com
 
-# SOCKS5 with auth — Chromium can't prompt for SOCKS5 creds, so $B runs a
+# SOCKS5 with auth � Chromium can't prompt for SOCKS5 creds, so $B runs a
 # local 127.0.0.1 bridge that handles the auth handshake.
 $B --proxy socks5://user:pass@residential.proxy.host:1080 goto https://example.com
 
@@ -601,7 +601,7 @@ $B --headed --proxy socks5://user:pass@host:1080 \
 ```
 
 **Credential policy.** Pass creds via the URL (`socks5://user:pass@host`) OR
-the env vars `BROWSE_PROXY_USER` / `BROWSE_PROXY_PASS` — never both. `$B`
+the env vars `BROWSE_PROXY_USER` / `BROWSE_PROXY_PASS` � never both. `$B`
 refuses with a clear hint when both are set; silent override created
 "works on my machine" debugging traps.
 
@@ -610,9 +610,9 @@ A running daemon with config A meeting a new invocation with config B exits
 1 with a `browse disconnect` hint instead of silently restarting and dropping
 tab state, cookies, or sessions.
 
-**Stealth scope (Layer C, always on).** Every context — headless `launch`,
+**Stealth scope (Layer C, always on).** Every context � headless `launch`,
 `--headed`/`--proxy`, `handoff`, and the `useragent`/`viewport --scale`
-rebuild (`recreateContext`) — gets the full Layer C mask, no opt-in flag.
+rebuild (`recreateContext`) � gets the full Layer C mask, no opt-in flag.
 Layer C masks `navigator.webdriver`, restores the `window.chrome.*` shape
 (`runtime`, `app`, `csi`, `loadTimes`), aligns `Notification.permission`
 with the Permissions API, reports a per-install
@@ -620,13 +620,13 @@ with the Permissions API, reports a per-install
 Selenium/Phantom/Nightmare/Playwright globals, and installs a
 `Function.prototype.toString` proxy so every patched getter reports
 `[native code]` even under the depth-3 recursion check. It still does NOT
-fake `navigator.plugins` or `navigator.languages` — modern fingerprinters
+fake `navigator.plugins` or `navigator.languages` � modern fingerprinters
 cross-check those for consistency, and synthesizing fixed values flags MORE
 bot-like, not less. ChromeDriver's `cdc_`/`__webdriver` runtime artifacts and
 the Permissions notifications tell are also cleaned up on every path.
 
 `istm_STEALTH=extended` (also accepts `1` or `true`; off by default) layers
-six more aggressive patches on top — WebGL renderer spoof, a faked
+six more aggressive patches on top � WebGL renderer spoof, a faked
 `navigator.plugins` PluginArray, `navigator.mediaDevices`. That mode actively
 lies and can break sites that reflect on those properties; use it only when
 the default triggers detection. For gbrowser builds with the C++ patches, the
@@ -651,14 +651,14 @@ software" infobar), `--disable-extensions`,
 display range (`:99`, `:100`, ...) until `xdpyinfo` reports a free slot,
 then spawns Xvfb. Cleanup-on-disconnect validates the recorded PID's
 `/proc/<pid>/cmdline` matches `Xvfb` AND start-time matches before sending
-any signal — no PID-reuse footguns. Skips spawn entirely when
+any signal � no PID-reuse footguns. Skips spawn entirely when
 `WAYLAND_DISPLAY` is set (Chromium uses Wayland natively). Standard
 Debian/Ubuntu containers work out of the box; minimal images (alpine,
 distroless) may need fonts/dbus/gtk libs for headed Chromium to render.
 
-**Failure modes.** SOCKS5 upstream rejected or unreachable — fail-fast at
+**Failure modes.** SOCKS5 upstream rejected or unreachable � fail-fast at
 startup with a redacted error after 3 retries (5s budget). Mid-stream
-upstream drop — bridge kills the affected client connection only; no
+upstream drop � bridge kills the affected client connection only; no
 transport retries that could corrupt browser traffic.
 
 ---
@@ -671,7 +671,7 @@ on the page, plus an interactive Claude PTY inside the sidebar.
 
 ### The Terminal pane (the headline)
 
-The Side Panel's primary surface is the **Terminal pane** — a live `claude -p`
+The Side Panel's primary surface is the **Terminal pane** � a live `claude -p`
 PTY you can type into directly from the sidebar. Activity / Refs / Inspector
 are debug overlays behind the footer's `debug` toggle. WebSocket auth uses
 `Sec-WebSocket-Protocol` (browsers can't set `Authorization` on a WebSocket
@@ -681,11 +681,11 @@ via `POST /pty-session`.
 The toolbar's Cleanup button and the Inspector's "Send to Code" action both
 pipe text into the live Claude PTY via `window.istmInjectToTerminal(text)`,
 exposed by `sidepanel-terminal.js`. There's no separate `/sidebar-command`
-POST — the live REPL is the only execution surface.
+POST � the live REPL is the only execution surface.
 
 ### Activity feed
 
-A scrolling feed of every browse command — name, args, duration, status,
+A scrolling feed of every browse command � name, args, duration, status,
 errors. Shows up in real time as Claude works. Backed by SSE (`/activity/stream`)
 that accepts the Bearer token OR the HttpOnly `istm_sse` session cookie
 (30-minute stream-scope cookie minted via `POST /sse-session`).
@@ -712,7 +712,7 @@ The "Send to Code" button injects a description into the Claude PTY.
 | Sidebar utilities | `browse/src/sidebar-utils.ts` | URL sanitization, helpers |
 
 Before modifying any of these, read the comment block in `CLAUDE.md` under
-"Sidebar architecture" — silent failures here usually trace to not understanding
+"Sidebar architecture" � silent failures here usually trace to not understanding
 the cross-component flow.
 
 ### Manual install (for your regular Chrome)
@@ -724,13 +724,13 @@ one):
 bin/istm-workflow-extension    # opens chrome://extensions, copies path to clipboard
 ```
 
-Or do it manually: `chrome://extensions` → toggle Developer mode → Load
-unpacked → navigate to `~/.claude/skills/istm-workflow/extension` → pin the
-extension → enter the port from `$B status`.
+Or do it manually: `chrome://extensions` ? toggle Developer mode ? Load
+unpacked ? navigate to `~/.claude/skills/istm-workflow/extension` ? pin the
+extension ? enter the port from `$B status`.
 
 v1.63 pinned the extension identity via the manifest `key` field, so existing
 unpacked installs get a new extension ID and panel-local state (saved port)
-resets once — a one-time in-product notice explains this.
+resets once � a one-time in-product notice explains this.
 
 ---
 
@@ -746,8 +746,8 @@ by a 26-command allowlist, scoped tokens, and a denial log.
 /pair-agent                     # generates a setup key, prints connection instructions
 # Copy the instructions to the remote agent
 # Remote agent runs:
-#   POST <tunnel-url>/connect with setup key → gets a scoped token (24h, single client)
-#   POST <tunnel-url>/command with token → runs allowed commands
+#   POST <tunnel-url>/connect with setup key ? gets a scoped token (24h, single client)
+#   POST <tunnel-url>/command with token ? runs allowed commands
 ```
 
 ### Dual-listener architecture (v1.6.0.0+)
@@ -757,7 +757,7 @@ When `pair-agent` activates, the daemon binds **two HTTP listeners**:
 - **Local listener** (`127.0.0.1:LOCAL_PORT`). Full command surface. Never
   forwarded by ngrok. Used by your Claude Code, the Side Panel, anything
   on your machine.
-- **Tunnel listener** (`127.0.0.1:TUNNEL_PORT`). Locked allowlist —
+- **Tunnel listener** (`127.0.0.1:TUNNEL_PORT`). Locked allowlist �
   `/connect`, `/command` (scoped tokens + 26-command browser-driving
   allowlist), `/sidebar-chat`. ngrok forwards only this port.
 
@@ -781,7 +781,7 @@ remote agent that tries them gets a 403 plus a fresh entry in the denial log.
 
 ### Tunnel denial log
 
-`~/.istm-workflow/security/attempts.jsonl` — append-only, salted SHA-256 of source
+`~/.istm-workflow/security/attempts.jsonl` � append-only, salted SHA-256 of source
 + domain only (no raw IP, no full request body), rotates at 10MB with 5
 generations. Per-device salt at `~/.istm-workflow/security/device-salt` (mode 0600).
 
@@ -802,7 +802,7 @@ full operator guide.
 Scoped tokens default to `tabPolicy: 'own-only'`. A paired agent can `newtab`
 to create its own tab and drive that tab freely, but it can't `goto`, `fill`,
 or `click` on tabs another caller owns. `tabs` lists ALL tab metadata (an
-accepted tradeoff — see ARCHITECTURE.md), but `text`/`html`/`snapshot` content
+accepted tradeoff � see ARCHITECTURE.md), but `text`/`html`/`snapshot` content
 of unowned tabs is blocked by ownership checks.
 
 ---
@@ -813,7 +813,7 @@ Three token types, three lifetimes, three scopes.
 
 | Token | Generated by | Lifetime | Scope |
 |-------|--------------|----------|-------|
-| **Root token** | Daemon startup (random UUID) | Daemon process lifetime | Full command surface, local listener only — 403 over tunnel |
+| **Root token** | Daemon startup (random UUID) | Daemon process lifetime | Full command surface, local listener only � 403 over tunnel |
 | **Setup key** | `POST /pair` | 5 minutes, one-time use | Single redemption: present at `/connect`, get a scoped token |
 | **Scoped token** | `POST /connect` (with setup key) | 24 hours | Per-client, allowlist-bound, optionally tab-scoped |
 
@@ -832,20 +832,20 @@ feed without putting the root token in extension storage.
 ### PTY session cookie
 
 The Terminal pane uses a separate session cookie, `istm_pty`, minted via
-`POST /pty-session`. Different scope — can spawn / drive the live `claude`
+`POST /pty-session`. Different scope � can spawn / drive the live `claude`
 PTY, can't dispatch arbitrary `/command` calls. `/health` endpoint MUST NOT
 surface this token.
 
 ### Extension token bootstrap (v1.63+)
 
-`GET /health` is liveness/status only — it never carries a token, in any
+`GET /health` is liveness/status only � it never carries a token, in any
 mode. The Side Panel extension bootstraps the root token via
 `POST /extension-token` on the local listener. The server releases the
 token only when the caller's Origin is exactly
-`chrome-extension://<istm_EXTENSION_ID>` — the `key` field in
+`chrome-extension://<istm_EXTENSION_ID>` � the `key` field in
 `extension/manifest.json` pins the extension ID (`istm_EXTENSION_ID` in
 `browse/src/server.ts`; derivation reproducible via
-`bun browse/scripts/extension-id.ts`) — AND the parsed Host hostname is
+`bun browse/scripts/extension-id.ts`) � AND the parsed Host hostname is
 loopback. Anything else gets a detail-free 403. The endpoint is never
 added to `TUNNEL_PATHS`, so the tunnel surface 404s it by default-deny.
 
@@ -868,27 +868,27 @@ Layered defense against prompt injection on untrusted page content.
 | **L2** Hidden-element strip | `content-security.ts` | server + page-content read path |
 | **L3** ARIA + URL blocklist + envelope wrapping | `content-security.ts` | server + page-content read path |
 | **L4** TestSavantAI ML classifier (112MB ONNX) | `security-classifier.ts` | security sidecar subprocess* |
-| Canary token utilities | `security.ts` | pure functions — no live injector today |
+| Canary token utilities | `security.ts` | pure functions � no live injector today |
 | `combineVerdict` ensemble | `security.ts` | server (inline L4 verdict path) |
 
 \* `security-classifier.ts` cannot be imported from the compiled browse
-binary — `@huggingface/transformers` v4 requires `onnxruntime-node` which
+binary � `@huggingface/transformers` v4 requires `onnxruntime-node` which
 fails to `dlopen` from Bun compile's temp extract dir. The compiled binary
-runs L1–L3 plus the pure parts of `security.ts`; L4 runs in a plain-Node
+runs L1�L3 plus the pure parts of `security.ts`; L4 runs in a plain-Node
 sidecar (`security-sidecar-entry.ts`, spawned lazily by
 `security-sidecar-client.ts` on the first `/pty-inject-scan`).
 
 ### Thresholds
 
-- `BLOCK: 0.85` — single-layer score that would cause BLOCK if cross-confirmed
-- `WARN: 0.75` — cross-confirm threshold in `combineVerdict`
-- `LOG_ONLY: 0.40` — log-only floor
-- `SOLO_CONTENT_BLOCK: 0.92` — single-layer threshold for label-less content classifiers
+- `BLOCK: 0.85` � single-layer score that would cause BLOCK if cross-confirmed
+- `WARN: 0.75` � cross-confirm threshold in `combineVerdict`
+- `LOG_ONLY: 0.40` � log-only floor
+- `SOLO_CONTENT_BLOCK: 0.92` � single-layer threshold for label-less content classifiers
 
 ### Ensemble rule
 
 `combineVerdict` retains multi-layer ensemble semantics (2-of-N block votes;
-single-layer high confidence degrades to WARN — the Stack Overflow
+single-layer high confidence degrades to WARN � the Stack Overflow
 instruction-writing FP mitigation), but only L4 (testsavant) is live today:
 the Haiku transcript and DeBERTa ensemble layers were removed along with the
 sidebar chat pipeline that hosted them. **Canary leak always BLOCKs
@@ -896,7 +896,7 @@ sidebar chat pipeline that hosted them. **Canary leak always BLOCKs
 
 ### Env knobs
 
-- `istm_SECURITY_OFF=1` — emergency kill switch. Classifier stays off
+- `istm_SECURITY_OFF=1` � emergency kill switch. Classifier stays off
   even if warmed. Just the ML scan is skipped.
 - Classifier model cache: `~/.istm-workflow/models/testsavant-small/` (112MB, first
   run only).
@@ -908,7 +908,7 @@ There is no security status indicator in the sidebar and no `security`
 field on `/health` (#2557): the session-state file that fed them lost its
 only writer when the chat-path agent was removed, so they reported stale or
 empty data. The live defenses report through their own call sites. See
-ARCHITECTURE.md § "Prompt injection defense" for the full threat model.
+ARCHITECTURE.md � "Prompt injection defense" for the full threat model.
 
 ---
 
@@ -926,28 +926,28 @@ ARCHITECTURE.md § "Prompt injection defense" for the full threat model.
 
 Element crop accepts CSS selectors (`.class`, `#id`, `[attr]`) or `@e`/`@c`
 refs. **Tag selectors like `button` aren't caught by the positional
-heuristic** — use the `--selector` flag form.
+heuristic** � use the `--selector` flag form.
 
-`--base64` returns `data:image/png;base64,...` instead of writing to disk —
+`--base64` returns `data:image/png;base64,...` instead of writing to disk �
 composes with `--selector`, `--clip`, `--viewport`.
 
 Mutual exclusion: `--clip` + selector, `--viewport` + `--clip`, and
 `--selector` + positional selector all throw.
 
-### Retina screenshots — `viewport --scale`
+### Retina screenshots � `viewport --scale`
 
 `viewport --scale <n>` sets Playwright's `deviceScaleFactor` (context-level,
-1–3 cap):
+1�3 cap):
 
 ```bash
 $B viewport 480x600 --scale 2
 $B load-html /tmp/card.html
 $B screenshot /tmp/card.png --selector .card
-# .card at 400x200 CSS pixels → card.png is 800x400 pixels
+# .card at 400x200 CSS pixels ? card.png is 800x400 pixels
 ```
 
 `--scale N` alone (no `WxH`) keeps the current viewport size. Scale changes
-trigger a context recreation, which invalidates `@e`/`@c` refs — rerun
+trigger a context recreation, which invalidates `@e`/`@c` refs � rerun
 `snapshot` after. HTML loaded via `load-html` survives the recreation via
 in-memory replay. Rejected in headed mode (real browser controls scale).
 
@@ -967,7 +967,7 @@ in-memory replay. Rejected in headed mode (real browser controls scale).
 
 ### Responsive screenshots
 
-`responsive [prefix]` — three screenshots in one call: mobile (375x812),
+`responsive [prefix]` � three screenshots in one call: mobile (375x812),
 tablet (768x1024), desktop (1280x720). Saves as `{prefix}-mobile.png` etc.
 
 ### `prettyscreenshot`
@@ -1000,7 +1000,7 @@ a magic-byte sniff to reject binary files mis-renamed as HTML. 50MB size cap
 
 `load-html` content survives later `viewport --scale` calls via in-memory
 replay (TabSession tracks the loaded HTML + waitUntil). The replay is
-purely in-memory — HTML is never persisted to disk via `state save` to
+purely in-memory � HTML is never persisted to disk via `state save` to
 avoid leaking secrets or customer data.
 
 ---
@@ -1008,7 +1008,7 @@ avoid leaking secrets or customer data.
 ## Batch endpoint
 
 `POST /batch` sends multiple commands in a single HTTP request. Eliminates
-per-command round-trip latency — critical for remote agents over ngrok where
+per-command round-trip latency � critical for remote agents over ngrok where
 each HTTP call costs 2-5s.
 
 ```json
@@ -1025,14 +1025,14 @@ Authorization: Bearer <token>
 }
 ```
 
-Each command routes through `handleCommandInternal` — full security pipeline
+Each command routes through `handleCommandInternal` � full security pipeline
 (scope checks, domain validation, tab ownership, content wrapping) enforced
 per command. Per-command error isolation: one failure doesn't abort the
 batch. Max 50 commands per batch. Nested batches rejected. Rate limiting:
 1 batch = 1 request against the per-agent limit.
 
 Pattern: agent crawling 20 pages opens 20 tabs (individual `newtab` or
-batch), then `POST /batch` with 20 `text` commands → 20 page contents in
+batch), then `POST /batch` with 20 `text` commands ? 20 page contents in
 ~2-3 seconds total vs ~40-100 seconds serial.
 
 ---
@@ -1057,8 +1057,8 @@ browser lockup. `dialog-accept <text>` controls prompt response text.
 ## JS execution
 
 `js` runs an inline expression. `eval` runs a JS file. Both run in the
-**same JS sandbox** — the only difference is inline-vs-file. Both support
-`await` — expressions containing `await` are auto-wrapped in an async
+**same JS sandbox** � the only difference is inline-vs-file. Both support
+`await` � expressions containing `await` are auto-wrapped in an async
 context:
 
 ```bash
@@ -1091,7 +1091,7 @@ $B tab-each "text"               # run "text" on every tab, return JSON
 ```
 
 `tab-each <command>` fans out a command across every open tab and returns a
-JSON array — handy for "give me the text of every tab I have open."
+JSON array � handy for "give me the text of every tab I have open."
 
 ### Frames
 
@@ -1120,7 +1120,7 @@ automatically, opt in with `BROWSE_PERSIST_STATE=1` in the daemon's
 environment: the headless daemon snapshots cookies + per-tab
 URL/localStorage/sessionStorage to `<stateDir>/session-state.json` (0600,
 atomic writes) every 30 seconds and at clean shutdown, then restores it off
-the boot path on the next launch. Default OFF — cookies on disk are a real
+the boot path on the next launch. Default OFF � cookies on disk are a real
 cost, so the user opts in. Headless only (headed mode's persistent Chromium
 profile already owns its state). Loaded HTML and tab ownership are never
 persisted, cookies for localhost, `.internal`, loopback IP literals
@@ -1153,7 +1153,7 @@ in `.istm-workflow/browser-scout.jsonl`.
 
 ## CDP
 
-### `$B cdp` — raw Chrome DevTools Protocol dispatch
+### `$B cdp` � raw Chrome DevTools Protocol dispatch
 
 Deny-default. Only methods enumerated in `browse/src/cdp-allowlist.ts`
 (`CDP_ALLOWLIST` const) are reachable; any other method returns 403. Each
@@ -1167,7 +1167,7 @@ $B cdp Network.enable
 $B cdp Accessibility.getFullAXTree '{"depth":5}'
 
 # Perf measurement on a simulated low-end client (overrides persist on the
-# tab until you clear them — callers own restoration):
+# tab until you clear them � callers own restoration):
 $B cdp Emulation.setCPUThrottlingRate '{"rate":4}'   # clear: '{"rate":1}'
 $B cdp Network.emulateNetworkConditions '{"offline":false,"latency":150,"downloadThroughput":195000,"uploadThroughput":97500}'
 # clear: '{"offline":false,"latency":0,"downloadThroughput":-1,"uploadThroughput":-1}'
@@ -1175,7 +1175,7 @@ $B cdp Network.emulateNetworkConditions '{"offline":false,"latency":150,"downloa
 
 To discover allowed methods: read `browse/src/cdp-allowlist.ts`.
 
-### `$B inspect` — CDP-based CSS inspector
+### `$B inspect` � CDP-based CSS inspector
 
 ```bash
 $B inspect ".header"                # full rule cascade for the header
@@ -1195,7 +1195,7 @@ $B ux-audit
 ```
 
 Returns JSON with site identity, navigation, headings (capped 50), text
-blocks, interactive elements (capped 200) — page structure for behavioral
+blocks, interactive elements (capped 200) � page structure for behavioral
 analysis without dumping the full HTML. Used by `/qa` and `/design-review`
 for cheap coverage maps.
 
@@ -1210,7 +1210,7 @@ for cheap coverage maps.
 | **istm-workflow browse** | **~3s** | **~100-200ms** | **0 tokens** (plain text stdout) |
 | **istm-workflow browse + codified skill** | **~3s** | **~200ms** | **0 tokens** (single skill invocation) |
 
-In a 20-command browser session, MCP tools burn 30,000–40,000 tokens on
+In a 20-command browser session, MCP tools burn 30,000�40,000 tokens on
 protocol framing alone. istm-workflow burns zero. The codified-skill path takes a
 20-command session down to a single `$B skill run` call.
 
@@ -1219,11 +1219,11 @@ protocol framing alone. istm-workflow burns zero. The codified-skill path takes 
 MCP works well for remote services. For local browser automation it adds
 pure overhead:
 
-- **Context bloat** — every MCP call includes full JSON schemas. A simple
+- **Context bloat** � every MCP call includes full JSON schemas. A simple
   "get the page text" costs 10x more context tokens than it should.
-- **Connection fragility** — persistent WebSocket/stdio connections drop
+- **Connection fragility** � persistent WebSocket/stdio connections drop
   and fail to reconnect.
-- **Unnecessary abstraction** — Claude already has a Bash tool. A CLI that
+- **Unnecessary abstraction** � Claude already has a Bash tool. A CLI that
   prints to stdout is the simplest possible interface.
 
 istm-workflow skips all of this. Compiled binary. Plain text in, plain text out.
@@ -1239,10 +1239,10 @@ collisions.
 
 | Workspace | State file | Port |
 |-----------|-----------|------|
-| `/code/project-a` | `/code/project-a/.istm-workflow/browse.json` | random (10000–49151) |
-| `/code/project-b` | `/code/project-b/.istm-workflow/browse.json` | random (10000–49151) |
+| `/code/project-a` | `/code/project-a/.istm-workflow/browse.json` | random (10000�49151) |
+| `/code/project-b` | `/code/project-b/.istm-workflow/browse.json` | random (10000�49151) |
 
-Browser-skills three-tier lookup walks project → global → bundled, so a
+Browser-skills three-tier lookup walks project ? global ? bundled, so a
 project-tier skill at `/code/project-a/.istm-workflow/browser-skills/foo/` shadows
 the global `~/.istm-workflow/browser-skills/foo/` only inside project-a.
 
@@ -1252,7 +1252,7 @@ the global `~/.istm-workflow/browser-skills/foo/` only inside project-a.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `BROWSE_PORT` | 0 (random 10000–49151) | Fixed port for the HTTP server (debug override) |
+| `BROWSE_PORT` | 0 (random 10000�49151) | Fixed port for the HTTP server (debug override) |
 | `BROWSE_IDLE_TIMEOUT` | 1800000 (30 min) | Idle shutdown timeout in ms |
 | `BROWSE_STATE_FILE` | `.istm-workflow/browse.json` | Path to state file |
 | `BROWSE_SERVER_SCRIPT` | auto-detected | Path to `server.ts` |
@@ -1260,13 +1260,13 @@ the global `~/.istm-workflow/browser-skills/foo/` only inside project-a.
 | `BROWSE_CDP_PORT` | 0 | CDP port (used internally) |
 | `BROWSE_HEADLESS_SKIP` | 0 | Skip Chromium launch entirely (test harness only) |
 | `BROWSE_TUNNEL` | 0 | Activate the dual-listener tunnel architecture (requires `NGROK_AUTHTOKEN`) |
-| `BROWSE_TUNNEL_LOCAL_ONLY` | 0 | Test-only — bind both listeners locally without ngrok |
+| `BROWSE_TUNNEL_LOCAL_ONLY` | 0 | Test-only � bind both listeners locally without ngrok |
 | `istm_BROWSE_MAX_HTML_BYTES` | 52428800 (50MB) | `load-html` size cap |
-| `istm_SECURITY_OFF` | unset | Emergency kill switch — disable ML classifier |
+| `istm_SECURITY_OFF` | unset | Emergency kill switch � disable ML classifier |
 | `istm_STEALTH` | unset | Set to `extended` (also accepts `1`/`true`) to layer six aggressive patches (WebGL spoof, faked plugins, mediaDevices) on top of Layer C. Actively lies; can break sites. |
 | `istm_CDP_STEALTH` | unset | Set to `on`/`1`/`true` to emit `--istm-workflow-suppress-prepare-stack-trace` (gbrowser Pack 2 / B11 C++ patch only; no-op on stock Chromium) |
 | `istm_GPU_VENDOR`, `istm_GPU_RENDERER`, `istm_GPU_CHIPSET` | unset | Per-install GPU spoof fed to the Pack 1 WebGL/UA-CH C++ patches. Set by gbd from the host profile; emitted as `--istm-workflow-gpu-vendor` / `--istm-workflow-gpu-renderer` / `--istm-workflow-ua-model` cmdline switches only when present. |
-| `istm_PLATFORM` | unset | Host platform classification (`MacARM`/`MacIntel` → `macOS`, `Win32` → `Windows`, `Linux*` → `Linux`) emitted as `--istm-workflow-ua-platform` |
+| `istm_PLATFORM` | unset | Host platform classification (`MacARM`/`MacIntel` ? `macOS`, `Win32` ? `Windows`, `Linux*` ? `Linux`) emitted as `--istm-workflow-ua-platform` |
 | `istm_HW_CONCURRENCY`, `istm_DEVICE_MEMORY` | host profile (fallback 8) | Per-install `hardwareConcurrency`/`deviceMemory` reported by Layer C and emitted as `--istm-workflow-hw-concurrency` / `--istm-workflow-device-memory` for the worker-navigator C++ patch |
 
 ---
@@ -1275,73 +1275,73 @@ the global `~/.istm-workflow/browser-skills/foo/` only inside project-a.
 
 ```
 browse/
-├── src/
-│   ├── cli.ts                   # Thin client — reads state, sends HTTP, prints
-│   ├── server.ts                # Bun HTTP daemon — routes commands, dual-listener
-│   ├── browser-manager.ts       # Chromium lifecycle, tabs, ref map, crash detection
-│   ├── port-allocator.ts        # Fixed 10000-49151 scan range for every long-lived listener (never port:0)
-│   ├── xprotect-heal.ts         # macOS XProtect launch-kill classify + quarantine-clear + bounded reinstall
-│   ├── socks-bridge.ts          # Local 127.0.0.1 SOCKS5 bridge that handles auth handshakes Chromium can't speak
-│   ├── proxy-config.ts          # --proxy URL parsing + cred resolution (URL vs env, fail-fast on both)
-│   ├── proxy-redact.ts          # Cred-redaction helper for any proxy URL surfaced to logs/errors
-│   ├── xvfb.ts                  # Xvfb auto-spawn + orphan cleanup with PID + start-time validation
-│   ├── stealth.ts               # Layer C: webdriver mask + window.chrome.* + Notification/Permissions + per-install hardware + toString proxy + automation-global sweep; buildistmLaunchArgs (istm_* cmdline switches); istm_STEALTH=extended opt-in
-│   ├── browse-client.ts         # Canonical SDK — what skills import as _lib/browse-client.ts
-│   ├── snapshot.ts              # AX tree → @e/@c refs → Locator map; -D/-a/-C handling
-│   ├── read-commands.ts         # Non-mutating: text, html, links, js, css, is, dialog, ...
-│   ├── write-commands.ts        # Mutating: goto, click, fill, upload, dialog-accept, ...
-│   ├── meta-commands.ts         # state, watch, inbox, frame, ux-audit, chain, diff, ...
-│   ├── browser-skills.ts        # 3-tier walk + frontmatter parser + tombstones
-│   ├── browser-skill-commands.ts # $B skill list/show/run/test/rm + spawnSkill
-│   ├── browser-skill-write.ts   # D3 atomic stage/commit/discard helper for /skillify
-│   ├── skill-token.ts           # mintSkillToken / revokeSkillToken (per-spawn, scoped)
-│   ├── domain-skills.ts         # Per-site agent notes (state machine: quarantined→active→global)
-│   ├── domain-skill-commands.ts # $B domain-skill save/list/show/edit/promote/rollback/rm
-│   ├── cdp-allowlist.ts         # Deny-default CDP method allowlist
-│   ├── cdp-bridge.ts            # CDP session lifecycle bridge
-│   ├── cdp-commands.ts          # $B cdp dispatcher
-│   ├── cdp-inspector.ts         # $B inspect — persistent CDP session per page
-│   ├── activity.ts              # ActivityEntry, CircularBuffer, SSE subscribers, privacy filtering
-│   ├── buffers.ts               # Console/network/dialog circular buffers (O(1) ring)
-│   ├── tab-session.ts           # Per-tab session state (load-html replay, ref map scope)
-│   ├── token-registry.ts        # Mint/validate/revoke for root + setup keys + scoped tokens
-│   ├── sse-session-cookie.ts    # 30-min HttpOnly cookie for /activity/stream + /inspector/events
-│   ├── pty-session-cookie.ts    # Separate scope: live Claude PTY auth
-│   ├── tunnel-denial-log.ts     # ~/.istm-workflow/security/attempts.jsonl writer (salted)
-│   ├── path-security.ts         # validateOutputPath / validateReadPath / validateTempPath
-│   ├── url-validation.ts        # URL safety checks for goto
-│   ├── content-security.ts      # L1-L3: datamarking, hidden strip, ARIA, URL blocklist, envelopes
-│   ├── security.ts              # L5 canary + L6 verdict combiner + thresholds
-│   ├── security-classifier.ts   # L4 ML classifier (TestSavantAI, runs in the security sidecar)
-│   ├── security-sidecar-entry.ts # Sidecar subprocess entrypoint hosting the ONNX classifier
-│   ├── security-sidecar-client.ts # server.ts-side client that drives the sidecar
-│   ├── terminal-agent.ts        # Side Panel Claude PTY manager (auth + lifecycle)
-│   ├── sidebar-utils.ts         # Sidebar URL sanitization + helpers
-│   ├── cookie-import-browser.ts # Decrypt + import cookies from real Chromium browsers
-│   ├── cookie-picker-routes.ts  # HTTP routes for /cookie-picker/*
-│   ├── cookie-picker-ui.ts      # Self-contained HTML/CSS/JS for cookie picker
-│   ├── network-capture.ts       # Network request capture for $B network
-│   ├── media-extract.ts         # Media element extraction for $B media
-│   ├── project-slug.ts          # Project slug derivation for state paths
-│   ├── error-handling.ts        # safeUnlink / safeKill / isProcessAlive
-│   ├── platform.ts              # OS detection (macOS, Linux, Windows)
-│   ├── telemetry.ts             # Anonymous opt-in usage telemetry
-│   ├── find-browse.ts           # Locate running daemon or bootstrap
-│   └── config.ts                # Config resolution (env / files)
-├── test/                        # Integration tests + HTML fixtures
-└── dist/
-    └── browse                   # Compiled binary (~58MB, Bun --compile)
++-- src/
+�   +-- cli.ts                   # Thin client � reads state, sends HTTP, prints
+�   +-- server.ts                # Bun HTTP daemon � routes commands, dual-listener
+�   +-- browser-manager.ts       # Chromium lifecycle, tabs, ref map, crash detection
+�   +-- port-allocator.ts        # Fixed 10000-49151 scan range for every long-lived listener (never port:0)
+�   +-- xprotect-heal.ts         # macOS XProtect launch-kill classify + quarantine-clear + bounded reinstall
+�   +-- socks-bridge.ts          # Local 127.0.0.1 SOCKS5 bridge that handles auth handshakes Chromium can't speak
+�   +-- proxy-config.ts          # --proxy URL parsing + cred resolution (URL vs env, fail-fast on both)
+�   +-- proxy-redact.ts          # Cred-redaction helper for any proxy URL surfaced to logs/errors
+�   +-- xvfb.ts                  # Xvfb auto-spawn + orphan cleanup with PID + start-time validation
+�   +-- stealth.ts               # Layer C: webdriver mask + window.chrome.* + Notification/Permissions + per-install hardware + toString proxy + automation-global sweep; buildistmLaunchArgs (istm_* cmdline switches); istm_STEALTH=extended opt-in
+�   +-- browse-client.ts         # Canonical SDK � what skills import as _lib/browse-client.ts
+�   +-- snapshot.ts              # AX tree ? @e/@c refs ? Locator map; -D/-a/-C handling
+�   +-- read-commands.ts         # Non-mutating: text, html, links, js, css, is, dialog, ...
+�   +-- write-commands.ts        # Mutating: goto, click, fill, upload, dialog-accept, ...
+�   +-- meta-commands.ts         # state, watch, inbox, frame, ux-audit, chain, diff, ...
+�   +-- browser-skills.ts        # 3-tier walk + frontmatter parser + tombstones
+�   +-- browser-skill-commands.ts # $B skill list/show/run/test/rm + spawnSkill
+�   +-- browser-skill-write.ts   # D3 atomic stage/commit/discard helper for /skillify
+�   +-- skill-token.ts           # mintSkillToken / revokeSkillToken (per-spawn, scoped)
+�   +-- domain-skills.ts         # Per-site agent notes (state machine: quarantined?active?global)
+�   +-- domain-skill-commands.ts # $B domain-skill save/list/show/edit/promote/rollback/rm
+�   +-- cdp-allowlist.ts         # Deny-default CDP method allowlist
+�   +-- cdp-bridge.ts            # CDP session lifecycle bridge
+�   +-- cdp-commands.ts          # $B cdp dispatcher
+�   +-- cdp-inspector.ts         # $B inspect � persistent CDP session per page
+�   +-- activity.ts              # ActivityEntry, CircularBuffer, SSE subscribers, privacy filtering
+�   +-- buffers.ts               # Console/network/dialog circular buffers (O(1) ring)
+�   +-- tab-session.ts           # Per-tab session state (load-html replay, ref map scope)
+�   +-- token-registry.ts        # Mint/validate/revoke for root + setup keys + scoped tokens
+�   +-- sse-session-cookie.ts    # 30-min HttpOnly cookie for /activity/stream + /inspector/events
+�   +-- pty-session-cookie.ts    # Separate scope: live Claude PTY auth
+�   +-- tunnel-denial-log.ts     # ~/.istm-workflow/security/attempts.jsonl writer (salted)
+�   +-- path-security.ts         # validateOutputPath / validateReadPath / validateTempPath
+�   +-- url-validation.ts        # URL safety checks for goto
+�   +-- content-security.ts      # L1-L3: datamarking, hidden strip, ARIA, URL blocklist, envelopes
+�   +-- security.ts              # L5 canary + L6 verdict combiner + thresholds
+�   +-- security-classifier.ts   # L4 ML classifier (TestSavantAI, runs in the security sidecar)
+�   +-- security-sidecar-entry.ts # Sidecar subprocess entrypoint hosting the ONNX classifier
+�   +-- security-sidecar-client.ts # server.ts-side client that drives the sidecar
+�   +-- terminal-agent.ts        # Side Panel Claude PTY manager (auth + lifecycle)
+�   +-- sidebar-utils.ts         # Sidebar URL sanitization + helpers
+�   +-- cookie-import-browser.ts # Decrypt + import cookies from real Chromium browsers
+�   +-- cookie-picker-routes.ts  # HTTP routes for /cookie-picker/*
+�   +-- cookie-picker-ui.ts      # Self-contained HTML/CSS/JS for cookie picker
+�   +-- network-capture.ts       # Network request capture for $B network
+�   +-- media-extract.ts         # Media element extraction for $B media
+�   +-- project-slug.ts          # Project slug derivation for state paths
+�   +-- error-handling.ts        # safeUnlink / safeKill / isProcessAlive
+�   +-- platform.ts              # OS detection (macOS, Linux, Windows)
+�   +-- telemetry.ts             # Anonymous opt-in usage telemetry
+�   +-- find-browse.ts           # Locate running daemon or bootstrap
+�   +-- config.ts                # Config resolution (env / files)
++-- test/                        # Integration tests + HTML fixtures
++-- dist/
+    +-- browse                   # Compiled binary (~58MB, Bun --compile)
 
 browser-skills/
-└── hackernews-frontpage/        # Bundled reference skill
-    ├── SKILL.md
-    ├── script.ts
-    ├── _lib/browse-client.ts
-    ├── fixtures/hn-2026-04-26.html
-    └── script.test.ts
++-- hackernews-frontpage/        # Bundled reference skill
+    +-- SKILL.md
+    +-- script.ts
+    +-- _lib/browse-client.ts
+    +-- fixtures/hn-2026-04-26.html
+    +-- script.test.ts
 
-scrape/SKILL.md.tmpl             # /scrape istm-workflow skill — match-or-prototype entry point
-skillify/SKILL.md.tmpl           # /skillify istm-workflow skill — codify last /scrape into permanent skill
+scrape/SKILL.md.tmpl             # /scrape istm-workflow skill � match-or-prototype entry point
+skillify/SKILL.md.tmpl           # /skillify istm-workflow skill � codify last /scrape into permanent skill
 ```
 
 ---
@@ -1399,7 +1399,7 @@ pages.
    (mutating), or `meta-commands.ts` (server / lifecycle).
 2. Register the route in `server.ts`.
 3. Add the entry to `COMMAND_DESCRIPTIONS` in `browse/src/commands.ts` (with
-   a clear `description` and `usage` — the `gen-skill-docs` validation
+   a clear `description` and `usage` � the `gen-skill-docs` validation
    suite enforces no `|` characters in `description`).
 4. Add a test case in `browse/test/commands.test.ts` with an HTML fixture
    if needed.
@@ -1439,13 +1439,13 @@ cp browse/dist/browse ~/.claude/skills/istm-workflow/browse/dist/browse
 
 ## Cross-references
 
-- [`ARCHITECTURE.md`](ARCHITECTURE.md) — system-level architecture, dual-listener tunnel design, prompt-injection defense threat model
-- [`CLAUDE.md`](CLAUDE.md) — project-level instructions, sidebar architecture notes, security-stack constraints
-- [`docs/REMOTE_BROWSER_ACCESS.md`](docs/REMOTE_BROWSER_ACCESS.md) — operator guide for `/pair-agent` (setup keys, scoped tokens, denial log)
-- [`docs/designs/BROWSER_SKILLS_V1.md`](docs/designs/BROWSER_SKILLS_V1.md) — design doc for browser-skills runtime (Phase 1 + 2a + roadmap)
-- [`scrape/SKILL.md`](scrape/SKILL.md) — `/scrape` skill: match-or-prototype data extraction
-- [`skillify/SKILL.md`](skillify/SKILL.md) — `/skillify` skill: codify last `/scrape` into permanent skill
-- [`TODOS.md`](TODOS.md) — `/automate` (Phase 2b P0), Phase 3 resolver injection, Phase 4 eval + sandbox
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) � system-level architecture, dual-listener tunnel design, prompt-injection defense threat model
+- [`CLAUDE.md`](CLAUDE.md) � project-level instructions, sidebar architecture notes, security-stack constraints
+- [`docs/REMOTE_BROWSER_ACCESS.md`](docs/REMOTE_BROWSER_ACCESS.md) � operator guide for `/pair-agent` (setup keys, scoped tokens, denial log)
+- [`docs/designs/BROWSER_SKILLS_V1.md`](docs/designs/BROWSER_SKILLS_V1.md) � design doc for browser-skills runtime (Phase 1 + 2a + roadmap)
+- [`scrape/SKILL.md`](scrape/SKILL.md) � `/scrape` skill: match-or-prototype data extraction
+- [`skillify/SKILL.md`](skillify/SKILL.md) � `/skillify` skill: codify last `/scrape` into permanent skill
+- [`TODOS.md`](TODOS.md) � `/automate` (Phase 2b P0), Phase 3 resolver injection, Phase 4 eval + sandbox
 
 ---
 
@@ -1454,8 +1454,8 @@ cp browse/dist/browse ~/.claude/skills/istm-workflow/browse/dist/browse
 The browser automation layer is built on [Playwright](https://playwright.dev/)
 by Microsoft. Playwright's accessibility tree API, locator system, and
 headless Chromium management are what make ref-based interaction possible.
-The snapshot system — assigning `@ref` labels to AX tree nodes and mapping
-them back to Playwright Locators — is built entirely on top of Playwright's
+The snapshot system � assigning `@ref` labels to AX tree nodes and mapping
+them back to Playwright Locators � is built entirely on top of Playwright's
 primitives. Thank you to the Playwright team for building such a solid
 foundation.
 

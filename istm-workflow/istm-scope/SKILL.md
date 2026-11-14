@@ -1,7 +1,7 @@
 ---
 name: istm-scope
 allowed-tools: Bash, Read, Grep, Glob, Write, Edit, Agent, AskUserQuestion
-description: "Run /istm-scope to turn a product idea into a living, coarse scope in .istm-context/istm-scope/ and keep it current: plan a new product, plan the next slice, enroll one named feature, or run with no argument to reconcile after shipping and queue what is next. Seeds WHAT to build; /architect designs, /istm-develop builds."
+description: "Run /istm-scope to turn a product idea into a living, coarse scope in specs/ and keep it current: plan a new product, plan the next slice, enroll one named feature, or run with no argument to reconcile after shipping and queue what is next. Seeds WHAT to build; /istm-architecture designs, /istm-develop builds."
 ---
 
 ## Output style (plain words, no dashes, no hyphens)
@@ -12,11 +12,11 @@ Write everything this skill produces, files and messages alike, in plain simple 
 
 ## What this skill does
 
-Turns an idea into an ordered, coarse, living plan and keeps it honest as the product ships. Answers "what do I build, in what order, how heavy, which need a decision first?", not "how do I build this one thing?" (that is `/architect` and `/istm-develop`).
+Turns an idea into an ordered, coarse, living plan and keeps it honest as the product ships. Answers "what do I build, in what order, how heavy, which need a decision first?", not "how do I build this one thing?" (that is `/istm-architecture` and `/istm-develop`).
 
 Scope shape, coarse and small: a slim At a glance table (`# · Feature · Phase · Status`) + feature sections grouped by phase (see `scope-template.md`). Each section: heading `### N. Name` with short tags only when they matter (`needs a decision`, an approach override, a workflow tier override like `· Full`), a 1 to 2 line intent, one `Done when:` line (acceptance criteria seeds, the WHAT), checkbox steps.
 
-Feature shape lifecycle: not yet designed → one box, its entry command. On spec capture, `/architect` fills the built ready shape: `Design it (spec)` ticked, spec linked, `Build it: /istm-develop <feature>` with 2 to 5 milestone sub items rolled up from the spec's `## Build plan`, then `Verify it: /istm-check verify <feature>` and `Test it: /istm-test <feature>`. Atomic build tasks stay in the spec's `## Build plan`, never here; every box is a command or tracked milestone. Status: in the table and beside the heading; spec and code pointers once they exist. `/istm-scope` seeds the what; `/architect` designs the how and defines milestones; `/istm-develop` builds; `/istm-check verify` and `/istm-test` close; `/istm-sync` reconciles conventions after.
+Feature shape lifecycle: not yet designed → one box, its entry command. On spec capture, `/istm-architecture` fills the built ready shape: `Design it (spec)` ticked, spec linked, `Build it: /istm-develop <feature>` with 2 to 5 milestone sub items rolled up from the spec's `## Build plan`, then `Verify it: /istm-check verify <feature>` and `Test it: /istm-test <feature>`. Atomic build tasks stay in the spec's `## Build plan`, never here; every box is a command or tracked milestone. Status: in the table and beside the heading; spec and code pointers once they exist. `/istm-scope` seeds the what; `/istm-architecture` designs the how and defines milestones; `/istm-develop` builds; `/istm-check verify` and `/istm-test` close.
 
 One command, inferred intent (`/istm-scope [what]`, never a subcommand):
 - **plan** (default): no scope yet + a product sized idea, or asking for the next slice. Full pass: ask → decompose into coarse feature sections → order + phase → write.
@@ -25,9 +25,9 @@ One command, inferred intent (`/istm-scope [what]`, never a subcommand):
 
 ## Asks vs acts
 
-Senior product engineer, thorough across all dimensions. Same infer / ask / recommend discipline as `/architect`: INFER what the idea states (category, obvious capabilities); ASK what cannot be inferred across business, product, go to market in batched rounds (up to 4 questions per round; see Decision panels); RECOMMEND build approach, build order, the workflow tier (project default and any per feature override), which need a spec (expert calls: present them, let the engineer override).
+Senior product engineer, thorough across all dimensions. Same infer / ask / recommend discipline as `/istm-architecture`: INFER what the idea states (category, obvious capabilities); ASK what cannot be inferred across business, product, go to market in batched rounds (up to 4 questions per round; see Decision panels); RECOMMEND build approach, build order, the workflow tier (project default and any per feature override), which need a spec (expert calls: present them, let the engineer override).
 
-Never pick tools: no provider, library, ORM, host, or BaaS chosen or named; that is `/architect`'s job per feature in the spec. A feature implying a tool choice is exactly `Needs spec: yes`. Keep the scope tool agnostic so it doesn't rot.
+Never pick tools: no provider, library, ORM, host, or BaaS chosen or named; that is `/istm-architecture`'s job per feature in the spec. A feature implying a tool choice is exactly `Needs spec: yes`. Keep the scope tool agnostic so it doesn't rot.
 
 ## Decision panels (every user facing choice)
 
@@ -35,26 +35,26 @@ Every choice is an options panel, never a neutral menu: 2 to 4 concrete options 
 
 ## Artifact ownership
 
-`.istm-context/istm-scope/` is the feature scope, owned by this skill; `/architect` owns `.istm-context/specs/`. Other skills find a feature by scanning `.istm-context/istm-scope/` for its row. Living document: `plan`, `replan`, `add` all edit in place (reconcile and append, never a new dated file). Writes nothing else: no specs, code, or `.istm-context/agents.md`. `.istm-context/istm-scope/` holds scope files only; inventories, analyses, research docs live with the spec in its `rationale.md` (owned by `/architect`).
+`specs/` is the feature scope, owned by this skill; `/istm-architecture` owns `specs/`. Other skills find a feature by scanning `specs/` for its row. Living document: `plan`, `replan`, `add` all edit in place (reconcile and append, never a new dated file). Writes nothing else: no specs, code, or `AGENTS.md`. `specs/` holds scope files only; inventories, analyses, research docs live with the spec in its `rationale.md` (owned by `/istm-architecture`).
 
 File shape:
-- Small product: one file, `.istm-context/istm-scope/istm-scope.md` (At a glance table + phase grouped sections + legend).
-- Large product: epic split: `.istm-context/istm-scope/index.md` (At a glance table across epics + one line status rollup per epic, each linking its epic file) + one file per epic named by area (`.istm-context/istm-scope/auth.md`, …).
+- Small product: one file, `specs/istm-scope.md` (At a glance table + phase grouped sections + legend).
+- Large product: epic split: `specs/index.md` (At a glance table across epics + one line status rollup per epic, each linking its epic file) + one file per epic named by area (`specs/auth.md`, …).
 - Promote on demand: start single file; when `scope.md` outgrows a comfortable scan (roughly a dozen plus features across clearly distinct areas), rename to `index.md` (keep table + per epic rollup), move each area's sections into its own `<epic>.md`. Never split it early. Names semantic (`scope.md` / `index.md` / `<epic>.md`), never numbered.
 - Keep every file coarse and small; a long epic file needs finer features and tighter intent, not a build task dump.
 
 Status lifecycle (`/istm-scope` sets initial status; the pipeline advances it):
 - New features start `planned`. Brownfield: also enroll features that are already there as `existing` (complete) or `in-progress` (partial), the only other statuses `/istm-scope` writes.
-- `/istm-develop` advances pipeline built work (`planned` → `in-progress` → `done`); `/istm-sync` reconciles against the diff. A feature built on an **assumed decision** (its governing spec is `Assumed`, recorded by `/istm-develop` when the engineer chose to build before deciding) stays `in-progress` with an `assumed decision (spec NNNN)` note until `/architect` ratifies the decision; it cannot reach `done` before then.
-- `done` ≠ `existing`: `done` = this pipeline built and verified it; `existing` predates the workflow; `/istm-develop` and `/istm-sync` never touch `existing` rows.
-- `replan` may set a feature dropped from scope to `dropped`, never deletes rows; `dropped` keeps history, excluded from active counts and work; `/istm-develop` and `/istm-sync` skip it.
+- `/istm-develop` advances pipeline built work (`planned` → `in-progress` → `done`). A feature built on an **assumed decision** (its governing spec is `Assumed`, recorded by `/istm-develop` when the engineer chose to build before deciding) stays `in-progress` with an `assumed decision (spec NNNN)` note until `/istm-architecture` ratifies the decision; it cannot reach `done` before then.
+- `done` ≠ `existing`: `done` = this pipeline built and verified it; `existing` predates the workflow; `/istm-develop` never changes `existing` rows.
+- `replan` may set a feature dropped from scope to `dropped`, never deletes rows; `dropped` keeps history, excluded from active counts and work; `/istm-develop` skips it.
 
 Workflow tier (one rigor dial per feature, `Vibe` · `Lean` · `Medium` · `Full`): how much process a feature warrants, replacing the older separate "weight". It is a recommendation the engineer overrides, never a forced track. There is ONE project default (recommended once, plan Step 5b, recorded on the scope header `**Workflow:**` line) and a per feature override (a tag beside the heading, e.g. `· Full`, only when a feature differs from the default; no tag = inherit). What the tier drives:
 - **Design time**: higher tier → more likely `Needs spec: yes`, and the spec's cross model decision critic runs (auto at `Full`/`Medium`). `Vibe`/`Lean` features are often `Needs spec: no`.
 - **After `/istm-develop`** (the verification tail): `Vibe` = nothing (rely on `/istm-develop`'s own build time self check); `Lean` = `/istm-check verify`; `Medium` = `/istm-check verify` + `/istm-test`; `Full` = adds a fresh model `/istm-check review` + `/istm-document`.
 - **What closes `done`** (the last required stage marks it): `Vibe` → `/istm-develop` (build + self check); `Lean` → `/istm-check verify`; `Medium`/`Full` → `/istm-test`. An `Assumed` spec still blocks `done` at every tier.
 
-`/istm-scope` recommends the project default from the risk and size of the feature mix (Step 5b), the same signals `/architect` and `/istm-develop` read; `/istm-develop` reads the effective tier (feature override, else project default, else inferred) to scale the next steps it recommends, so a `Vibe` project is not told to run verify and a `Lean` project is not told to run a full review chain. Not a global playbook a feature is slotted into: it is a per project, per feature judgment.
+`/istm-scope` recommends the project default from the risk and size of the feature mix (Step 5b), the same signals `/istm-architecture` and `/istm-develop` read; `/istm-develop` reads the effective tier (feature override, else project default, else inferred) to scale the next steps it recommends, so a `Vibe` project is not told to run verify and a `Lean` project is not told to run a full review chain. Not a global playbook a feature is slotted into: it is a per project, per feature judgment.
 
 
 
@@ -72,7 +72,7 @@ Any Agent Skills client on macOS, Linux, Windows. Detection snippets are POSIX r
 
 ### Step 0: Infer intent & idea check
 
-No subcommand. First check whether a scope exists under `.istm-context/istm-scope/` (or `.workflow/istm-scope/` if that is the artifact base), then infer:
+No subcommand. First check whether a scope exists under `specs/` (or `.workflow/istm-scope/` if that is the artifact base), then infer:
 - Scope exists + no argument (or running again, described as "reconcile / what's next") → replan behavior (`modes/replan.md`).
 - Scope exists + argument names a single feature → add behavior (`modes/add.md`).
 - No scope yet + a product sized idea, or scoping the next slice (including brownfield) → plan behavior, below.

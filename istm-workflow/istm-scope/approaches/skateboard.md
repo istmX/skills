@@ -23,7 +23,7 @@ Foundations → smallest usable product → grow it release by release, each rel
 Production, minimal but genuinely usable and shippable at every release.
 
 ## Worked example: async standup app
-1. Foundations: stack + scaffold, the minimal data model the first usable version needs, design system.
+1. Foundations: stack + scaffold, the minimal data model the first usable version needs.
 2. **Release 1 (smallest usable whole):** a person signs in and posts their daily standup to one shared board, and sees everyone's posts for today. No separate teams, no roles, no templates editor, no reminders. A tiny standup tool a small group could actually use tomorrow.
 3. Release 2: teams, so more than one group can use it.
 4. Release 3: custom questions / templates.

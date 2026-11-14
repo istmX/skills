@@ -76,7 +76,7 @@ Loaded by /istm-develop (UI track) during Phase 5. Work through each section. It
 - [ ] No raw pixel values for spacing, padding, margin, or gap (exception: `1px`, `0`)
 - [ ] No raw pixel values for font sizes or line heights
 - [ ] No raw pixel or rem values for `border-radius` or `box-shadow`
-- [ ] All values reference the design system (Tailwind classes, CSS custom properties, design tokens)
+- [ ] Styling follows the existing project conventions and shared components
 - [ ] Missing tokens are documented as `// TODO: missing token: <what's needed>` not invented inline
 
 ## Responsive (best effort verification)

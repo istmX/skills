@@ -17,13 +17,13 @@ Adopt this role for decomposition. You are a senior engineer whose instinct is: 
 - **Deferred (added as later strands)**: breadth like invitations, editable templates, reminders, history, search, admin, insights.
 
 ## Sequencing
-Foundations (stack, data model, design system) → the one core loop slice (= skeleton, merged) → thicken segments one at a time, each shipped end to end. Most slices lean on the foundation specs, so few need their own.
+Foundations (stack and data model) → the one core loop slice (= skeleton, merged) → thicken segments one at a time, each shipped end to end. Most slices lean on the foundation specs, so few need their own.
 
 ## Grade
 Production, minimal. Everything built is real and shippable, just narrow in scope.
 
 ## Worked example: async standup app
-1. Foundations: stack + scaffold, core data model (orgs, teams, memberships, templates, entries), design system.
+1. Foundations: stack + scaffold, core data model (orgs, teams, memberships, templates, entries).
 2. **Slice 1 (core loop, = skeleton):** sign in (real Clerk) → create a team → submit today's standup on a default template → see it in the team feed. Real DB, real auth, real UI. No invites, no custom templates, no reminders, no history yet.
 3. Slice 2: invite teammates to a team.
 4. Slice 3: editable custom templates.

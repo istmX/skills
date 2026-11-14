@@ -32,7 +32,6 @@ If `INSTALL_STATE = deferred`, still write complete, correct tests, they simply 
 
 - Read each scoped source file, that is your primary input.
 - Read a spec path you were given **only if** it plainly governs a file you're testing; skip the rest. Don't read all three reflexively.
-- Read the `.istm-context/design.md` path **only** when writing component/page accessibility cases.
 
 ---
 
@@ -116,7 +115,7 @@ A good suite for a changed feature has more than the happy path. If you only wro
 
 ---
 
-## Accessibility cases (component / page scope, or when a .istm-context/design.md path was given)
+## Accessibility cases (component or page scope)
 
 - Every interactive element is reachable by Tab in logical order
 - Every `button` has an accessible name (visible text or `aria-label`)
