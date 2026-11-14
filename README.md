@@ -23,7 +23,7 @@ Workflow skills live in `istm-workflow/`. Each folder with a `SKILL.md` can be i
 
 ## Project guidance
 
-Skills use existing project instructions and conventions when relevant, including `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, and architecture documentation. They do not require a proprietary context directory or a universal router.
+Skills use existing project instructions and conventions when relevant, including `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, and architecture documentation.
 
 ## Contributing
 

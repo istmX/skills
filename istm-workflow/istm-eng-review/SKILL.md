@@ -114,15 +114,6 @@ else
   echo "LEARNINGS: 0"
 fi
 ~/.claude/skills/istm-workflow/bin/istm-workflow-timeline-log '{"skill":"plan-eng-review","event":"started","branch":"'"$_BRANCH"'","session":"'"$_SESSION_ID"'"}' 2>/dev/null &
-_HAS_ROUTING="no"
-for _RF in CLAUDE.md AGENTS.md; do
-  if [ -f "$_RF" ] && grep -q "## Skill routing" "$_RF" 2>/dev/null; then
-    _HAS_ROUTING="yes"
-  fi
-done
-_ROUTING_DECLINED=$(~/.claude/skills/istm-workflow/bin/istm-workflow-config get routing_declined 2>/dev/null || echo "false")
-echo "HAS_ROUTING: $_HAS_ROUTING"
-echo "ROUTING_DECLINED: $_ROUTING_DECLINED"
 _VENDORED="no"
 if [ -d ".claude/skills/istm-workflow" ] && [ ! -L ".claude/skills/istm-workflow" ]; then
   if [ -f ".claude/skills/istm-workflow/VERSION" ] || [ -d ".claude/skills/istm-workflow/.git" ]; then
@@ -266,80 +257,6 @@ Else if `ACTIVATED` is `yes` AND `FIRST_LOOP_SHOWN` is `no`: say once as a heads
 Then run `touch ~/.istm-workflow/.first-loop-tip-shown 2>/dev/null || true`.
 
 Skip this section if `ACTIVATED` and `FIRST_LOOP_SHOWN` are both `yes`.
-
-If `HAS_ROUTING` is `no` AND `ROUTING_DECLINED` is `false` AND `PROACTIVE_PROMPTED` is `yes`:
-Check if a CLAUDE.md file exists in the project root. If it does not exist, create it.
-
-Use AskUserQuestion:
-
-> istm-workflow works best when your project's CLAUDE.md includes skill routing rules.
-
-Options:
-- A) Add routing rules to CLAUDE.md (recommended)
-- B) No thanks, I'll invoke skills manually
-
-If A: Append this section to the end of CLAUDE.md:
-
-```markdown
-
-## Skill routing
-
-When the user's request matches an available skill, invoke it via the Skill tool. When in doubt, invoke the skill.
-
-Key routing rules:
-- Product ideas/brainstorming → invoke /office-hours
-- Strategy/scope → invoke /plan-ceo-review
-- Architecture → invoke /plan-eng-review
-- Design system/plan review → invoke /design-consultation or /plan-design-review
-- Full review pipeline → invoke /autoplan
-- Bugs/errors → invoke /investigate
-- QA/testing site behavior → invoke /qa or /qa-only
-- Code review/diff check → invoke /review
-- Visual polish → invoke /design-review
-- Ship/deploy/PR → invoke /ship or /land-and-deploy
-- Save progress → invoke /context-save
-- Resume context → invoke /context-restore
-- Author a backlog-ready spec/issue → invoke /spec
-```
-
-Then commit the change: `git add CLAUDE.md && git commit -m "chore: add istm-workflow skill routing rules to CLAUDE.md"`
-
-If B: run `~/.claude/skills/istm-workflow/bin/istm-workflow-config set routing_declined true` and say they can re-enable with `istm-workflow-config set routing_declined false`.
-
-This only happens once per project. Skip if `HAS_ROUTING` is `yes` or `ROUTING_DECLINED` is `true`.
-
-If `VENDORED_istm` is `yes`, warn once via AskUserQuestion unless `~/.istm-workflow/.vendoring-warned-$SLUG` exists:
-
-> This project has istm-workflow vendored in `.claude/skills/istm-workflow/`. Vendoring is deprecated.
-> Migrate to team mode?
-
-Options:
-- A) Yes, migrate to team mode now
-- B) No, I'll handle it myself
-
-If A:
-1. Run `git rm -r .claude/skills/istm-workflow/`
-2. Run `echo '.claude/skills/istm-workflow/' >> .gitignore`
-3. Run `~/.claude/skills/istm-workflow/bin/istm-workflow-team-init required` (or `optional`)
-4. Run `git add .claude/ .gitignore CLAUDE.md && git commit -m "chore: migrate istm-workflow from vendored to team mode"`
-5. Tell the user: "Done. Each developer now runs: `cd ~/.claude/skills/istm-workflow && ./setup --team`"
-
-If B: say "OK, you're on your own to keep the vendored copy up to date."
-
-Always run (regardless of choice):
-```bash
-eval "$(~/.claude/skills/istm-workflow/bin/istm-workflow-slug 2>/dev/null)" 2>/dev/null || true
-touch ~/.istm-workflow/.vendoring-warned-${SLUG:-unknown}
-```
-
-If marker exists, skip.
-
-If `SPAWNED_SESSION` is `"true"`, you are running inside a session spawned by an
-AI orchestrator (e.g., OpenClaw). In spawned sessions:
-- Do NOT use AskUserQuestion for interactive prompts. Auto-choose the recommended option.
-- Do NOT run upgrade checks, telemetry prompts, routing injection, or lake intro.
-- Focus on completing the task and reporting results via prose output.
-- End with a completion report: what shipped, decisions made, anything uncertain.
 
 ## AskUserQuestion Format
 

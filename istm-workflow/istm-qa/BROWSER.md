@@ -85,7 +85,7 @@ WebSocket — Claude's Bash tool already exists, so we use it.
 Three escalating modes:
 
 - **Headless** (default). Daemon runs Chromium with no visible window. Fastest,
-  cheapest, what skills like `/qa`, `/design-review`, `/benchmark` use by
+  cheapest, what skills like `/qa`, ``, `/benchmark` use by
   default.
 - **Headed via `$B connect`**. Same daemon, but Chromium is visible (rebranded
   as "istm Browser") with the Side Panel extension auto-loaded. You watch
@@ -571,7 +571,7 @@ with your tabs and bookmarks stays untouched.
 
 ### CDP-aware skills
 
-When in real-browser mode, `/qa` and `/design-review` automatically skip
+When in real-browser mode, `/qa` and `` automatically skip
 cookie import prompts and headless workarounds — the headed browser already
 has whatever session you logged into.
 
@@ -1196,7 +1196,7 @@ $B ux-audit
 
 Returns JSON with site identity, navigation, headings (capped 50), text
 blocks, interactive elements (capped 200) — page structure for behavioral
-analysis without dumping the full HTML. Used by `/qa` and `/design-review`
+analysis without dumping the full HTML. Used by `/qa` and ``
 for cheap coverage maps.
 
 ---

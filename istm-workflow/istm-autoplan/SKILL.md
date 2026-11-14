@@ -2,7 +2,7 @@
 name: autoplan
 preamble-tier: 3
 version: 1.0.0
-description: Auto-review pipeline — reads the full CEO, design, eng, and DX review skills from disk and runs them sequentially with auto-decisions using 6 decision principles. (istm-workflow)
+description: Auto-review pipeline — reads the full CEO, engineering, and DX review skills from disk and runs them sequentially with auto-decisions using 6 decision principles. (istm-workflow)
 benefits-from: [office-hours]
 triggers:
   - run all reviews
@@ -115,15 +115,6 @@ else
   echo "LEARNINGS: 0"
 fi
 ~/.claude/skills/istm-workflow/bin/istm-workflow-timeline-log '{"skill":"autoplan","event":"started","branch":"'"$_BRANCH"'","session":"'"$_SESSION_ID"'"}' 2>/dev/null &
-_HAS_ROUTING="no"
-for _RF in CLAUDE.md AGENTS.md; do
-  if [ -f "$_RF" ] && grep -q "## Skill routing" "$_RF" 2>/dev/null; then
-    _HAS_ROUTING="yes"
-  fi
-done
-_ROUTING_DECLINED=$(~/.claude/skills/istm-workflow/bin/istm-workflow-config get routing_declined 2>/dev/null || echo "false")
-echo "HAS_ROUTING: $_HAS_ROUTING"
-echo "ROUTING_DECLINED: $_ROUTING_DECLINED"
 _VENDORED="no"
 if [ -d ".claude/skills/istm-workflow" ] && [ ! -L ".claude/skills/istm-workflow" ]; then
   if [ -f ".claude/skills/istm-workflow/VERSION" ] || [ -d ".claude/skills/istm-workflow/.git" ]; then
@@ -267,80 +258,6 @@ Else if `ACTIVATED` is `yes` AND `FIRST_LOOP_SHOWN` is `no`: say once as a heads
 Then run `touch ~/.istm-workflow/.first-loop-tip-shown 2>/dev/null || true`.
 
 Skip this section if `ACTIVATED` and `FIRST_LOOP_SHOWN` are both `yes`.
-
-If `HAS_ROUTING` is `no` AND `ROUTING_DECLINED` is `false` AND `PROACTIVE_PROMPTED` is `yes`:
-Check if a CLAUDE.md file exists in the project root. If it does not exist, create it.
-
-Use AskUserQuestion:
-
-> istm-workflow works best when your project's CLAUDE.md includes skill routing rules.
-
-Options:
-- A) Add routing rules to CLAUDE.md (recommended)
-- B) No thanks, I'll invoke skills manually
-
-If A: Append this section to the end of CLAUDE.md:
-
-```markdown
-
-## Skill routing
-
-When the user's request matches an available skill, invoke it via the Skill tool. When in doubt, invoke the skill.
-
-Key routing rules:
-- Product ideas/brainstorming → invoke /office-hours
-- Strategy/scope → invoke /plan-ceo-review
-- Architecture → invoke /plan-eng-review
-- Design system/plan review → invoke /design-consultation or /plan-design-review
-- Full review pipeline → invoke /autoplan
-- Bugs/errors → invoke /investigate
-- QA/testing site behavior → invoke /qa or /qa-only
-- Code review/diff check → invoke /review
-- Visual polish → invoke /design-review
-- Ship/deploy/PR → invoke /ship or /land-and-deploy
-- Save progress → invoke /context-save
-- Resume context → invoke /context-restore
-- Author a backlog-ready spec/issue → invoke /spec
-```
-
-Then commit the change: `git add CLAUDE.md && git commit -m "chore: add istm-workflow skill routing rules to CLAUDE.md"`
-
-If B: run `~/.claude/skills/istm-workflow/bin/istm-workflow-config set routing_declined true` and say they can re-enable with `istm-workflow-config set routing_declined false`.
-
-This only happens once per project. Skip if `HAS_ROUTING` is `yes` or `ROUTING_DECLINED` is `true`.
-
-If `VENDORED_istm` is `yes`, warn once via AskUserQuestion unless `~/.istm-workflow/.vendoring-warned-$SLUG` exists:
-
-> This project has istm-workflow vendored in `.claude/skills/istm-workflow/`. Vendoring is deprecated.
-> Migrate to team mode?
-
-Options:
-- A) Yes, migrate to team mode now
-- B) No, I'll handle it myself
-
-If A:
-1. Run `git rm -r .claude/skills/istm-workflow/`
-2. Run `echo '.claude/skills/istm-workflow/' >> .gitignore`
-3. Run `~/.claude/skills/istm-workflow/bin/istm-workflow-team-init required` (or `optional`)
-4. Run `git add .claude/ .gitignore CLAUDE.md && git commit -m "chore: migrate istm-workflow from vendored to team mode"`
-5. Tell the user: "Done. Each developer now runs: `cd ~/.claude/skills/istm-workflow && ./setup --team`"
-
-If B: say "OK, you're on your own to keep the vendored copy up to date."
-
-Always run (regardless of choice):
-```bash
-eval "$(~/.claude/skills/istm-workflow/bin/istm-workflow-slug 2>/dev/null)" 2>/dev/null || true
-touch ~/.istm-workflow/.vendoring-warned-${SLUG:-unknown}
-```
-
-If marker exists, skip.
-
-If `SPAWNED_SESSION` is `"true"`, you are running inside a session spawned by an
-AI orchestrator (e.g., OpenClaw). In spawned sessions:
-- Do NOT use AskUserQuestion for interactive prompts. Auto-choose the recommended option.
-- Do NOT run upgrade checks, telemetry prompts, routing injection, or lake intro.
-- Focus on completing the task and reporting results via prose output.
-- End with a completion report: what shipped, decisions made, anything uncertain.
 
 ## AskUserQuestion Format
 
@@ -945,7 +862,7 @@ If none was produced (user may have cancelled), proceed with standard review.
 
 One command. Rough plan in, fully reviewed plan out.
 
-/autoplan reads the full CEO, design, eng, and DX review skill files from disk and follows
+/autoplan reads the full CEO, engineering, and DX review skill files from disk and follows
 them at full depth — same rigor, same sections, same methodology as running each skill
 manually. The only difference: intermediate AskUserQuestion calls are auto-decided using
 the 6 principles below. Taste decisions (where reasonable people could disagree) are
@@ -967,7 +884,6 @@ These rules auto-answer every intermediate question:
 **Conflict resolution (context-dependent tiebreakers):**
 - **CEO phase:** P1 (completeness) + P2 (boil lakes) dominate.
 - **Eng phase:** P5 (explicit) + P3 (pragmatic) dominate.
-- **Design phase:** P5 (explicit) + P1 (completeness) dominate.
 
 ---
 
@@ -1009,7 +925,7 @@ preference." The user still decides, but the framing is appropriately urgent.
 
 ## Sequential Execution — MANDATORY
 
-Phases MUST execute in strict order: CEO → Design → Eng → DX.
+Phases MUST execute in strict order: CEO → Eng → DX.
 Each phase MUST complete fully before the next begins.
 NEVER run phases in parallel — each builds on the previous.
 
@@ -1096,10 +1012,6 @@ Then prepend a one-line HTML comment to the plan file:
 ### Step 2: Read context
 
 - Read CLAUDE.md, TODOS.md, git log -30, git diff against the base branch --stat
-- Discover design docs: `ls -t ~/.istm-workflow/projects/$SLUG/*-design-*.md 2>/dev/null | head -1`
-- Detect UI scope: grep the plan for view/rendering terms (component, screen, form,
-  button, modal, layout, dashboard, sidebar, nav, dialog). Require 2+ matches. Exclude
-  false positives ("page" alone, "UI" in acronyms).
 - Detect DX scope: grep the plan for developer-facing terms (API, endpoint, REST,
   GraphQL, gRPC, webhook, CLI, command, flag, argument, terminal, shell, SDK, library,
   package, npm, pip, import, require, SKILL.md, skill template, Claude Code, MCP, agent,
@@ -1113,7 +1025,6 @@ Then prepend a one-line HTML comment to the plan file:
 
 Read each file using the Read tool:
 - `~/.claude/skills/istm-workflow/plan-ceo-review/SKILL.md`
-- `~/.claude/skills/istm-workflow/plan-design-review/SKILL.md` (only if UI scope detected)
 - `~/.claude/skills/istm-workflow/plan-eng-review/SKILL.md`
 - `~/.claude/skills/istm-workflow/plan-devex-review/SKILL.md` (only if DX scope detected)
 
@@ -1131,11 +1042,10 @@ Read each file using the Read tool:
 - Plan File Review Report
 - Prerequisite Skill Offer (BENEFITS_FROM)
 - Outside Voice — Independent Plan Challenge
-- Design Outside Voices (parallel)
 
 Follow ONLY the review-specific methodology, sections, and required outputs.
 
-Output: "Here's what I'm working with: [plan summary]. UI scope: [yes/no]. DX scope: [yes/no].
+Output: "Here's what I'm working with: [plan summary]. DX scope: [yes/no].
 Loaded review skills from disk. Starting full review pipeline with auto-decisions."
 
 ---
@@ -1284,7 +1194,6 @@ Sections 1-10 — for EACH section, run the evaluation criteria from the loaded 
 - Sections WITH findings: full analysis, auto-decide each issue, log to audit trail
 - Sections with NO findings: 1-2 sentences stating what was examined and why nothing
   was flagged. NEVER compress a section to just its name in a table row.
-- Section 11 (Design): run only if UI scope was detected in Phase 0
 
 **Mandatory outputs from Phase 1:**
 - "NOT in scope" section with deferred items and rationale
@@ -1311,90 +1220,6 @@ and the premise gate has been passed.
 - [ ] Premise gate passed (user confirmed)
 - [ ] Phase-transition summary emitted
 
-## Phase 2: Design Review (conditional — skip if no UI scope)
-
-Follow plan-design-review/SKILL.md — all 7 dimensions, full depth.
-Override: every AskUserQuestion → auto-decide using the 6 principles.
-
-**Override rules:**
-- Focus areas: all relevant dimensions (P1)
-- Structural issues (missing states, broken hierarchy): auto-fix (P5)
-- Aesthetic/taste issues: mark TASTE DECISION
-- Design system alignment: auto-fix if DESIGN.md exists and fix is obvious
-- Dual voices: always run BOTH Claude subagent AND Codex if available (P6).
-
-  **Codex design voice** (via Bash):
-  ```bash
-  _REPO_ROOT=$(git rev-parse --show-toplevel) || { echo "ERROR: not in a git repo" >&2; exit 1; }
-  _istm_codex_timeout_wrapper 600 codex exec "IMPORTANT: Do NOT read or execute any SKILL.md files or files in skill definition directories (paths containing skills/istm-workflow). These are AI assistant skill definitions meant for a different system. Stay focused on repository code only.
-
-  Read the plan file at <plan_path>. Evaluate this plan's
-  UI/UX design decisions.
-
-  Also consider these findings from the CEO review phase:
-  <insert CEO dual voice findings summary — key concerns, disagreements>
-
-  Does the information hierarchy serve the user or the developer? Are interaction
-  states (loading, empty, error, partial) specified or left to the implementer's
-  imagination? Is the responsive strategy intentional or afterthought? Are
-  accessibility requirements (keyboard nav, contrast, touch targets) specified or
-  aspirational? Does the plan describe specific UI decisions or generic patterns?
-  What design decisions will haunt the implementer if left ambiguous?
-  Be opinionated. No hedging." -C "$_REPO_ROOT" -s read-only -c 'web_search="cached"' < /dev/null
-  _CODEX_EXIT=$?
-  if [ "$_CODEX_EXIT" = "124" ]; then
-    _istm_codex_log_event "codex_timeout" "600"
-    _istm_codex_log_hang "autoplan" "0"
-    echo "[codex stalled past 10 minutes — tagging as [codex-unavailable] for this phase and proceeding with Claude subagent only]"
-  fi
-  ```
-  Timeout: 10 minutes (shell-wrapper) + 12 minutes (Bash outer gate). On hang, auto-degrades this phase's Codex voice.
-
-  **Claude design subagent** (via Agent tool):
-  "Read the plan file at <plan_path>. You are an independent senior product designer
-  reviewing this plan. You have NOT seen any prior review. Evaluate:
-  1. Information hierarchy: what does the user see first, second, third? Is it right?
-  2. Missing states: loading, empty, error, success, partial — which are unspecified?
-  3. User journey: what's the emotional arc? Where does it break?
-  4. Specificity: does the plan describe SPECIFIC UI or generic patterns?
-  5. What design decisions will haunt the implementer if left ambiguous?
-  For each finding: what's wrong, severity (critical/high/medium), and the fix."
-  NO prior-phase context — subagent must be truly independent.
-
-  Error handling: same as Phase 1 (both foreground/blocking, degradation matrix applies).
-
-- Design choices: if codex disagrees with a design decision with valid UX reasoning
-  → TASTE DECISION. Scope changes both models agree on → USER CHALLENGE.
-
-**Required execution checklist (Design):**
-
-1. Step 0 (Design Scope): Rate completeness 0-10. Check DESIGN.md. Map existing patterns.
-
-2. Step 0.5 (Dual Voices): Run Claude subagent (foreground) first, then Codex. Present under
-   CODEX SAYS (design — UX challenge) and CLAUDE SUBAGENT (design — independent review)
-   headers. Produce design litmus scorecard (consensus table). Use the litmus scorecard
-   format from plan-design-review. Include CEO phase findings in Codex prompt ONLY
-   (not Claude subagent — stays independent).
-
-3. Passes 1-7: Run each from loaded skill. Rate 0-10. Auto-decide each issue.
-   DISAGREE items from scorecard → raised in the relevant pass with both perspectives.
-
-**PHASE 2 COMPLETE.** Emit phase-transition summary:
-> **Phase 2 complete.** Codex: [N concerns]. Claude subagent: [N issues].
-> Consensus: [X/Y confirmed, Z disagreements → surfaced at gate].
-> Passing to Phase 3.
-
-Do NOT begin Phase 3 until all Phase 2 outputs (if run) are written to the plan file.
-
----
-
-**Pre-Phase 3 checklist (verify before starting):**
-- [ ] All Phase 1 items above confirmed
-- [ ] Design completion summary written (or "skipped, no UI scope")
-- [ ] Design dual voices ran (if Phase 2 ran)
-- [ ] Design consensus table produced (if Phase 2 ran)
-- [ ] Phase-transition summary emitted
-
 ## Phase 3: Eng Review + Dual Voices
 
 Follow plan-eng-review/SKILL.md — all sections, full depth.
@@ -1414,7 +1239,6 @@ Override: every AskUserQuestion → auto-decide using the 6 principles.
 
   Also consider these findings from prior review phases:
   CEO: <insert CEO consensus table summary — key concerns, DISAGREEs>
-  Design: <insert Design consensus table summary, or 'skipped, no UI scope'>
 
   File: <plan_path>" -C "$_REPO_ROOT" -s read-only -c 'web_search="cached"' < /dev/null
   _CODEX_EXIT=$?
@@ -1647,12 +1471,6 @@ produced. Check the plan file and conversation for each item.
 - [ ] Dual voices ran (Codex + Claude subagent, or noted unavailable)
 - [ ] CEO consensus table produced
 
-**Phase 2 (Design) outputs — only if UI scope detected:**
-- [ ] All 7 dimensions evaluated with scores
-- [ ] Issues identified and auto-decided
-- [ ] Dual voices ran (or noted unavailable/skipped with phase)
-- [ ] Design litmus scorecard produced
-
 **Phase 3 (Eng) outputs:**
 - [ ] Scope challenge with actual code analysis (not just "scope is fine")
 - [ ] Architecture ASCII diagram produced
@@ -1707,7 +1525,7 @@ if command -v jq >/dev/null 2>&1; then
   # dedupe by (component, sorted(files), title) — exact match only.
   # Sort by priority (P1 > P2 > P3) then by phase order.
   ALL_JSONL=$(mktemp -t autoplan-tasks.XXXXXXXX)
-  for phase in ceo-review design-review eng-review devex-review; do
+  for phase in ceo-review eng-review devex-review; do
     # Use find instead of glob expansion — zsh nomatch errors otherwise when
     # a phase produced no JSONL files. Sorting by name keeps the order stable.
     while IFS= read -r f; do
@@ -1741,9 +1559,9 @@ if command -v jq >/dev/null 2>&1; then
     'group_by([.component, (.files | sort), .title])
      | map(
          # Take the highest-priority entry per group; tie-break by phase order
-         sort_by({P1:0,P2:1,P3:2}[.priority] // 99, {"ceo-review":0,"design-review":1,"eng-review":2,"devex-review":3}[.phase] // 99) | .[0]
+         sort_by({P1:0,P2:1,P3:2}[.priority] // 99, {"ceo-review":0,"eng-review":1,"devex-review":2}[.phase] // 99) | .[0]
        )
-     | sort_by({P1:0,P2:1,P3:2}[.priority] // 99, {"ceo-review":0,"design-review":1,"eng-review":2,"devex-review":3}[.phase] // 99)
+     | sort_by({P1:0,P2:1,P3:2}[.priority] // 99, {"ceo-review":0,"eng-review":1,"devex-review":2}[.phase] // 99)
      | if length == 0 then "_No actionable tasks emitted from any phase._" else
          map("- [ ] **\(.id) (\(.priority), human: \(.effort_human) / CC: \(.effort_cc)) — \(.component)** — \(.title)\n  - Surfaced by: \(.phase) — \(.source_finding)\n  - Files: \(.files | join(", "))") | join("\n")
        end' "$ALL_JSONL" 2>/dev/null | sed 's/^"//;s/"$//;s/\\n/\n/g')
@@ -1803,8 +1621,6 @@ I recommend [X] — [principle]. But [Y] is also viable:
 ### Review Scores
 - CEO: [summary]
 - CEO Voices: Codex [summary], Claude subagent [summary], Consensus [X/6 confirmed]
-- Design: [summary or "skipped, no UI scope"]
-- Design Voices: Codex [summary], Claude subagent [summary], Consensus [X/7 confirmed] (or "skipped")
 - Eng: [summary]
 - Eng Voices: Codex [summary], Claude subagent [summary], Consensus [X/6 confirmed]
 - DX: [summary or "skipped, no developer-facing scope"]
@@ -1841,7 +1657,7 @@ AskUserQuestion options:
 - A: mark APPROVED, write review logs, suggest /ship
 - B: ask which overrides, apply, re-present gate
 - C: answer freeform, re-present gate
-- D: make changes, re-run affected phases (scope→1B, design→2, test plan→3, arch→3). Max 3 cycles.
+- D: make changes, re-run affected phases (scope→1B, test plan→3, arch→3). Max 3 cycles.
 - E: start over
 
 ---
@@ -1861,10 +1677,6 @@ TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 ~/.claude/skills/istm-workflow/bin/istm-workflow-review-log '{"skill":"plan-eng-review","timestamp":"'"$TIMESTAMP"'","status":"STATUS","unresolved":N,"critical_gaps":N,"issues_found":N,"mode":"FULL_REVIEW","via":"autoplan","commit":"'"$COMMIT"'"}'
 ```
 
-If Phase 2 ran (UI scope):
-```bash
-~/.claude/skills/istm-workflow/bin/istm-workflow-review-log '{"skill":"plan-design-review","timestamp":"'"$TIMESTAMP"'","status":"STATUS","unresolved":N,"via":"autoplan","commit":"'"$COMMIT"'"}'
-```
 
 If Phase 3.5 ran (DX scope):
 ```bash
@@ -1878,10 +1690,6 @@ Dual voice logs (one per phase that ran):
 ~/.claude/skills/istm-workflow/bin/istm-workflow-review-log '{"skill":"autoplan-voices","timestamp":"'"$TIMESTAMP"'","status":"STATUS","source":"SOURCE","phase":"eng","via":"autoplan","consensus_confirmed":N,"consensus_disagree":N,"commit":"'"$COMMIT"'"}'
 ```
 
-If Phase 2 ran (UI scope), also log:
-```bash
-~/.claude/skills/istm-workflow/bin/istm-workflow-review-log '{"skill":"autoplan-voices","timestamp":"'"$TIMESTAMP"'","status":"STATUS","source":"SOURCE","phase":"design","via":"autoplan","consensus_confirmed":N,"consensus_disagree":N,"commit":"'"$COMMIT"'"}'
-```
 
 If Phase 3.5 ran (DX scope), also log:
 ```bash
@@ -1902,4 +1710,4 @@ Suggest next step: `/ship` when ready to create the PR.
 - **Log every decision.** No silent auto-decisions. Every choice gets a row in the audit trail.
 - **Full depth means full depth.** Do not compress or skip sections from the loaded skill files (except the skip list in Phase 0). "Full depth" means: read the code the section asks you to read, produce the outputs the section requires, identify every issue, and decide each one. A one-sentence summary of a section is not "full depth" — it is a skip. If you catch yourself writing fewer than 3 sentences for any review section, you are likely compressing.
 - **Artifacts are deliverables.** Test plan artifact, failure modes registry, error/rescue table, ASCII diagrams — these must exist on disk or in the plan file when the review completes. If they don't exist, the review is incomplete.
-- **Sequential order.** CEO → Design → Eng → DX. Each phase builds on the last.
+- **Sequential order.** CEO → Eng → DX. Each phase builds on the last.
